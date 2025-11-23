@@ -91,7 +91,7 @@ export default function Home() {
   const isVisible = (id: string) => visibleSections.has(id);
 
   return (
-    <div className="relative w-full bg-background h-screen overflow-y-auto" style={{ scrollSnapType: "y proximity" }}>
+    <div className="relative w-full bg-background h-screen overflow-y-auto">
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0">
         <img
@@ -116,7 +116,7 @@ export default function Home() {
         <section
           id="coming-soon"
           ref={(el) => (sectionRefs.current["coming-soon"] = el)}
-          className="relative flex min-h-screen items-center justify-center px-6 py-16 snap-start snap-always"
+          className="relative flex min-h-screen items-center justify-center px-6 py-16"
           style={{
             opacity: scrollOpacity,
             transition: "opacity 0.3s ease-out",
@@ -156,7 +156,7 @@ export default function Home() {
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-screen flex-col items-center justify-center px-6 py-12 snap-start"
+          className="flex min-h-screen flex-col items-center justify-center px-6 py-12"
         >
           {/* Title */}
           <div className="flex flex-col items-center gap-3 mb-10 md:gap-4 md:mb-12">
