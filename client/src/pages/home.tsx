@@ -74,20 +74,27 @@ export default function Home() {
       setTimeout(() => setShowGlitch(false), 250);
     };
 
-    // Random glitch every 5-10 seconds
+    // First glitch happens right after "COMING SOON..." loads (around 1.5s)
+    const initialGlitch = setTimeout(triggerGlitch, 1500);
+
+    // Random glitch every 8-15 seconds after the initial one
     const scheduleNextGlitch = () => {
-      const delay = 5000 + Math.random() * 5000;
+      const delay = 8000 + Math.random() * 7000;
       return setTimeout(triggerGlitch, delay);
     };
 
-    let timeout = scheduleNextGlitch();
+    // Start scheduling regular glitches after the initial one
+    let timeout = setTimeout(() => {
+      timeout = scheduleNextGlitch();
+    }, 2000);
 
     const interval = setInterval(() => {
       clearTimeout(timeout);
       timeout = scheduleNextGlitch();
-    }, 10000);
+    }, 15000);
 
     return () => {
+      clearTimeout(initialGlitch);
       clearTimeout(timeout);
       clearInterval(interval);
     };
