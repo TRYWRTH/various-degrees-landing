@@ -71,7 +71,8 @@ export default function Home() {
   useEffect(() => {
     const triggerGlitch = () => {
       setShowGlitch(true);
-      setTimeout(() => setShowGlitch(false), 250);
+      // Glitch lasts 1.5 seconds - slow distortion
+      setTimeout(() => setShowGlitch(false), 1500);
     };
 
     // First glitch happens right after "COMING SOON..." loads (around 1.5s)
@@ -86,7 +87,7 @@ export default function Home() {
     // Start scheduling regular glitches after the initial one
     let timeout = setTimeout(() => {
       timeout = scheduleNextGlitch();
-    }, 2000);
+    }, 3500);
 
     const interval = setInterval(() => {
       clearTimeout(timeout);
@@ -125,51 +126,54 @@ export default function Home() {
           className="h-full w-full object-cover"
         />
         
-        {/* Glitch: Displaced image slices */}
+        {/* Glitch: Displaced image slices with continuous shake */}
         {showGlitch && (
           <>
-            {/* Top slice - shifted right with red tint and vertical shake */}
+            {/* Top slice - shifted right with red tint and continuous shake */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
               style={{
                 clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
                 transform: 'translateX(30px) translateY(-5px) rotate(0.5deg)',
                 filter: 'brightness(1.4) hue-rotate(-30deg) saturate(1.8)',
               }}
             />
-            {/* Upper-middle slice - shifted left with cyan tint */}
+            {/* Upper-middle slice - shifted left with cyan tint and shake */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
               style={{
                 clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
                 transform: 'translateX(-35px) translateY(6px) skewX(-2deg)',
                 filter: 'brightness(1.5) hue-rotate(80deg) saturate(2)',
+                animationDelay: '0.05s',
               }}
             />
-            {/* Lower-middle slice - shifted right and heavily skewed */}
+            {/* Lower-middle slice - shifted right and heavily skewed with shake */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover glitch-animate"
               style={{
                 clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
                 transform: 'translateX(40px) translateY(-4px) skewX(-4deg) rotate(-0.8deg)',
                 filter: 'brightness(1.3) contrast(1.4)',
+                animationDelay: '0.03s',
               }}
             />
             {/* Bottom slice - shifted left with magenta tint and shake */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
               style={{
                 clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
                 transform: 'translateX(-28px) translateY(8px) rotate(0.6deg)',
                 filter: 'brightness(1.4) hue-rotate(-80deg) saturate(1.8)',
+                animationDelay: '0.07s',
               }}
             />
           </>
