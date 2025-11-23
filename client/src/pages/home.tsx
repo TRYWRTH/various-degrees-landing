@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
-import { Mail } from "lucide-react";
+import { Mail, Instagram, Copy, Check } from "lucide-react";
 import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("variousdegrees@gmail.com");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   const artists = [
     "Andrea Mikyska",
@@ -87,35 +98,69 @@ export default function Home() {
       {/* Floating Contact Bubble */}
       <div
         className={`
-          fixed right-6 top-6 z-20 transition-all duration-1000 md:right-8 md:top-8
-          ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}
+          fixed bottom-6 right-6 z-20 transition-all duration-1000 md:bottom-8 md:right-8
+          ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
         `}
         style={{ transitionDelay: "1600ms" }}
       >
-        <button
-          onClick={() => setShowContact(!showContact)}
-          className="group relative flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-lg transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/20 active:scale-95"
-          data-testid="button-contact"
-          aria-label="Contact information"
-        >
-          <Mail className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
-          <span
-            className={`
-              overflow-hidden text-sm font-medium text-white transition-all duration-300
-              ${showContact ? "max-w-xs opacity-100" : "max-w-0 opacity-0"}
-            `}
-            data-testid="text-email"
+        {/* Expanded Contact Info */}
+        {showContact && (
+          <div
+            className="mb-3 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-lg"
+            data-testid="contact-info"
           >
-            variousdegrees@gmail.com
-          </span>
-        </button>
+            <div className="flex flex-col gap-3">
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/various.degrees/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/link flex items-center gap-3 text-white transition-all hover:text-white/80"
+                data-testid="link-instagram"
+              >
+                <Instagram className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
+                <span className="text-sm font-medium">@various.degrees</span>
+              </a>
 
-        {/* Tooltip on Hover (Desktop) */}
-        {!showContact && (
-          <div className="pointer-events-none absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-black/80 px-3 py-1.5 text-xs text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
-            Click for contact
+              {/* Email */}
+              <div className="flex items-center gap-2">
+                <a
+                  href="mailto:variousdegrees@gmail.com"
+                  className="group/link flex flex-1 items-center gap-3 text-white transition-all hover:text-white/80"
+                  data-testid="link-email"
+                >
+                  <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
+                  <span className="text-sm font-medium">variousdegrees@gmail.com</span>
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  className="rounded-lg border border-white/20 bg-white/10 p-2 text-white transition-all hover:bg-white/20 active:scale-95"
+                  data-testid="button-copy-email"
+                  aria-label="Copy email"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         )}
+
+        {/* Toggle Button */}
+        <button
+          onClick={() => setShowContact(!showContact)}
+          className="group ml-auto flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-lg transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/20 active:scale-95"
+          data-testid="button-contact"
+          aria-label={showContact ? "Hide contact information" : "Show contact information"}
+        >
+          <Mail className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
+          <span className="text-sm font-medium text-white">
+            {showContact ? "Close" : "Contact"}
+          </span>
+        </button>
       </div>
     </div>
   );
