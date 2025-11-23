@@ -111,7 +111,7 @@ export default function Home() {
       </div>
 
       {/* Snap Container - Only for the first two sections */}
-      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
+      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-proximity">
         {/* Section 1: Coming Soon */}
         <section
           id="coming-soon"
