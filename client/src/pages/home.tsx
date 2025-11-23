@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Mail, Instagram, Copy, Check } from "lucide-react";
+import { Mail, Instagram, Copy, Check, ChevronDown } from "lucide-react";
 import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 export default function Home() {
@@ -85,7 +85,7 @@ export default function Home() {
         <section
           id="coming-soon"
           ref={(el) => (sectionRefs.current["coming-soon"] = el)}
-          className="flex min-h-screen items-center justify-center px-6 py-16"
+          className="relative flex min-h-screen items-center justify-center px-6 py-16"
         >
           <h1
             className={`
@@ -98,6 +98,23 @@ export default function Home() {
           >
             COMING SOON...
           </h1>
+
+          {/* Scroll Indicator */}
+          <div
+            className={`
+              absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
+              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
+            `}
+            style={{ transitionDelay: "1200ms" }}
+            data-testid="scroll-indicator"
+          >
+            <p className="text-xs uppercase tracking-widest text-white/70 md:text-sm">
+              Scroll
+            </p>
+            <div className="animate-bounce">
+              <ChevronDown className="h-6 w-6 text-white/70 md:h-8 md:w-8" />
+            </div>
+          </div>
         </section>
 
         {/* Section 2: Publication Title */}
