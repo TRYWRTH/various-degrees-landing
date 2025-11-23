@@ -137,13 +137,14 @@ export default function Home() {
             </h2>
             <p
               className={`
-                font-serif text-2xl font-light italic tracking-wide text-white/90 transition-all duration-1000
+                font-serif text-2xl font-light italic tracking-widest text-white/90 transition-all duration-1000
                 md:text-3xl lg:text-4xl
                 ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ 
                 textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-                transitionDelay: "200ms"
+                transitionDelay: "200ms",
+                letterSpacing: "0.2em"
               }}
               data-testid="text-subtitle"
             >
