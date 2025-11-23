@@ -214,8 +214,8 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Footer - Fixed at bottom */}
-      <footer className="fixed bottom-0 left-0 right-0 z-10 flex flex-col items-center gap-2 border-t border-white/10 bg-black/30 px-6 py-4 backdrop-blur-sm">
+      {/* Footer */}
+      <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
         <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
           © 2025 Various Degrees. All rights reserved.
         </p>
