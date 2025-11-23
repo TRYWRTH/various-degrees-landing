@@ -132,7 +132,7 @@ export default function Home() {
             style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
             data-testid="text-title"
           >
-            Various Degrees
+            VARIOUS DEGREES
           </h2>
         </section>
 
