@@ -16,10 +16,10 @@ export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Everything starts blurry, then sharpens together
+    // Everything starts blurry, then sharpens together slowly
     const loadedTimer = setTimeout(() => {
       setIsLoaded(true);
-    }, 100);
+    }, 800);
 
     return () => {
       clearTimeout(loadedTimer);
@@ -131,7 +131,7 @@ export default function Home() {
         <img
           src={backgroundImage}
           alt="Background"
-          className={`h-full w-full object-cover transition-all duration-1500 ${
+          className={`h-full w-full object-cover transition-all duration-[2500ms] ${
             isLoaded ? 'blur-0 scale-100' : 'blur-md scale-105'
           }`}
           style={{
@@ -214,7 +214,7 @@ export default function Home() {
         >
           <h1
             className={`
-              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1500
+              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-[2500ms]
               sm:text-5xl md:text-7xl lg:text-8xl
               ${isLoaded ? "translate-y-0 opacity-100 blur-0" : "translate-y-8 opacity-0 blur-sm"}
             `}
