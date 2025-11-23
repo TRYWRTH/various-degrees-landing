@@ -7,12 +7,34 @@ export default function Home() {
   const [showContact, setShowContact] = useState(false);
   const [copied, setCopied] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const [scrollOpacity, setScrollOpacity] = useState(1);
   
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fadeStart = windowHeight * 0.3;
+      const fadeEnd = windowHeight * 0.8;
+      
+      if (scrollY < fadeStart) {
+        setScrollOpacity(1);
+      } else if (scrollY > fadeEnd) {
+        setScrollOpacity(0);
+      } else {
+        const opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+        setScrollOpacity(opacity);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -61,7 +83,7 @@ export default function Home() {
   const isVisible = (id: string) => visibleSections.has(id);
 
   return (
-    <div className="relative w-full bg-background">
+    <div className="relative w-full bg-background snap-y snap-mandatory overflow-y-scroll h-screen">
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0">
         <img
@@ -86,7 +108,11 @@ export default function Home() {
         <section
           id="coming-soon"
           ref={(el) => (sectionRefs.current["coming-soon"] = el)}
-          className="relative flex min-h-screen items-center justify-center px-6 py-16"
+          className="relative flex min-h-screen items-center justify-center px-6 py-16 snap-start snap-always"
+          style={{
+            opacity: scrollOpacity,
+            transition: "opacity 0.3s ease-out",
+          }}
         >
           <h1
             className={`
@@ -122,7 +148,7 @@ export default function Home() {
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-[50vh] items-center justify-center px-6 pb-8 pt-16"
+          className="flex min-h-[50vh] items-center justify-center px-6 pb-8 pt-16 snap-start"
         >
           <div className="flex flex-col items-center gap-4 md:gap-6">
             <h2
@@ -158,7 +184,7 @@ export default function Home() {
         <section
           id="artists"
           ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen items-center justify-center px-6 py-12"
+          className="flex min-h-screen items-center justify-center px-6 py-12 snap-start"
         >
           <div className="flex max-w-4xl flex-col items-center gap-4 md:gap-6">
             {artists.map((artist, index) => (
@@ -190,7 +216,7 @@ export default function Home() {
             © 2025 Various Degrees. All rights reserved.
           </p>
           <p className="text-xs text-white/40 md:text-sm">
-            Designed by YWRT
+            Designed by YRT
           </p>
         </footer>
       </div>
