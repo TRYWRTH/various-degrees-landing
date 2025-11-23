@@ -212,17 +212,17 @@ export default function Home() {
             ))}
           </div>
         </section>
-      </div>
 
-      {/* Footer */}
-      <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
-        <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
-          © 2025 Various Degrees. All rights reserved.
-        </p>
-        <p className="text-xs text-white/40 md:text-sm" data-testid="text-credit">
-          Designed by YRT
-        </p>
-      </footer>
+        {/* Footer */}
+        <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
+          <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
+            © 2025 Various Degrees. All rights reserved.
+          </p>
+          <p className="text-xs text-white/40 md:text-sm" data-testid="text-credit">
+            Designed by YRT
+          </p>
+        </footer>
+      </div>
 
       {/* Floating Contact Bubble */}
       <div
