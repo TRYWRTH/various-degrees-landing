@@ -69,7 +69,7 @@ export default function Home() {
 
   const handleCopyEmail = async () => {
     try {
-      await navigator.clipboard.writeText("variousdegrees@gmail.com");
+      await navigator.clipboard.writeText("info@amenogroup.co");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -214,8 +214,8 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Footer - Outside snap container for free scrolling */}
-      <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
+      {/* Footer - Fixed at bottom */}
+      <footer className="fixed bottom-0 left-0 right-0 z-10 flex flex-col items-center gap-2 border-t border-white/10 bg-black/30 px-6 py-4 backdrop-blur-sm">
         <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
           © 2025 Various Degrees. All rights reserved.
         </p>
@@ -254,12 +254,12 @@ export default function Home() {
               {/* Email */}
               <div className="flex items-center gap-2">
                 <a
-                  href="mailto:variousdegrees@gmail.com"
+                  href="mailto:info@amenogroup.co"
                   className="group/link flex flex-1 items-center gap-3 text-white transition-all hover:text-white/80"
                   data-testid="link-email"
                 >
                   <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
-                  <span className="text-sm font-medium">variousdegrees@gmail.com</span>
+                  <span className="text-sm font-medium">info@amenogroup.co</span>
                 </a>
                 <button
                   onClick={handleCopyEmail}
