@@ -121,7 +121,7 @@ export default function Home() {
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-screen items-center justify-center px-6 py-16"
+          className="flex min-h-[60vh] items-center justify-center px-6 py-16"
         >
           <h2
             className={`
@@ -140,24 +140,24 @@ export default function Home() {
         <section
           id="artists"
           ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen items-center justify-center px-6 py-16"
+          className="flex min-h-screen items-start justify-center px-6 py-24 md:py-32"
         >
-          <div className="flex max-w-3xl flex-col items-center gap-6 md:gap-8">
+          <div className="flex max-w-4xl flex-col items-center gap-12 md:gap-16">
             {artists.map((artist, index) => (
               <div
                 key={artist}
                 id={`artist-${index}`}
                 ref={(el) => (sectionRefs.current[`artist-${index}`] = el)}
                 className={`
-                  transition-all duration-700
-                  ${isVisible(`artist-${index}`) ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+                  transition-all duration-1000
+                  ${isVisible(`artist-${index}`) ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
                 `}
                 style={{
-                  transitionDelay: `${index * 150}ms`,
+                  transitionDelay: `${index * 100}ms`,
                 }}
               >
                 <p
-                  className="font-serif text-2xl font-light italic text-white/90 md:text-3xl lg:text-4xl"
+                  className="font-serif text-4xl font-light italic text-white/95 md:text-5xl lg:text-6xl"
                   style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
                   data-testid={`text-artist-${index}`}
                 >
