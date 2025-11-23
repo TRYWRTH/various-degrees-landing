@@ -121,7 +121,7 @@ export default function Home() {
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-[60vh] items-center justify-center px-6 py-16"
+          className="flex min-h-[50vh] items-center justify-center px-6 pb-8 pt-16"
         >
           <h2
             className={`
@@ -140,7 +140,7 @@ export default function Home() {
         <section
           id="artists"
           ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen items-start justify-center px-6 py-24 md:py-32"
+          className="flex min-h-screen items-start justify-center px-6 pt-8 pb-24"
         >
           <div className="flex max-w-4xl flex-col items-center gap-12 md:gap-16">
             {artists.map((artist, index) => (
