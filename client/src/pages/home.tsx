@@ -4,6 +4,7 @@ import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showEntrance, setShowEntrance] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrollOpacity, setScrollOpacity] = useState(1);
@@ -14,7 +15,20 @@ export default function Home() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsLoaded(true);
+    
+    // Cinematic entrance: fade from black
+    const entranceTimer = setTimeout(() => {
+      setShowEntrance(false);
+    }, 300);
+    
+    const loadedTimer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 600);
+
+    return () => {
+      clearTimeout(entranceTimer);
+      clearTimeout(loadedTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -116,6 +130,13 @@ export default function Home() {
 
   return (
     <div className="relative w-full bg-background">
+      {/* Cinematic entrance overlay - fades from black */}
+      <div 
+        className={`fixed inset-0 z-50 bg-black transition-opacity duration-1000 pointer-events-none ${
+          showEntrance ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         {/* Main background image */}
@@ -200,11 +221,14 @@ export default function Home() {
         >
           <h1
             className={`
-              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1000
+              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1500
               sm:text-5xl md:text-7xl lg:text-8xl
-              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+              ${isLoaded ? "translate-y-0 opacity-100 blur-0 scale-100" : "translate-y-16 opacity-0 blur-lg scale-90"}
             `}
-            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+            style={{ 
+              textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)",
+              transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
             data-testid="text-headline"
           >
             COMING SOON...
