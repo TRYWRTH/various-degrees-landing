@@ -57,41 +57,31 @@ export default function Home() {
         </h1>
 
         {/* Artist Names */}
-        <div className="mt-12 space-y-3 md:mt-16 md:space-y-4">
-          {artists.map((artist, index) => (
-            <p
-              key={artist}
-              className={`
-                font-serif text-lg font-light italic text-white/90 transition-all duration-700
-                md:text-xl lg:text-2xl
-                ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-              `}
-              style={{
-                transitionDelay: `${600 + index * 100}ms`,
-                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-              }}
-              data-testid={`text-artist-${index}`}
-            >
-              {artist}
-            </p>
-          ))}
-        </div>
-
-        {/* Subtitle */}
-        <p
+        <div
           className={`
-            mt-12 max-w-2xl text-center font-sans text-sm tracking-wide text-white/70 transition-all duration-1000
-            md:mt-16 md:text-base
+            mt-12 flex max-w-4xl flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 transition-all duration-1000
+            md:mt-16 md:gap-x-6
             ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
           `}
           style={{
-            transitionDelay: "1400ms",
-            textShadow: "0 2px 8px rgba(0, 0, 0, 0.5)",
+            transitionDelay: "600ms",
+            textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
           }}
-          data-testid="text-subtitle"
         >
-          An art publication exploring the futures that might never come
-        </p>
+          {artists.map((artist, index) => (
+            <span key={artist} className="flex items-center gap-x-4 md:gap-x-6">
+              <span
+                className="font-serif text-lg font-light italic text-white/90 md:text-xl lg:text-2xl"
+                data-testid={`text-artist-${index}`}
+              >
+                {artist}
+              </span>
+              {index < artists.length - 1 && (
+                <span className="text-white/40">|</span>
+              )}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Floating Contact Bubble */}
@@ -104,7 +94,7 @@ export default function Home() {
       >
         <button
           onClick={() => setShowContact(!showContact)}
-          className="group relative flex items-center gap-3 rounded-full border border-white/20 bg-black/30 px-5 py-3 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-black/40 active:scale-95"
+          className="group relative flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-lg transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/20 active:scale-95"
           data-testid="button-contact"
           aria-label="Contact information"
         >
