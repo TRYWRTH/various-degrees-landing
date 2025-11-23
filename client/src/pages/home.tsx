@@ -71,7 +71,7 @@ export default function Home() {
   useEffect(() => {
     const triggerGlitch = () => {
       setShowGlitch(true);
-      setTimeout(() => setShowGlitch(false), 150);
+      setTimeout(() => setShowGlitch(false), 200);
     };
 
     // Random glitch every 8-15 seconds
@@ -114,11 +114,12 @@ export default function Home() {
         <img
           src={backgroundImage}
           alt="Background"
-          className={`h-full w-full object-cover transition-all duration-150 ${
-            showGlitch ? 'brightness-150 contrast-200 hue-rotate-15' : ''
+          className={`h-full w-full object-cover transition-all duration-100 ${
+            showGlitch ? 'brightness-[1.8] contrast-[2.5]' : ''
           }`}
           style={{
-            filter: showGlitch ? 'saturate(1.5)' : 'none',
+            filter: showGlitch ? 'saturate(2) hue-rotate(30deg)' : 'none',
+            transform: showGlitch ? 'scale(1.02) translateX(3px)' : 'scale(1)',
           }}
         />
         {/* Dark Gradient Overlay for Text Legibility */}
@@ -132,18 +133,32 @@ export default function Home() {
         />
         {/* Glitch overlay */}
         {showGlitch && (
-          <div 
-            className="absolute inset-0 mix-blend-screen opacity-30"
-            style={{
-              background: `repeating-linear-gradient(
-                0deg,
-                rgba(255, 0, 0, 0.1) 0px,
-                rgba(0, 255, 0, 0.1) 2px,
-                rgba(0, 0, 255, 0.1) 4px,
-                transparent 6px
-              )`,
-            }}
-          />
+          <>
+            <div 
+              className="absolute inset-0 mix-blend-screen opacity-60"
+              style={{
+                background: `repeating-linear-gradient(
+                  0deg,
+                  rgba(255, 0, 255, 0.3) 0px,
+                  rgba(0, 255, 255, 0.3) 2px,
+                  rgba(255, 255, 0, 0.3) 4px,
+                  transparent 6px
+                )`,
+              }}
+            />
+            <div 
+              className="absolute inset-0 mix-blend-overlay opacity-40"
+              style={{
+                background: `linear-gradient(90deg, 
+                  transparent 0%, 
+                  rgba(255, 0, 0, 0.3) 25%, 
+                  rgba(0, 255, 0, 0.3) 50%, 
+                  rgba(0, 0, 255, 0.3) 75%, 
+                  transparent 100%
+                )`,
+              }}
+            />
+          </>
         )}
       </div>
 
@@ -174,7 +189,7 @@ export default function Home() {
           {/* Scroll Indicator */}
           <div
             className={`
-              absolute bottom-16 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
+              absolute bottom-24 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
               md:bottom-8
               ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
             `}
