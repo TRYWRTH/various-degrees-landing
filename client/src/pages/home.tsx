@@ -110,18 +110,64 @@ export default function Home() {
   return (
     <div className="relative w-full bg-background">
       {/* Background Image with Fixed Position */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        {/* Main background image */}
         <img
           src={backgroundImage}
           alt="Background"
-          className={`h-full w-full object-cover transition-all duration-100 ${
-            showGlitch ? 'brightness-[1.8] contrast-[2.5]' : ''
-          }`}
-          style={{
-            filter: showGlitch ? 'saturate(2) hue-rotate(30deg)' : 'none',
-            transform: showGlitch ? 'scale(1.02) translateX(3px)' : 'scale(1)',
-          }}
+          className="h-full w-full object-cover"
         />
+        
+        {/* Glitch: Displaced image slices */}
+        {showGlitch && (
+          <>
+            {/* Top slice - shifted right with red tint */}
+            <img
+              src={backgroundImage}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              style={{
+                clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
+                transform: 'translateX(8px)',
+                filter: 'brightness(1.2) hue-rotate(-20deg)',
+              }}
+            />
+            {/* Upper-middle slice - shifted left with cyan tint */}
+            <img
+              src={backgroundImage}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              style={{
+                clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
+                transform: 'translateX(-12px)',
+                filter: 'brightness(1.3) hue-rotate(60deg)',
+              }}
+            />
+            {/* Lower-middle slice - shifted right and skewed */}
+            <img
+              src={backgroundImage}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{
+                clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
+                transform: 'translateX(15px) skewX(-2deg)',
+                filter: 'brightness(1.1)',
+              }}
+            />
+            {/* Bottom slice - shifted left with magenta tint */}
+            <img
+              src={backgroundImage}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
+              style={{
+                clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
+                transform: 'translateX(-6px)',
+                filter: 'brightness(1.2) hue-rotate(-60deg)',
+              }}
+            />
+          </>
+        )}
+        
         {/* Dark Gradient Overlay for Text Legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70" />
         {/* Vignette Effect */}
@@ -131,35 +177,6 @@ export default function Home() {
             background: "radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 100%)",
           }}
         />
-        {/* Glitch overlay */}
-        {showGlitch && (
-          <>
-            <div 
-              className="absolute inset-0 mix-blend-screen opacity-60"
-              style={{
-                background: `repeating-linear-gradient(
-                  0deg,
-                  rgba(255, 0, 255, 0.3) 0px,
-                  rgba(0, 255, 255, 0.3) 2px,
-                  rgba(255, 255, 0, 0.3) 4px,
-                  transparent 6px
-                )`,
-              }}
-            />
-            <div 
-              className="absolute inset-0 mix-blend-overlay opacity-40"
-              style={{
-                background: `linear-gradient(90deg, 
-                  transparent 0%, 
-                  rgba(255, 0, 0, 0.3) 25%, 
-                  rgba(0, 255, 0, 0.3) 50%, 
-                  rgba(0, 0, 255, 0.3) 75%, 
-                  transparent 100%
-                )`,
-              }}
-            />
-          </>
-        )}
       </div>
 
       {/* Snap Container - Only for the first two sections */}
