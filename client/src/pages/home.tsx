@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Mail, Instagram, Copy, Check } from "lucide-react";
 import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
@@ -6,9 +6,34 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   useEffect(() => {
     setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+        rootMargin: "-10% 0px -10% 0px",
+      }
+    );
+
+    Object.values(sectionRefs.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleCopyEmail = async () => {
@@ -32,8 +57,10 @@ export default function Home() {
     "Tomer Rosenthal",
   ];
 
+  const isVisible = (id: string) => visibleSections.has(id);
+
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-background">
+    <div className="relative w-full bg-background">
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0">
         <img
@@ -52,47 +79,80 @@ export default function Home() {
         />
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-16 md:px-12">
-        {/* Headline */}
-        <h1
-          className={`
-            font-serif text-5xl font-light tracking-widest text-white transition-all duration-1000
-            md:text-7xl lg:text-8xl
-            ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-          `}
-          style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
-          data-testid="text-headline"
+      {/* Scrolling Content */}
+      <div className="relative z-10">
+        {/* Section 1: Coming Soon */}
+        <section
+          id="coming-soon"
+          ref={(el) => (sectionRefs.current["coming-soon"] = el)}
+          className="flex min-h-screen items-center justify-center px-6 py-16"
         >
-          COMING SOON...
-        </h1>
+          <h1
+            className={`
+              font-serif text-5xl font-light tracking-widest text-white transition-all duration-1000
+              md:text-7xl lg:text-8xl
+              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+            `}
+            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+            data-testid="text-headline"
+          >
+            COMING SOON...
+          </h1>
+        </section>
 
-        {/* Artist Names */}
-        <div
-          className={`
-            mt-12 flex max-w-4xl flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 transition-all duration-1000
-            md:mt-16 md:gap-x-6
-            ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-          `}
-          style={{
-            transitionDelay: "600ms",
-            textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-          }}
+        {/* Section 2: Publication Title */}
+        <section
+          id="title"
+          ref={(el) => (sectionRefs.current["title"] = el)}
+          className="flex min-h-screen items-center justify-center px-6 py-16"
         >
-          {artists.map((artist, index) => (
-            <span key={artist} className="flex items-center gap-x-4 md:gap-x-6">
-              <span
-                className="font-serif text-lg font-light italic text-white/90 md:text-xl lg:text-2xl"
-                data-testid={`text-artist-${index}`}
+          <h2
+            className={`
+              font-serif text-6xl font-light tracking-wider text-white transition-all duration-1000
+              md:text-8xl lg:text-9xl
+              ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+            `}
+            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+            data-testid="text-title"
+          >
+            Various Degrees
+          </h2>
+        </section>
+
+        {/* Section 3: Artists */}
+        <section
+          id="artists"
+          ref={(el) => (sectionRefs.current["artists"] = el)}
+          className="flex min-h-screen items-center justify-center px-6 py-16"
+        >
+          <div className="flex max-w-3xl flex-col items-center gap-6 md:gap-8">
+            {artists.map((artist, index) => (
+              <div
+                key={artist}
+                id={`artist-${index}`}
+                ref={(el) => (sectionRefs.current[`artist-${index}`] = el)}
+                className={`
+                  transition-all duration-700
+                  ${isVisible(`artist-${index}`) ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+                `}
+                style={{
+                  transitionDelay: `${index * 150}ms`,
+                }}
               >
-                {artist}
-              </span>
-              {index < artists.length - 1 && (
-                <span className="text-white/40">|</span>
-              )}
-            </span>
-          ))}
-        </div>
+                <p
+                  className="font-serif text-2xl font-light italic text-white/90 md:text-3xl lg:text-4xl"
+                  style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
+                  data-testid={`text-artist-${index}`}
+                >
+                  {artist}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Bottom Spacing */}
+        <div className="h-32" />
       </div>
 
       {/* Floating Contact Bubble */}
