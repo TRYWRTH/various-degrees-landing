@@ -4,7 +4,6 @@ import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showEntrance, setShowEntrance] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrollOpacity, setScrollOpacity] = useState(1);
@@ -15,15 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    // Everything starts blurry, then sharpens together very slowly
-    const loadedTimer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 1200);
-
-    return () => {
-      clearTimeout(loadedTimer);
-    };
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -127,16 +118,11 @@ export default function Home() {
     <div className="relative w-full bg-background">
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0 overflow-hidden">
-        {/* Main background image - starts blurry, sharpens */}
+        {/* Main background image */}
         <img
           src={backgroundImage}
           alt="Background"
-          className={`h-full w-full object-cover transition-all duration-[3500ms] ${
-            isLoaded ? 'blur-0 scale-100' : 'blur-xl scale-105'
-          }`}
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-          }}
+          className="h-full w-full object-cover"
         />
         
         {/* Glitch: Displaced image slices */}
@@ -149,8 +135,8 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
-                transform: 'translateX(18px) translateY(-3px) rotate(0.3deg)',
-                filter: 'brightness(1.3) hue-rotate(-30deg) saturate(1.5)',
+                transform: 'translateX(30px) translateY(-5px) rotate(0.5deg)',
+                filter: 'brightness(1.4) hue-rotate(-30deg) saturate(1.8)',
               }}
             />
             {/* Upper-middle slice - shifted left with cyan tint */}
@@ -160,8 +146,8 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
-                transform: 'translateX(-22px) translateY(4px) skewX(-1deg)',
-                filter: 'brightness(1.4) hue-rotate(80deg) saturate(1.6)',
+                transform: 'translateX(-35px) translateY(6px) skewX(-2deg)',
+                filter: 'brightness(1.5) hue-rotate(80deg) saturate(2)',
               }}
             />
             {/* Lower-middle slice - shifted right and heavily skewed */}
@@ -171,8 +157,8 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover"
               style={{
                 clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
-                transform: 'translateX(25px) translateY(-2px) skewX(-3deg) rotate(-0.5deg)',
-                filter: 'brightness(1.2) contrast(1.3)',
+                transform: 'translateX(40px) translateY(-4px) skewX(-4deg) rotate(-0.8deg)',
+                filter: 'brightness(1.3) contrast(1.4)',
               }}
             />
             {/* Bottom slice - shifted left with magenta tint and shake */}
@@ -182,8 +168,8 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
-                transform: 'translateX(-16px) translateY(5px) rotate(0.4deg)',
-                filter: 'brightness(1.3) hue-rotate(-80deg) saturate(1.5)',
+                transform: 'translateX(-28px) translateY(8px) rotate(0.6deg)',
+                filter: 'brightness(1.4) hue-rotate(-80deg) saturate(1.8)',
               }}
             />
           </>
@@ -214,14 +200,11 @@ export default function Home() {
         >
           <h1
             className={`
-              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-[3500ms]
+              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1000
               sm:text-5xl md:text-7xl lg:text-8xl
-              ${isLoaded ? "translate-y-0 opacity-100 blur-0" : "translate-y-4 opacity-0 blur-md"}
+              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
             `}
-            style={{ 
-              textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)",
-              transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-            }}
+            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
             data-testid="text-headline"
           >
             COMING SOON...
