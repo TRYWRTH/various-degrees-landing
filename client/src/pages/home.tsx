@@ -16,17 +16,12 @@ export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Cinematic entrance: fade from black
-    const entranceTimer = setTimeout(() => {
-      setShowEntrance(false);
-    }, 300);
-    
+    // Everything starts blurry, then sharpens together
     const loadedTimer = setTimeout(() => {
       setIsLoaded(true);
-    }, 600);
+    }, 100);
 
     return () => {
-      clearTimeout(entranceTimer);
       clearTimeout(loadedTimer);
     };
   }, []);
@@ -130,20 +125,18 @@ export default function Home() {
 
   return (
     <div className="relative w-full bg-background">
-      {/* Cinematic entrance overlay - fades from black */}
-      <div 
-        className={`fixed inset-0 z-50 bg-black transition-opacity duration-1000 pointer-events-none ${
-          showEntrance ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-      
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0 overflow-hidden">
-        {/* Main background image */}
+        {/* Main background image - starts blurry, sharpens */}
         <img
           src={backgroundImage}
           alt="Background"
-          className="h-full w-full object-cover"
+          className={`h-full w-full object-cover transition-all duration-1500 ${
+            isLoaded ? 'blur-0 scale-100' : 'blur-md scale-105'
+          }`}
+          style={{
+            transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
         />
         
         {/* Glitch: Displaced image slices */}
@@ -223,7 +216,7 @@ export default function Home() {
             className={`
               text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1500
               sm:text-5xl md:text-7xl lg:text-8xl
-              ${isLoaded ? "translate-y-0 opacity-100 blur-0 scale-100" : "translate-y-16 opacity-0 blur-lg scale-90"}
+              ${isLoaded ? "translate-y-0 opacity-100 blur-0" : "translate-y-8 opacity-0 blur-sm"}
             `}
             style={{ 
               textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)",
