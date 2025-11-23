@@ -9,12 +9,23 @@ export async function serveStatic(app: Express, _server: Server) {
   const distPath = path.resolve(import.meta.dirname, "public");
 
   if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+    console.warn(
+      `Build directory not found: ${distPath}. Run 'npm run build' to create it.`,
     );
+    
+    // In production, serve a simple message if build doesn't exist
+    app.use("*", (_req, res) => {
+      res.status(503).send("Service temporarily unavailable. Please run: npm run build");
+    });
+    return;
   }
 
-  app.use(express.static(distPath));
+  // Serve static files with caching headers for better performance
+  app.use(express.static(distPath, {
+    maxAge: '1d',
+    etag: true,
+    lastModified: true,
+  }));
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
