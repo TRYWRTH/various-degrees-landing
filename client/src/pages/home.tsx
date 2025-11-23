@@ -91,7 +91,7 @@ export default function Home() {
   const isVisible = (id: string) => visibleSections.has(id);
 
   return (
-    <div className="relative w-full bg-background snap-y snap-mandatory overflow-y-scroll h-screen">
+    <div className="relative w-full bg-background h-screen overflow-y-auto" style={{ scrollSnapType: "y proximity" }}>
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0">
         <img
@@ -124,8 +124,8 @@ export default function Home() {
         >
           <h1
             className={`
-              font-serif text-5xl font-light tracking-widest text-white transition-all duration-1000
-              md:text-7xl lg:text-8xl
+              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1000
+              sm:text-5xl md:text-7xl lg:text-8xl
               ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
             `}
             style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
@@ -162,8 +162,8 @@ export default function Home() {
           <div className="flex flex-col items-center gap-3 mb-10 md:gap-4 md:mb-12">
             <h2
               className={`
-                font-serif text-5xl font-light tracking-wider text-white transition-all duration-1000
-                md:text-7xl lg:text-8xl
+                text-center font-serif text-4xl font-light tracking-wider text-white transition-all duration-1000
+                sm:text-5xl md:text-7xl lg:text-8xl
                 ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
@@ -173,8 +173,8 @@ export default function Home() {
             </h2>
             <p
               className={`
-                font-serif text-xl font-light italic tracking-widest text-white/90 transition-all duration-1000
-                md:text-2xl lg:text-3xl
+                text-center font-serif text-lg font-light italic tracking-widest text-white/90 transition-all duration-1000
+                sm:text-xl md:text-2xl lg:text-3xl
                 ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ 
@@ -202,7 +202,7 @@ export default function Home() {
                 }}
               >
                 <p
-                  className="font-serif text-2xl font-light italic text-white/95 md:text-3xl lg:text-4xl"
+                  className="text-center font-serif text-xl font-light italic text-white/95 sm:text-2xl md:text-3xl lg:text-4xl"
                   style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
                   data-testid={`text-artist-${index}`}
                 >
