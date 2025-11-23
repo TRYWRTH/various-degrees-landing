@@ -146,14 +146,12 @@ export default function Home() {
             {artists.map((artist, index) => (
               <div
                 key={artist}
-                id={`artist-${index}`}
-                ref={(el) => (sectionRefs.current[`artist-${index}`] = el)}
                 className={`
                   transition-all duration-1000
-                  ${isVisible(`artist-${index}`) ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
+                  ${isVisible("artists") ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
                 `}
                 style={{
-                  transitionDelay: `${index * 100}ms`,
+                  transitionDelay: isVisible("artists") ? `${index * 100}ms` : "0ms",
                 }}
               >
                 <p
