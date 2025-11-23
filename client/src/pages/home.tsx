@@ -126,33 +126,33 @@ export default function Home() {
           className="h-full w-full object-cover"
         />
         
-        {/* Glitch: Displaced image slices with continuous shake */}
+        {/* Glitch: VHS static/snow effect */}
         {showGlitch && (
           <>
-            {/* Top slice - shifted right with red tint and continuous shake */}
+            {/* Top slice - shifted right, desaturated */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
+              className="absolute inset-0 h-full w-full object-cover glitch-animate"
               style={{
                 clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
                 transform: 'translateX(30px) translateY(-5px) rotate(0.5deg)',
-                filter: 'brightness(1.4) hue-rotate(-30deg) saturate(1.8)',
+                filter: 'brightness(1.2) contrast(1.5) saturate(0.3) grayscale(0.4)',
               }}
             />
-            {/* Upper-middle slice - shifted left with cyan tint and shake */}
+            {/* Upper-middle slice - shifted left, more desaturated */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
+              className="absolute inset-0 h-full w-full object-cover glitch-animate"
               style={{
                 clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
                 transform: 'translateX(-35px) translateY(6px) skewX(-2deg)',
-                filter: 'brightness(1.5) hue-rotate(80deg) saturate(2)',
+                filter: 'brightness(0.9) contrast(1.6) saturate(0.2) grayscale(0.5)',
                 animationDelay: '0.05s',
               }}
             />
-            {/* Lower-middle slice - shifted right and heavily skewed with shake */}
+            {/* Lower-middle slice - shifted right and heavily skewed */}
             <img
               src={backgroundImage}
               alt=""
@@ -160,20 +160,42 @@ export default function Home() {
               style={{
                 clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
                 transform: 'translateX(40px) translateY(-4px) skewX(-4deg) rotate(-0.8deg)',
-                filter: 'brightness(1.3) contrast(1.4)',
+                filter: 'brightness(1.1) contrast(1.7) saturate(0.1) grayscale(0.6)',
                 animationDelay: '0.03s',
               }}
             />
-            {/* Bottom slice - shifted left with magenta tint and shake */}
+            {/* Bottom slice - shifted left, most desaturated */}
             <img
               src={backgroundImage}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover mix-blend-screen glitch-animate"
+              className="absolute inset-0 h-full w-full object-cover glitch-animate"
               style={{
                 clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
                 transform: 'translateX(-28px) translateY(8px) rotate(0.6deg)',
-                filter: 'brightness(1.4) hue-rotate(-80deg) saturate(1.8)',
+                filter: 'brightness(1.15) contrast(1.5) saturate(0.2) grayscale(0.5)',
                 animationDelay: '0.07s',
+              }}
+            />
+            
+            {/* VHS static overlay - scanlines */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-30"
+              style={{
+                background: `repeating-linear-gradient(
+                  0deg,
+                  transparent 0px,
+                  rgba(255, 255, 255, 0.03) 1px,
+                  transparent 2px,
+                  transparent 3px
+                )`,
+              }}
+            />
+            
+            {/* Noise/grain overlay */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
               }}
             />
           </>
