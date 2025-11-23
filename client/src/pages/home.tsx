@@ -123,17 +123,33 @@ export default function Home() {
           ref={(el) => (sectionRefs.current["title"] = el)}
           className="flex min-h-[50vh] items-center justify-center px-6 pb-8 pt-16"
         >
-          <h2
-            className={`
-              font-serif text-6xl font-light tracking-wider text-white transition-all duration-1000
-              md:text-8xl lg:text-9xl
-              ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
-            `}
-            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
-            data-testid="text-title"
-          >
-            VARIOUS DEGREES
-          </h2>
+          <div className="flex flex-col items-center gap-4 md:gap-6">
+            <h2
+              className={`
+                font-serif text-6xl font-light tracking-wider text-white transition-all duration-1000
+                md:text-8xl lg:text-9xl
+                ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+              `}
+              style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+              data-testid="text-title"
+            >
+              VARIOUS DEGREES
+            </h2>
+            <p
+              className={`
+                font-serif text-2xl font-light italic tracking-wide text-white/90 transition-all duration-1000
+                md:text-3xl lg:text-4xl
+                ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+              `}
+              style={{ 
+                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
+                transitionDelay: "200ms"
+              }}
+              data-testid="text-subtitle"
+            >
+              Remnants of a future
+            </p>
+          </div>
         </section>
 
         {/* Section 3: Artists */}
