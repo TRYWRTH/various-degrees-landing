@@ -11,6 +11,7 @@ export default function Home() {
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setIsLoaded(true);
   }, []);
 
@@ -183,8 +184,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Bottom Spacing */}
-        <div className="h-32" />
+        {/* Footer */}
+        <footer className="flex flex-col items-center gap-2 px-6 py-12 text-center">
+          <p className="text-xs text-white/50 md:text-sm">
+            © 2025 Various Degrees. All rights reserved.
+          </p>
+          <p className="text-xs text-white/40 md:text-sm">
+            Designed by YWRT
+          </p>
+        </footer>
       </div>
 
       {/* Floating Contact Bubble */}
