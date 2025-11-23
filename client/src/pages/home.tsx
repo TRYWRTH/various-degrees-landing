@@ -174,7 +174,8 @@ export default function Home() {
           {/* Scroll Indicator */}
           <div
             className={`
-              absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
+              absolute bottom-16 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
+              md:bottom-8
               ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
             `}
             style={{ transitionDelay: "1200ms" }}
@@ -193,7 +194,7 @@ export default function Home() {
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-screen flex-col items-center justify-center px-6 py-12 snap-start snap-always"
+          className="flex min-h-screen flex-col items-center justify-center px-6 py-6 md:py-12 snap-start snap-always"
         >
           {/* Title */}
           <div className="flex flex-col items-center gap-3 mb-10 md:gap-4 md:mb-12">
