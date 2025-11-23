@@ -71,12 +71,12 @@ export default function Home() {
   useEffect(() => {
     const triggerGlitch = () => {
       setShowGlitch(true);
-      setTimeout(() => setShowGlitch(false), 200);
+      setTimeout(() => setShowGlitch(false), 250);
     };
 
-    // Random glitch every 8-15 seconds
+    // Random glitch every 5-10 seconds
     const scheduleNextGlitch = () => {
-      const delay = 8000 + Math.random() * 7000;
+      const delay = 5000 + Math.random() * 5000;
       return setTimeout(triggerGlitch, delay);
     };
 
@@ -85,7 +85,7 @@ export default function Home() {
     const interval = setInterval(() => {
       clearTimeout(timeout);
       timeout = scheduleNextGlitch();
-    }, 15000);
+    }, 10000);
 
     return () => {
       clearTimeout(timeout);
@@ -121,15 +121,15 @@ export default function Home() {
         {/* Glitch: Displaced image slices */}
         {showGlitch && (
           <>
-            {/* Top slice - shifted right with red tint */}
+            {/* Top slice - shifted right with red tint and vertical shake */}
             <img
               src={backgroundImage}
               alt=""
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
-                transform: 'translateX(8px)',
-                filter: 'brightness(1.2) hue-rotate(-20deg)',
+                transform: 'translateX(18px) translateY(-3px) rotate(0.3deg)',
+                filter: 'brightness(1.3) hue-rotate(-30deg) saturate(1.5)',
               }}
             />
             {/* Upper-middle slice - shifted left with cyan tint */}
@@ -139,30 +139,30 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
-                transform: 'translateX(-12px)',
-                filter: 'brightness(1.3) hue-rotate(60deg)',
+                transform: 'translateX(-22px) translateY(4px) skewX(-1deg)',
+                filter: 'brightness(1.4) hue-rotate(80deg) saturate(1.6)',
               }}
             />
-            {/* Lower-middle slice - shifted right and skewed */}
+            {/* Lower-middle slice - shifted right and heavily skewed */}
             <img
               src={backgroundImage}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
               style={{
                 clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
-                transform: 'translateX(15px) skewX(-2deg)',
-                filter: 'brightness(1.1)',
+                transform: 'translateX(25px) translateY(-2px) skewX(-3deg) rotate(-0.5deg)',
+                filter: 'brightness(1.2) contrast(1.3)',
               }}
             />
-            {/* Bottom slice - shifted left with magenta tint */}
+            {/* Bottom slice - shifted left with magenta tint and shake */}
             <img
               src={backgroundImage}
               alt=""
               className="absolute inset-0 h-full w-full object-cover mix-blend-screen"
               style={{
                 clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
-                transform: 'translateX(-6px)',
-                filter: 'brightness(1.2) hue-rotate(-60deg)',
+                transform: 'translateX(-16px) translateY(5px) rotate(0.4deg)',
+                filter: 'brightness(1.3) hue-rotate(-80deg) saturate(1.5)',
               }}
             />
           </>
