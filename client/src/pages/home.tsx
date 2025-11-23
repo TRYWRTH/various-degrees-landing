@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Mail, Instagram, Copy, Check, ChevronDown } from "lucide-react";
+import { Mail, Instagram, ChevronDown } from "lucide-react";
 import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showContact, setShowContact] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [showArtists, setShowArtists] = useState(false);
+  const [showGlitch, setShowGlitch] = useState(false);
   
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
@@ -67,25 +67,42 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText("info@amenogroup.co");
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
+  // Occasional glitch effect on background
+  useEffect(() => {
+    const triggerGlitch = () => {
+      setShowGlitch(true);
+      setTimeout(() => setShowGlitch(false), 150);
+    };
+
+    // Random glitch every 8-15 seconds
+    const scheduleNextGlitch = () => {
+      const delay = 8000 + Math.random() * 7000;
+      return setTimeout(triggerGlitch, delay);
+    };
+
+    let timeout = scheduleNextGlitch();
+
+    const interval = setInterval(() => {
+      clearTimeout(timeout);
+      timeout = scheduleNextGlitch();
+    }, 15000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, []);
+
 
   const artists = [
-    "Andrea Mikyska",
     "Asmaa Azaizeh",
     "Julio Clavijo",
-    "Kevin Junk",
-    "Nicola Sebastian",
     "Sharlene Durfey",
-    "Theresa Weber",
+    "Kevin Junk",
+    "Andrea Mikyska",
     "Tomer Rosenthal",
+    "Nicola Sebastian",
+    "Theresa Weber",
   ];
 
   const isVisible = (id: string) => visibleSections.has(id);
@@ -97,7 +114,12 @@ export default function Home() {
         <img
           src={backgroundImage}
           alt="Background"
-          className="h-full w-full object-cover"
+          className={`h-full w-full object-cover transition-all duration-150 ${
+            showGlitch ? 'brightness-150 contrast-200 hue-rotate-15' : ''
+          }`}
+          style={{
+            filter: showGlitch ? 'saturate(1.5)' : 'none',
+          }}
         />
         {/* Dark Gradient Overlay for Text Legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70" />
@@ -108,10 +130,25 @@ export default function Home() {
             background: "radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 100%)",
           }}
         />
+        {/* Glitch overlay */}
+        {showGlitch && (
+          <div 
+            className="absolute inset-0 mix-blend-screen opacity-30"
+            style={{
+              background: `repeating-linear-gradient(
+                0deg,
+                rgba(255, 0, 0, 0.1) 0px,
+                rgba(0, 255, 0, 0.1) 2px,
+                rgba(0, 0, 255, 0.1) 4px,
+                transparent 6px
+              )`,
+            }}
+          />
+        )}
       </div>
 
       {/* Snap Container - Only for the first two sections */}
-      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-proximity">
+      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
         {/* Section 1: Coming Soon */}
         <section
           id="coming-soon"
@@ -252,28 +289,14 @@ export default function Home() {
               </a>
 
               {/* Email */}
-              <div className="flex items-center gap-2">
-                <a
-                  href="mailto:info@amenogroup.co"
-                  className="group/link flex flex-1 items-center gap-3 text-white transition-all hover:text-white/80"
-                  data-testid="link-email"
-                >
-                  <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
-                  <span className="text-sm font-medium">info@amenogroup.co</span>
-                </a>
-                <button
-                  onClick={handleCopyEmail}
-                  className="rounded-lg border border-white/20 bg-white/10 p-2 text-white transition-all hover:bg-white/20 active:scale-95"
-                  data-testid="button-copy-email"
-                  aria-label="Copy email"
-                >
-                  {copied ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+              <a
+                href="mailto:hanna@amenogroup.co"
+                className="group/link flex items-center gap-3 text-white transition-all hover:text-white/80"
+                data-testid="link-email"
+              >
+                <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
+                <span className="text-sm font-medium">hanna@amenogroup.co</span>
+              </a>
             </div>
           </div>
         )}
