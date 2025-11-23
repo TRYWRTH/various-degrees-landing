@@ -140,9 +140,9 @@ export default function Home() {
         <section
           id="artists"
           ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen items-start justify-center px-6 pt-8 pb-24"
+          className="flex min-h-screen items-center justify-center px-6 py-12"
         >
-          <div className="flex max-w-4xl flex-col items-center gap-12 md:gap-16">
+          <div className="flex max-w-4xl flex-col items-center gap-4 md:gap-6">
             {artists.map((artist, index) => (
               <div
                 key={artist}
@@ -155,7 +155,7 @@ export default function Home() {
                 }}
               >
                 <p
-                  className="font-serif text-4xl font-light italic text-white/95 md:text-5xl lg:text-6xl"
+                  className="font-serif text-3xl font-light italic text-white/95 md:text-4xl lg:text-5xl"
                   style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
                   data-testid={`text-artist-${index}`}
                 >
