@@ -8,6 +8,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrollOpacity, setScrollOpacity] = useState(1);
+  const [showArtists, setShowArtists] = useState(false);
   
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
@@ -43,6 +44,13 @@ export default function Home() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+            
+            // When title section becomes visible, show artists after a delay
+            if (entry.target.id === "title") {
+              setTimeout(() => {
+                setShowArtists(true);
+              }, 1200);
+            }
           }
         });
       },
@@ -144,13 +152,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 2: Publication Title */}
+        {/* Section 2: Publication Title & Artists Combined */}
         <section
           id="title"
           ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-[50vh] items-center justify-center px-6 pb-8 pt-16 snap-start"
+          className="flex min-h-screen flex-col items-center justify-center px-6 py-12 snap-start"
         >
-          <div className="flex flex-col items-center gap-4 md:gap-6">
+          {/* Title */}
+          <div className="flex flex-col items-center gap-4 mb-16 md:gap-6 md:mb-20">
             <h2
               className={`
                 font-serif text-6xl font-light tracking-wider text-white transition-all duration-1000
@@ -178,24 +187,18 @@ export default function Home() {
               Remnants of a future
             </p>
           </div>
-        </section>
 
-        {/* Section 3: Artists */}
-        <section
-          id="artists"
-          ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen items-center justify-center px-6 py-12 snap-start"
-        >
+          {/* Artists - appear automatically after delay */}
           <div className="flex max-w-4xl flex-col items-center gap-4 md:gap-6">
             {artists.map((artist, index) => (
               <div
                 key={artist}
                 className={`
                   transition-all duration-1000
-                  ${isVisible("artists") ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
+                  ${showArtists ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
                 `}
                 style={{
-                  transitionDelay: isVisible("artists") ? `${index * 100}ms` : "0ms",
+                  transitionDelay: showArtists ? `${index * 100}ms` : "0ms",
                 }}
               >
                 <p
