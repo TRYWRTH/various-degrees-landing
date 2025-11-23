@@ -49,7 +49,7 @@ export default function Home() {
             if (entry.target.id === "title") {
               setTimeout(() => {
                 setShowArtists(true);
-              }, 1200);
+              }, 400);
             }
           }
         });
@@ -91,7 +91,7 @@ export default function Home() {
   const isVisible = (id: string) => visibleSections.has(id);
 
   return (
-    <div className="relative w-full bg-background h-screen overflow-y-auto snap-y snap-mandatory">
+    <div className="relative w-full bg-background">
       {/* Background Image with Fixed Position */}
       <div className="fixed inset-0 z-0">
         <img
@@ -110,8 +110,8 @@ export default function Home() {
         />
       </div>
 
-      {/* Scrolling Content */}
-      <div className="relative z-10">
+      {/* Snap Container - Only for the first two sections */}
+      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
         {/* Section 1: Coming Soon */}
         <section
           id="coming-soon"
@@ -198,7 +198,7 @@ export default function Home() {
                   ${showArtists ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
                 `}
                 style={{
-                  transitionDelay: showArtists ? `${index * 100}ms` : "0ms",
+                  transitionDelay: showArtists ? `${index * 60}ms` : "0ms",
                 }}
               >
                 <p
@@ -212,17 +212,17 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="flex flex-col items-center gap-2 px-6 py-12 text-center">
-          <p className="text-xs text-white/50 md:text-sm">
-            © 2025 Various Degrees. All rights reserved.
-          </p>
-          <p className="text-xs text-white/40 md:text-sm">
-            Designed by YRT
-          </p>
-        </footer>
       </div>
+
+      {/* Footer - Outside snap container for free scrolling */}
+      <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
+        <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
+          © 2025 Various Degrees. All rights reserved.
+        </p>
+        <p className="text-xs text-white/40 md:text-sm" data-testid="text-credit">
+          Designed by YRT
+        </p>
+      </footer>
 
       {/* Floating Contact Bubble */}
       <div
