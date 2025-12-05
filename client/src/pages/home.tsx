@@ -8,6 +8,7 @@ export default function Home() {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [showArtists, setShowArtists] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const [showGlitch, setShowGlitch] = useState(false);
   
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -45,8 +46,14 @@ export default function Home() {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => new Set(prev).add(entry.target.id));
             
-            // When title section becomes visible, show artists after a delay
-            if (entry.target.id === "title") {
+            // When description section becomes visible, show description after a delay
+            if (entry.target.id === "description") {
+              setTimeout(() => {
+                setShowDescription(true);
+              }, 400);
+            }
+            // When artists section becomes visible, show artists after a delay
+            if (entry.target.id === "artists") {
               setTimeout(() => {
                 setShowArtists(true);
               }, 400);
@@ -214,27 +221,44 @@ export default function Home() {
 
       {/* Snap Container - Only for the first two sections */}
       <div className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
-        {/* Section 1: Coming Soon */}
+        {/* Section 1: Title */}
         <section
-          id="coming-soon"
-          ref={(el) => (sectionRefs.current["coming-soon"] = el)}
+          id="title"
+          ref={(el) => (sectionRefs.current["title"] = el)}
           className="relative flex min-h-screen items-center justify-center px-6 py-16 snap-start snap-always"
           style={{
             opacity: scrollOpacity,
             transition: "opacity 0.3s ease-out",
           }}
         >
-          <h1
-            className={`
-              text-center font-serif text-4xl font-light tracking-widest text-white transition-all duration-1000
-              sm:text-5xl md:text-7xl lg:text-8xl
-              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-            `}
-            style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
-            data-testid="text-headline"
-          >
-            COMING SOON...
-          </h1>
+          <div className="flex flex-col items-center gap-3 md:gap-4">
+            <h1
+              className={`
+                text-center font-serif text-4xl font-light tracking-wider text-white transition-all duration-1000
+                sm:text-5xl md:text-7xl lg:text-8xl
+                ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+              `}
+              style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+              data-testid="text-title"
+            >
+              VARIOUS DEGREES
+            </h1>
+            <p
+              className={`
+                text-center font-serif text-lg font-light italic tracking-widest text-white/90 transition-all duration-1000
+                sm:text-xl md:text-2xl lg:text-3xl
+                ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+              `}
+              style={{ 
+                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
+                transitionDelay: "200ms",
+                letterSpacing: "0.2em"
+              }}
+              data-testid="text-subtitle"
+            >
+              Remnants of a future
+            </p>
+          </div>
 
           {/* Scroll Indicator */}
           <div
@@ -255,43 +279,61 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 2: Publication Title & Artists Combined */}
+        {/* Section 2: Description */}
         <section
-          id="title"
-          ref={(el) => (sectionRefs.current["title"] = el)}
-          className="flex min-h-screen flex-col items-center justify-center px-6 py-6 md:py-12 snap-start snap-always"
+          id="description"
+          ref={(el) => (sectionRefs.current["description"] = el)}
+          className="flex min-h-screen flex-col items-center justify-center px-6 py-12 snap-start snap-always"
         >
-          {/* Title */}
-          <div className="flex flex-col items-center gap-3 mb-10 md:gap-4 md:mb-12">
-            <h2
-              className={`
-                text-center font-serif text-4xl font-light tracking-wider text-white transition-all duration-1000
-                sm:text-5xl md:text-7xl lg:text-8xl
-                ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
-              `}
-              style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
-              data-testid="text-title"
-            >
-              VARIOUS DEGREES
-            </h2>
+          <div className="flex max-w-3xl flex-col items-center gap-8 md:gap-10">
             <p
               className={`
-                text-center font-serif text-lg font-light italic tracking-widest text-white/90 transition-all duration-1000
-                sm:text-xl md:text-2xl lg:text-3xl
-                ${isVisible("title") ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
+                sm:text-xl md:text-2xl
+                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+              `}
+              style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
+              data-testid="text-description-1"
+            >
+              A publication contemplating the effects of when the future we imagined were to be feels increasingly faraway.
+            </p>
+            <p
+              className={`
+                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
+                sm:text-xl md:text-2xl
+                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ 
                 textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-                transitionDelay: "200ms",
-                letterSpacing: "0.2em"
+                transitionDelay: "150ms"
               }}
-              data-testid="text-subtitle"
+              data-testid="text-description-2"
             >
-              Remnants of a future
+              The publication brings together a carefully curated group of artists, poets, writers and creators, who each offer their individual exploration of the theme.
+            </p>
+            <p
+              className={`
+                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
+                sm:text-xl md:text-2xl
+                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
+              `}
+              style={{ 
+                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
+                transitionDelay: "300ms"
+              }}
+              data-testid="text-description-3"
+            >
+              It is collection about dreams, about loss, about mourning, about hope. And about how we in the face of a crumbling world, can find pieces that helps us take another step towards the future.
             </p>
           </div>
+        </section>
 
-          {/* Artists - appear automatically after delay */}
+        {/* Section 3: Artists */}
+        <section
+          id="artists"
+          ref={(el) => (sectionRefs.current["artists"] = el)}
+          className="flex min-h-screen flex-col items-center justify-center px-6 py-6 md:py-12 snap-start snap-always"
+        >
           <div className="flex max-w-4xl flex-col items-center gap-3 md:gap-4">
             {artists.map((artist, index) => (
               <div
