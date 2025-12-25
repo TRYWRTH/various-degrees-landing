@@ -1,5 +1,12 @@
-import { createRoot } from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom";
 import App from "./App";
-import "./index.css";
+import { Router } from "wouter";
 
-createRoot(document.getElementById("root")!).render(<App />);
+ReactDOM.render(
+  <Router base="/various-degrees-landing">
+    <App />
+  </Router>,
+  document.getElementById("root")
+);
+
