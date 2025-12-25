@@ -22,8 +22,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        {/* Set the base to your repo name for GitHub Pages */}
-        <WouterRouter base="/various-degrees-landing">
+        {/* On Render, app is served at domain root */}
+        <WouterRouter base="/">
           <MyRoutes />
         </WouterRouter>
       </TooltipProvider>
