@@ -7,8 +7,8 @@ const root = document.getElementById("root");
 console.log("root element:", root);
 
 ReactDOM.render(
-  <Router base="/various-degrees-landing">
+  <Router>
     <App />
   </Router>,
-  document.getElementById("root"),
+  root,
 );
