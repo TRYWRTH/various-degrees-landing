@@ -23,7 +23,7 @@ A cinematic "Coming Soon" landing page for Various Degrees - an art publication 
 
 ## Contact
 
-For inquiries: hanna@amenogroup.co
+For inquiries: v.degrees@proton.me
 
 ## Development
 

@@ -398,12 +398,12 @@ export default function Home() {
 
               {/* Email */}
               <a
-                href="mailto:hanna@amenogroup.co"
+                href="mailto:v.degrees@proton.me"
                 className="group/link flex items-center gap-3 text-white transition-all hover:text-white/80"
                 data-testid="link-email"
               >
                 <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
-                <span className="text-sm font-medium">hanna@amenogroup.co</span>
+                <span className="text-sm font-medium">v.degrees@proton.me</span>
               </a>
             </div>
           </div>
