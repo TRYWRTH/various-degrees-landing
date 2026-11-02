@@ -1,0 +1,46 @@
+import { forwardRef } from "react";
+import { Section, SectionLabel } from "@/components/sections/Section";
+import { contributors } from "@/data/contributors";
+
+type ContributorsProps = {
+  revealed: boolean;
+  onSelect: (slug: string, trigger: HTMLButtonElement) => void;
+};
+
+export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function Contributors(
+  { revealed, onSelect },
+  ref,
+) {
+  return (
+    <Section id="contributors" ref={ref} aria-labelledby="contributors-label">
+      <div className="flex w-full max-w-column flex-col items-center">
+        <SectionLabel>
+          <span id="contributors-label">Contributors</span>
+        </SectionLabel>
+
+        <ul className="mt-6 flex w-full flex-col items-center md:mt-8">
+          {contributors.map((contributor, index) => (
+            <li
+              key={contributor.slug}
+              className={`
+                transition-all duration-1000 motion-reduce:transition-none
+                ${revealed ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
+              `}
+              style={{ transitionDelay: revealed ? `${index * 60}ms` : "0ms" }}
+            >
+              <button
+                type="button"
+                onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
+                aria-haspopup="dialog"
+                className="group flex min-h-[50px] items-center justify-center px-2 font-forum text-name-m text-ink md:min-h-14 md:text-name"
+                data-testid={`button-contributor-${contributor.slug}`}
+              >
+                <span className="draw-underline">{contributor.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Section>
+  );
+});

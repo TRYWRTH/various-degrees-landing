@@ -1,25 +1,19 @@
 # Various Degrees: Remnants of a Future
 
-A cinematic "Coming Soon" landing page for Various Degrees - an art publication exploring alternate timelines and futures that might never come.
+The one-page site for *Remnants of a Future*, the debut publication from Various Degrees: an art publication exploring lost futures, new dreams, and the traces they leave in between.
 
-## Features
+## Structure
 
-- 🎬 **Scroll-based storytelling** - Progressive content reveal
-- 📺 **VHS glitch effects** - Atmospheric static and distortion
-- 🎨 **Featured artists showcase** - Cascading artist names
-- 📱 **Fully responsive** - Optimized for all devices
-- ⚡ **Fast & modern** - Built with React + Vite
+One section per screen (CSS scroll snapping) over a fixed background photo:
 
-## Featured Artists
+1. **Hero** with the VHS glitch effect (runs only while the hero is in view)
+2. **Launch**: event details, RSVP, maps link and a generated `.ics` calendar file
+3. **About**
+4. **Contributors**: each name opens an accessible bio panel (data in `client/src/data/contributors.ts`)
+5. **Pre-order**
+6. **Footer**
 
-- Asmaa Azaizeh
-- James Bridle
-- Simon Denny
-- Keller Easterling
-- Forensic Architecture
-- Marina Otero Verzier
-- Andrés Jaque
-- Keren Yeala-Golan
+Design tokens (colours, type scale) live in `tailwind.config.ts`; shared links in `client/src/lib/links.ts`.
 
 ## Contact
 

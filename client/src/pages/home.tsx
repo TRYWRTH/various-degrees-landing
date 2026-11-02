@@ -1,427 +1,239 @@
-import { useState, useEffect, useRef } from "react";
-import { Mail, Instagram, ChevronDown } from "lucide-react";
-import backgroundImage from "@assets/01 Greek_1763915893499.png";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Background, type BackgroundHandle, type OverlayState } from "@/components/Background";
+import { TopBar } from "@/components/TopBar";
+import { ContributorPanel } from "@/components/ContributorPanel";
+import { Hero } from "@/components/sections/Hero";
+import { Launch } from "@/components/sections/Launch";
+import { About } from "@/components/sections/About";
+import { Contributors } from "@/components/sections/Contributors";
+import { PreOrder } from "@/components/sections/PreOrder";
+import { Footer } from "@/components/sections/Footer";
+import { contributors } from "@/data/contributors";
+
+type SectionKey = "hero" | "launch" | "about" | "contributors" | "pre-order" | "footer";
+
+const SECTION_ORDER: SectionKey[] = ["hero", "launch", "about", "contributors", "pre-order", "footer"];
+
+/** Legibility overlay ramp: the value each section settles on. */
+const OVERLAY: Record<SectionKey, OverlayState> = {
+  hero: { hero: 1, alpha: 0, blur: 0 },
+  launch: { hero: 0, alpha: 0.72, blur: 4 },
+  about: { hero: 0, alpha: 0.78, blur: 8 },
+  contributors: { hero: 0, alpha: 0.78, blur: 8 },
+  "pre-order": { hero: 0, alpha: 0.84, blur: 10 },
+  footer: { hero: 0, alpha: 0.84, blur: 10 },
+};
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+const PANEL_STATE_KEY = "vdContributor";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showContact, setShowContact] = useState(false);
-  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
-  const [scrollOpacity, setScrollOpacity] = useState(1);
-  const [showArtists, setShowArtists] = useState(false);
+  const [heroActive, setHeroActive] = useState(true);
+  const [showTopPreorder, setShowTopPreorder] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
-  const [showGlitch, setShowGlitch] = useState(false);
-  
-  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const [showArtists, setShowArtists] = useState(false);
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const backgroundRef = useRef<BackgroundHandle>(null);
+  const sectionRefs = useRef<Partial<Record<SectionKey, HTMLElement | null>>>({});
+  const panelTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const reducedMotion = useRef(false);
+
+  const setSectionRef = (key: SectionKey) => (el: HTMLElement | null) => {
+    sectionRefs.current[key] = el;
+  };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    scrollerRef.current?.scrollTo(0, 0);
+    // A reload keeps history.state; drop a stale panel marker so Close doesn't navigate back.
+    if (window.history.state?.[PANEL_STATE_KEY]) {
+      const { [PANEL_STATE_KEY]: _stale, ...rest } = window.history.state;
+      window.history.replaceState(rest, "");
+    }
     setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const fadeStart = windowHeight * 0.3;
-      const fadeEnd = windowHeight * 0.8;
-      
-      if (scrollY < fadeStart) {
-        setScrollOpacity(1);
-      } else if (scrollY > fadeEnd) {
-        setScrollOpacity(0);
-      } else {
-        const opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
-        setScrollOpacity(opacity);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => (reducedMotion.current = mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
   }, []);
 
+  // Scroll-driven state: hero fade (scrollOpacity), overlay ramp, glitch + top-bar visibility.
   useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const scrollY = scroller.scrollTop;
+      const windowHeight = scroller.clientHeight;
+      const maxScroll = scroller.scrollHeight - windowHeight;
+
+      // Hero fades out on scroll (unchanged thresholds)
+      const fadeStart = windowHeight * 0.3;
+      const fadeEnd = windowHeight * 0.8;
+      let scrollOpacity = 1;
+      if (scrollY > fadeEnd) scrollOpacity = 0;
+      else if (scrollY > fadeStart) scrollOpacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+      const hero = sectionRefs.current.hero;
+      if (hero) hero.style.opacity = String(scrollOpacity);
+
+      // Overlay ramp: interpolate between the snap positions of neighbouring sections
+      const anchors = SECTION_ORDER.map((key) => {
+        const el = sectionRefs.current[key];
+        return { key, top: el ? Math.min(el.offsetTop, maxScroll) : 0 };
+      });
+      let state = OVERLAY.hero;
+      for (let i = 0; i < anchors.length; i++) {
+        const current = anchors[i];
+        const next = anchors[i + 1];
+        if (!next || scrollY < next.top) {
+          if (!next || next.top <= current.top) {
+            state = OVERLAY[current.key];
+          } else {
+            let t = Math.min(1, Math.max(0, (scrollY - current.top) / (next.top - current.top)));
+            if (reducedMotion.current) t = t < 0.5 ? 0 : 1;
+            const a = OVERLAY[current.key];
+            const b = OVERLAY[next.key];
+            state = {
+              hero: lerp(a.hero, b.hero, t),
+              alpha: lerp(a.alpha, b.alpha, t),
+              blur: lerp(a.blur, b.blur, t),
+            };
+          }
+          break;
+        }
+      }
+      backgroundRef.current?.setOverlay(state);
+
+      // Glitch only while the hero is in view
+      setHeroActive(scrollY < windowHeight * 0.8);
+
+      // Top-bar Pre-order: after the hero is ~80% scrolled out, hidden while Pre-order is in view
+      const pre = sectionRefs.current["pre-order"];
+      let preorderInView = false;
+      if (pre) {
+        const top = pre.offsetTop;
+        const bottom = top + pre.offsetHeight;
+        const overlap = Math.min(bottom, scrollY + windowHeight) - Math.max(top, scrollY);
+        preorderInView = overlap > windowHeight * 0.25;
+      }
+      setShowTopPreorder(scrollY > windowHeight * 0.8 && !preorderInView);
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Staggered reveal-on-view for About paragraphs and contributor names
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
-            
-            // When description section becomes visible, show description after a delay
-            if (entry.target.id === "description") {
-              setTimeout(() => {
-                setShowDescription(true);
-              }, 400);
-            }
-            // When artists section becomes visible, show artists after a delay
-            if (entry.target.id === "artists") {
-              setTimeout(() => {
-                setShowArtists(true);
-              }, 400);
-            }
-          }
+          if (!entry.isIntersecting) return;
+          if (entry.target.id === "about") timers.push(setTimeout(() => setShowDescription(true), 400));
+          if (entry.target.id === "contributors") timers.push(setTimeout(() => setShowArtists(true), 400));
+          observer.unobserve(entry.target);
         });
       },
-      {
-        threshold: 0.3,
-        rootMargin: "-10% 0px -10% 0px",
-      }
+      { threshold: 0.3, rootMargin: "-10% 0px -10% 0px" },
     );
-
-    Object.values(sectionRefs.current).forEach((ref) => {
-      if (ref) observer.observe(ref);
+    (["about", "contributors"] as const).forEach((key) => {
+      const el = sectionRefs.current[key];
+      if (el) observer.observe(el);
     });
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Occasional glitch effect on background
-  useEffect(() => {
-    const triggerGlitch = () => {
-      setShowGlitch(true);
-      // Glitch lasts 1.5 seconds - slow distortion
-      setTimeout(() => setShowGlitch(false), 1500);
-    };
-
-    // First glitch happens right after "COMING SOON..." loads (around 1.5s)
-    const initialGlitch = setTimeout(triggerGlitch, 1500);
-
-    // Random glitch every 8-15 seconds after the initial one
-    const scheduleNextGlitch = () => {
-      const delay = 8000 + Math.random() * 7000;
-      return setTimeout(triggerGlitch, delay);
-    };
-
-    // Start scheduling regular glitches after the initial one
-    let timeout = setTimeout(() => {
-      timeout = scheduleNextGlitch();
-    }, 3500);
-
-    const interval = setInterval(() => {
-      clearTimeout(timeout);
-      timeout = scheduleNextGlitch();
-    }, 15000);
-
     return () => {
-      clearTimeout(initialGlitch);
-      clearTimeout(timeout);
-      clearInterval(interval);
+      observer.disconnect();
+      timers.forEach(clearTimeout);
     };
   }, []);
 
+  // Contributor panel: history entry so the back gesture closes it
+  const openContributor = useCallback((slug: string, trigger: HTMLButtonElement) => {
+    panelTriggerRef.current = trigger;
+    setActiveSlug(slug);
+    window.history.pushState({ ...(window.history.state ?? {}), [PANEL_STATE_KEY]: slug }, "");
+  }, []);
 
-  const artists = [
-    "Asmaa Azaizeh",
-    "Julio Clavijo",
-    "Sharlene Durfey",
-    "Kevin Junk",
-    "Andrea Mikyska",
-    "Tomer Rosenthal",
-    "Nicola Sebastian",
-    "Theresa Weber",
-  ];
+  const closeContributor = useCallback(() => {
+    if (window.history.state?.[PANEL_STATE_KEY]) {
+      window.history.back(); // popstate handler clears the panel
+    } else {
+      setActiveSlug(null);
+    }
+  }, []);
 
-  const isVisible = (id: string) => visibleSections.has(id);
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      setActiveSlug(e.state?.[PANEL_STATE_KEY] ?? null);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  // Lock page scroll + snapping while the panel is open; restore focus on close
+  const panelOpen = activeSlug !== null;
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    if (panelOpen) {
+      scroller.style.overflowY = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      scroller.style.overflowY = "";
+      document.body.style.overflow = "";
+      panelTriggerRef.current?.focus({ preventScroll: true });
+    }
+  }, [panelOpen]);
+
+  const activeContributor = contributors.find((c) => c.slug === activeSlug) ?? null;
 
   return (
-    <div className="relative w-full bg-background">
-      {/* Background Image with Fixed Position */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        {/* Main background image */}
-        <img
-          src={backgroundImage}
-          alt="Background"
-          className="h-full w-full object-cover"
-        />
-        
-        {/* Glitch: VHS static/snow effect */}
-        {showGlitch && (
-          <>
-            {/* Top slice - shifted right, desaturated */}
-            <img
-              src={backgroundImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover glitch-animate"
-              style={{
-                clipPath: 'polygon(0 0, 100% 0, 100% 25%, 0 25%)',
-                transform: 'translateX(30px) translateY(-5px) rotate(0.5deg)',
-                filter: 'brightness(1.2) contrast(1.5) saturate(0.3) grayscale(0.4)',
-              }}
-            />
-            {/* Upper-middle slice - shifted left, more desaturated */}
-            <img
-              src={backgroundImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover glitch-animate"
-              style={{
-                clipPath: 'polygon(0 25%, 100% 25%, 100% 50%, 0 50%)',
-                transform: 'translateX(-35px) translateY(6px) skewX(-2deg)',
-                filter: 'brightness(0.9) contrast(1.6) saturate(0.2) grayscale(0.5)',
-                animationDelay: '0.05s',
-              }}
-            />
-            {/* Lower-middle slice - shifted right and heavily skewed */}
-            <img
-              src={backgroundImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover glitch-animate"
-              style={{
-                clipPath: 'polygon(0 50%, 100% 50%, 100% 75%, 0 75%)',
-                transform: 'translateX(40px) translateY(-4px) skewX(-4deg) rotate(-0.8deg)',
-                filter: 'brightness(1.1) contrast(1.7) saturate(0.1) grayscale(0.6)',
-                animationDelay: '0.03s',
-              }}
-            />
-            {/* Bottom slice - shifted left, most desaturated */}
-            <img
-              src={backgroundImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover glitch-animate"
-              style={{
-                clipPath: 'polygon(0 75%, 100% 75%, 100% 100%, 0 100%)',
-                transform: 'translateX(-28px) translateY(8px) rotate(0.6deg)',
-                filter: 'brightness(1.15) contrast(1.5) saturate(0.2) grayscale(0.5)',
-                animationDelay: '0.07s',
-              }}
-            />
-            
-            {/* VHS static overlay - scanlines */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-30"
-              style={{
-                background: `repeating-linear-gradient(
-                  0deg,
-                  transparent 0px,
-                  rgba(255, 255, 255, 0.03) 1px,
-                  transparent 2px,
-                  transparent 3px
-                )`,
-              }}
-            />
-            
-            {/* Noise/grain overlay */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-              }}
-            />
-          </>
-        )}
-        
-        {/* Dark Gradient Overlay for Text Legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70" />
-        {/* Vignette Effect */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 100%)",
-          }}
-        />
+    <div className="relative w-full bg-night">
+      <Background ref={backgroundRef} glitchActive={heroActive && !panelOpen} />
+
+      <div aria-hidden={panelOpen || undefined}>
+        <TopBar isLoaded={isLoaded} showPreorder={showTopPreorder} />
       </div>
 
-      {/* Snap Container - Only for the first two sections */}
-      <div className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory">
-        {/* Section 1: Title */}
-        <section
-          id="title"
-          ref={(el) => (sectionRefs.current["title"] = el)}
-          className="relative flex min-h-screen items-center justify-center px-6 py-16 snap-start snap-always"
-          style={{
-            opacity: scrollOpacity,
-            transition: "opacity 0.3s ease-out",
-          }}
-        >
-          <div className="flex flex-col items-center gap-3 md:gap-4">
-            <h1
-              className={`
-                text-center font-serif text-4xl font-light tracking-wider text-white transition-all duration-1000
-                sm:text-5xl md:text-7xl lg:text-8xl
-                ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-              `}
-              style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
-              data-testid="text-title"
-            >
-              VARIOUS DEGREES
-            </h1>
-            <p
-              className={`
-                text-center font-serif text-lg font-light italic tracking-widest text-white/90 transition-all duration-1000
-                sm:text-xl md:text-2xl lg:text-3xl
-                ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-              `}
-              style={{ 
-                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-                transitionDelay: "200ms",
-                letterSpacing: "0.2em"
-              }}
-              data-testid="text-subtitle"
-            >
-              Remnants of a future
-            </p>
-          </div>
-
-          {/* Scroll Indicator */}
-          <div
-            className={`
-              absolute bottom-24 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
-              md:bottom-8
-              ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
-            `}
-            style={{ transitionDelay: "1200ms" }}
-            data-testid="scroll-indicator"
-          >
-            <p className="text-xs uppercase tracking-widest text-white/70 md:text-sm">
-              Scroll
-            </p>
-            <div className="animate-bounce">
-              <ChevronDown className="h-6 w-6 text-white/70 md:h-8 md:w-8" />
-            </div>
-          </div>
-        </section>
-
-        {/* Section 2: Description */}
-        <section
-          id="description"
-          ref={(el) => (sectionRefs.current["description"] = el)}
-          className="flex min-h-screen flex-col items-center justify-center px-6 py-12 snap-start snap-always"
-        >
-          <div className="flex max-w-3xl flex-col items-center gap-8 md:gap-10">
-            <p
-              className={`
-                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
-                sm:text-xl md:text-2xl
-                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
-              `}
-              style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
-              data-testid="text-description-1"
-            >
-              A publication contemplating the effects of when the future we imagined were to be feels increasingly faraway.
-            </p>
-            <p
-              className={`
-                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
-                sm:text-xl md:text-2xl
-                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
-              `}
-              style={{ 
-                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-                transitionDelay: "150ms"
-              }}
-              data-testid="text-description-2"
-            >
-              The publication brings together a carefully curated group of artists, poets, writers and creators, who each offer their individual exploration of the theme.
-            </p>
-            <p
-              className={`
-                text-center font-serif text-lg font-light leading-relaxed text-white/90 transition-all duration-1000
-                sm:text-xl md:text-2xl
-                ${showDescription ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
-              `}
-              style={{ 
-                textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-                transitionDelay: "300ms"
-              }}
-              data-testid="text-description-3"
-            >
-              It is collection about dreams, about loss, about mourning, about hope. And about how we in the face of a crumbling world, can find pieces that helps us take another step towards the future.
-            </p>
-          </div>
-        </section>
-
-        {/* Section 3: Artists */}
-        <section
-          id="artists"
-          ref={(el) => (sectionRefs.current["artists"] = el)}
-          className="flex min-h-screen flex-col items-center justify-center px-6 py-6 md:py-12 snap-start snap-always"
-        >
-          <div className="flex max-w-4xl flex-col items-center gap-3 md:gap-4">
-            {artists.map((artist, index) => (
-              <div
-                key={artist}
-                className={`
-                  transition-all duration-1000
-                  ${showArtists ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}
-                `}
-                style={{
-                  transitionDelay: showArtists ? `${index * 60}ms` : "0ms",
-                }}
-              >
-                <p
-                  className="text-center font-serif text-xl font-light italic text-white/95 sm:text-2xl md:text-3xl lg:text-4xl"
-                  style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)" }}
-                  data-testid={`text-artist-${index}`}
-                >
-                  {artist}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="relative z-10 flex flex-col items-center gap-2 px-6 py-12 text-center">
-          <p className="text-xs text-white/50 md:text-sm" data-testid="text-copyright">
-            © 2025 Various Degrees. All rights reserved.
-          </p>
-          <p className="text-xs text-white/40 md:text-sm" data-testid="text-credit">
-            Designed by YRT
-          </p>
-        </footer>
-      </div>
-
-      {/* Floating Contact Bubble */}
-      <div
-        className={`
-          fixed bottom-6 right-6 z-20 transition-all duration-1000 md:bottom-8 md:right-8
-          ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
-        `}
-        style={{ transitionDelay: "1600ms" }}
+      <main
+        ref={scrollerRef}
+        aria-hidden={panelOpen || undefined}
+        className="snap-scroller relative z-10 h-[100svh] snap-y snap-mandatory overflow-y-auto overflow-x-hidden"
       >
-        {/* Expanded Contact Info */}
-        {showContact && (
-          <div
-            className="mb-3 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-lg"
-            data-testid="contact-info"
-          >
-            <div className="flex flex-col gap-3">
-              {/* Instagram */}
-              <a
-                href="https://www.instagram.com/various.degrees/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/link flex items-center gap-3 text-white transition-all hover:text-white/80"
-                data-testid="link-instagram"
-              >
-                <Instagram className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
-                <span className="text-sm font-medium">@various.degrees</span>
-              </a>
+        <Hero ref={setSectionRef("hero")} isLoaded={isLoaded} />
+        <Launch ref={setSectionRef("launch")} />
+        <About ref={setSectionRef("about")} revealed={showDescription} />
+        <Contributors
+          ref={setSectionRef("contributors")}
+          revealed={showArtists}
+          onSelect={openContributor}
+        />
+        <PreOrder ref={setSectionRef("pre-order")} />
+        <Footer ref={setSectionRef("footer")} />
+      </main>
 
-              {/* Email */}
-              <a
-                href="mailto:v.degrees@proton.me"
-                className="group/link flex items-center gap-3 text-white transition-all hover:text-white/80"
-                data-testid="link-email"
-              >
-                <Mail className="h-5 w-5 flex-shrink-0 transition-transform group-hover/link:scale-110" />
-                <span className="text-sm font-medium">v.degrees@proton.me</span>
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Toggle Button */}
-        <button
-          onClick={() => setShowContact(!showContact)}
-          className="group ml-auto flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-lg transition-all duration-300 hover:scale-105 hover:border-white/30 hover:bg-white/20 active:scale-95"
-          data-testid="button-contact"
-          aria-label={showContact ? "Hide contact information" : "Show contact information"}
-        >
-          <Mail className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
-          <span className="text-sm font-medium text-white">
-            {showContact ? "Close" : "Contact"}
-          </span>
-        </button>
-      </div>
+      {activeContributor && (
+        <ContributorPanel contributor={activeContributor} onClose={closeContributor} />
+      )}
     </div>
   );
 }
