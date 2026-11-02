@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Various Degrees · Remnants of a future</title>
+  <meta name="description" content="Remnants of a future: the debut publication from Various Degrees. Launch on Wednesday 18 November at desirelines books, Berlin. Pre-order now.">
+  <meta name="theme-color" content="#1c1c21">
+
+  <!-- Same typefaces as the live site: Playfair Display (serif) and Inter (UI text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- Tokens (taken from the live site) ---------- */
+    :root {
+      --bg: #1c1c21;                         /* hsl(240 8% 12%) */
+      --fg: #f4f3f0;                         /* hsl(40 10% 95%) */
+      --fg-muted: rgba(244, 243, 240, 0.75);
+      --fg-faint: rgba(244, 243, 240, 0.62);
+      --line: rgba(244, 243, 240, 0.18);
+      --line-strong: rgba(244, 243, 240, 0.6);
+
+      --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+      --gutter: 1.5rem;
+      --measure: 40rem;
+      --header-h: 3.5rem;
+      --tap: 3rem;                           /* 48px, above the 44px minimum */
+    }
+
+    /* ---------- Base ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-h) + 1rem);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Fixed background, as on the live site. A fixed div is used instead of
+       background-attachment: fixed, which iOS Safari ignores. */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.66) 50%, rgba(0,0,0,.78)),
+        url("attached_assets/01%20Greek_1763915893499.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0);
+      white-space: nowrap; border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: var(--gutter);
+      top: -4rem;
+      z-index: 100;
+      padding: .75rem 1rem;
+      background: var(--fg);
+      color: var(--bg);
+      font-size: .875rem;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: .75rem; }
+
+    /* ---------- Shared type ---------- */
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: .75rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(1.75rem, 6vw, 2.75rem);
+      line-height: 1.2;
+      letter-spacing: .02em;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .lede {
+      font-family: var(--serif);
+      font-size: clamp(1.125rem, 4.2vw, 1.5rem);
+      line-height: 1.65;
+      color: rgba(244, 243, 240, .9);
+      text-align: center;
+      text-wrap: pretty;
+    }
+
+    .body-text {
+      font-size: 1rem;
+      color: var(--fg-muted);
+      text-align: center;
+      text-wrap: pretty;
+    }
+
+    /* ---------- Buttons & links ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--tap);
+      padding: .75rem 1.75rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-family: var(--sans);
+      font-size: .9375rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      line-height: 1.2;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .btn--primary {
+      background: var(--fg);
+      color: var(--bg);
+    }
+    .btn--primary:hover { background: #ffffff; }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--fg);
+      border-color: var(--line-strong);
+    }
+    .btn--outline:hover {
+      background: rgba(244, 243, 240, .08);
+      border-color: var(--fg);
+    }
+
+    .btn--block {
+      width: 100%;
+      max-width: 22rem;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 .25rem;
+      font-size: .9375rem;
+      color: var(--fg);
+      text-decoration: underline;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: .3em;
+    }
+    .text-link:hover { text-decoration-color: var(--fg); }
+
+    /* ---------- Sticky header ---------- */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      height: calc(var(--header-h) + env(safe-area-inset-top));
+      padding: env(safe-area-inset-top) var(--gutter) 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(28, 28, 33, .94);
+      border-bottom: 1px solid var(--line);
+      /* Hidden until the hero is scrolled past. visibility keeps it out of the tab order. */
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .25s ease, visibility 0s linear .25s;
+    }
+    .site-header.is-visible {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity .25s ease, visibility 0s;
+    }
+    .site-header__name {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-family: var(--serif);
+      font-size: 1.0625rem;
+      letter-spacing: .04em;
+      text-decoration: none;
+    }
+    .site-header .btn {
+      min-height: 44px;
+      padding: .5rem 1.25rem;
+      font-size: .875rem;
+    }
+
+    /* ---------- Layout ---------- */
+    .section {
+      padding: 5.5rem var(--gutter);
+    }
+    .section__inner {
+      max-width: var(--measure);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .section + .section { border-top: 1px solid var(--line); }
+
+    /* ---------- 1. Hero ---------- */
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem var(--gutter);
+      text-align: center;
+    }
+    .hero__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .hero__title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.25rem, 10vw, 6rem);
+      line-height: 1.1;
+      letter-spacing: .05em;
+      text-shadow: 0 4px 20px rgba(0,0,0,.6);
+    }
+    .hero__subtitle {
+      margin-top: .75rem;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.125rem, 4.5vw, 1.875rem);
+      letter-spacing: .2em;
+      color: rgba(244, 243, 240, .9);
+      text-shadow: 0 2px 12px rgba(0,0,0,.5);
+    }
+    .hero__meta {
+      margin-top: 2.5rem;
+      max-width: 22rem;
+      font-size: .8125rem;
+      letter-spacing: .06em;
+      line-height: 1.8;
+      color: var(--fg-muted);
+    }
+    .hero__meta span { white-space: nowrap; }
+    .hero__actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .75rem;
+      width: 100%;
+    }
+
+    /* ---------- 3. About ---------- */
+    .about .section__inner { gap: 2rem; }
+
+    /* ---------- 4. Contributors ---------- */
+    .contributors .section__inner { max-width: 60rem; gap: 2.5rem; }
+    .contributor-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      border-top: 1px solid var(--line);
+    }
+    .contributor {
+      border-bottom: 1px solid var(--line);
+      padding: .25rem 0 1.25rem;
+    }
+    .contributor__heading { font-size: inherit; font-weight: inherit; }
+    .contributor__toggle {
+      width: 100%;
+      min-height: var(--tap);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0 .25rem;
+      background: none;
+      border: 0;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .contributor__name {
+      display: block;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.375rem, 5.5vw, 1.75rem);
+      line-height: 1.25;
+    }
+    .contributor__handle {
+      font-style: normal;
+      font-family: var(--sans);
+      font-size: .8125rem;
+      letter-spacing: .02em;
+      color: var(--fg-faint);
+      white-space: nowrap;
+    }
+    .contributor__role {
+      display: block;
+      margin-top: .375rem;
+    }
+    .contributor__icon {
+      flex: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-top: .35rem;
+      position: relative;
+    }
+    /* Plain plus/minus, no animation */
+    .contributor__icon::before,
+    .contributor__icon::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 14px; height: 1px;
+      background: var(--fg);
+      transform: translate(-50%, -50%);
+    }
+    .contributor__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .contributor__toggle[aria-expanded="true"] .contributor__icon::after { display: none; }
+
+    .contributor__short {
+      margin-top: .5rem;
+      color: var(--fg-muted);
+      font-size: .9375rem;
+      /* two-line preview */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .contributor.is-open .contributor__short {
+      -webkit-line-clamp: unset;
+      display: block;
+      overflow: visible;
+    }
+    .contributor__full {
+      margin-top: .75rem;
+      color: var(--fg-muted);
+      font-size: .9375rem;
+    }
+    .contributor__full[hidden] { display: none; }
+
+    /* ---------- 5. Launch ---------- */
+    .event-details {
+      font-style: normal;
+      font-family: var(--serif);
+      font-size: clamp(1.125rem, 4.5vw, 1.375rem);
+      line-height: 1.6;
+      text-align: center;
+    }
+    .event-details span { display: block; }
+    .launch-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      width: 100%;
+      margin-top: .5rem;
+    }
+    .launch-actions__secondary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .25rem 1.5rem;
+    }
+
+    /* ---------- 6. Pre-order ---------- */
+    .fine-print {
+      font-size: .8125rem;
+      line-height: 1.7;
+      color: var(--fg-faint);
+      text-align: center;
+      max-width: 26rem;
+    }
+    .fine-print a {
+      color: var(--fg-muted);
+      text-underline-offset: .25em;
+      /* keep the inline email link tappable without breaking line rhythm */
+      display: inline-block;
+      padding: .75rem .1rem;
+      margin: -.75rem 0;
+    }
+
+    /* ---------- 7. Support ---------- */
+    .amounts {
+      list-style: none;
+      margin: .5rem 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+      width: 100%;
+      max-width: 22rem;
+    }
+    .amounts .btn { width: 100%; padding-inline: 1rem; }
+
+    /* ---------- 8. Footer ---------- */
+    .site-footer {
+      padding: 3rem var(--gutter) calc(3rem + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: .8125rem;
+      color: var(--fg-faint);
+    }
+    .site-footer p { line-height: 1.8; }
+    .site-footer a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 .25rem;
+      color: var(--fg-muted);
+      text-underline-offset: .25em;
+    }
+    .footer-meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: .5rem; }
+    .footer-legal { margin-top: .5rem; display: flex; justify-content: center; gap: 1.25rem; }
+
+    /* ---------- Larger screens ---------- */
+    @media (min-width: 48rem) {
+      :root { --gutter: 2.5rem; --header-h: 4rem; }
+      .section { padding-block: 8rem; }
+      .hero__meta { max-width: none; font-size: .875rem; }
+      .hero__actions { flex-direction: row; justify-content: center; gap: 1.5rem; }
+      .hero__actions .btn--block { width: auto; }
+
+      .contributor-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 3rem;
+        border-top: 0;
+      }
+      .contributor { border-top: 1px solid var(--line); border-bottom: 0; }
+      .contributor:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+
+      .launch-actions .btn--block { width: auto; }
+      .amounts { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 36rem; }
+      .pre-order .btn--block { width: auto; }
+    }
+
+    /* ---------- Motion preferences ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+      }
+    }
+
+    /* ---------- Forced colors (Windows high contrast) ---------- */
+    @media (forced-colors: active) {
+      .btn { border: 1px solid ButtonText; }
+    }
+  </style>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- 2. Sticky header: revealed once the hero has been scrolled past -->
+  <header class="site-header" id="site-header">
+    <a class="site-header__name" href="#top">Various Degrees</a>
+    <a class="btn btn--primary" href="#pre-order">Pre-order</a>
+  </header>
+
+  <main id="main">
+
+    <!-- 1. Hero -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__inner">
+        <h1 class="hero__title" id="hero-title">VARIOUS DEGREES</h1>
+        <p class="hero__subtitle">Remnants of a future</p>
+
+        <p class="hero__meta">
+          <span>Publication launch ·</span>
+          <span>Wednesday 18 November ·</span>
+          <span>desirelines books, Berlin</span>
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--block" href="[STRIPE PREORDER LINK]">Pre-order the publication</a>
+          <a class="text-link" href="https://luma.com/zclqrs5o">RSVP for the launch&nbsp;<span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. About -->
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="section__inner">
+        <h2 class="visually-hidden" id="about-title">About the publication</h2>
+        <p class="lede">A publication contemplating what happens when the future we imagined feels increasingly far away.</p>
+        <p class="lede">The publication brings together a carefully curated group of artists, poets, writers and creators, who each offer their individual exploration of the theme.</p>
+        <p class="lede">It is a collection about dreams, about loss, about mourning, about hope. And about how, in the face of a crumbling world, we can find pieces that help us take another step towards the future.</p>
+      </div>
+    </section>
+
+    <!-- 4. Contributors -->
+    <section class="section contributors" id="contributors" aria-labelledby="contributors-title">
+      <div class="section__inner">
+        <h2 class="section-title" id="contributors-title">Contributors</h2>
+
+        <!-- Without JavaScript every full bio stays visible. With JavaScript each one becomes an accordion panel. -->
+        <ul class="contributor-list">
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-azaizeh">
+                <span>
+                  <span class="contributor__name">Asmaa Azaizeh</span>
+                  <span class="contributor__role eyebrow">Poet, writer, editor</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Author of four poetry collections and the memoir “A Year of Small Museums”. Her collection “Don’t Believe Me If I Talk of War” has been translated into Dutch and Swedish.</p>
+            <div class="contributor__full" id="bio-azaizeh">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-clavijo">
+                <span>
+                  <span class="contributor__name">Julio Clavijo <span class="contributor__handle">(11v151131_M06)</span></span>
+                  <span class="contributor__role eyebrow">Generative &amp; AI art</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Uses AI and generative algorithms to create images that act as windows into a parallel reality, drawing on rituals and ancient artefacts from around the world.</p>
+            <div class="contributor__full" id="bio-clavijo">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-durfey">
+                <span>
+                  <span class="contributor__name">Sharlene Durfey</span>
+                  <span class="contributor__role eyebrow">Multidisciplinary artist</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Berlin-based artist whose practice centers on fungi as teachers that decompose, connect and communicate.</p>
+            <div class="contributor__full" id="bio-durfey">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-junk">
+                <span>
+                  <span class="contributor__name">Kevin Junk</span>
+                  <span class="contributor__role eyebrow">Poet, novelist</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Berlin-based writer working at the intersection of queerness, class and climate. Author of “RE: re: AW: Liebe” (2022) and “Saturns Sommer” (2023).</p>
+            <div class="contributor__full" id="bio-junk">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-mikyska">
+                <span>
+                  <span class="contributor__name">Andrea Mikyska</span>
+                  <span class="contributor__role eyebrow">New media artist</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Explores the meeting of nature, technology and constant change through “reverse archaeology”, a method of reconsidering current forms to discover new perceptions.</p>
+            <div class="contributor__full" id="bio-mikyska">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-rosenthal">
+                <span>
+                  <span class="contributor__name">Tomer Rosenthal</span>
+                  <span class="contributor__role eyebrow">Artist, drawing</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Berlin-based artist whose drawings place ancient symbols alongside contemporary imagery. Exhibited at the Tel Aviv Museum of Art and Traces: The Biennale for Drawing.</p>
+            <div class="contributor__full" id="bio-rosenthal">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-sebastian">
+                <span>
+                  <span class="contributor__name">Nicola Sebastian</span>
+                  <span class="contributor__role eyebrow">Writer</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Filipino writer, surfer and National Geographic Explorer exploring “islandness”. Published in Orion, Atmos, Vogue and The Virginia Quarterly Review.</p>
+            <div class="contributor__full" id="bio-sebastian">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+
+          <li class="contributor">
+            <h3 class="contributor__heading">
+              <button class="contributor__toggle" type="button" aria-expanded="false" aria-controls="bio-weber">
+                <span>
+                  <span class="contributor__name">Theresa Weber</span>
+                  <span class="contributor__role eyebrow">Collage, textile, performance</span>
+                </span>
+                <span class="contributor__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <p class="contributor__short">Berlin-based artist questioning power hierarchies and fixed categorizations through material collage, textile installation and collaborative performance.</p>
+            <div class="contributor__full" id="bio-weber">
+              <p>[FULL BIOS]</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. Launch -->
+    <section class="section launch" id="launch" aria-labelledby="launch-title">
+      <div class="section__inner">
+        <h2 class="section-title" id="launch-title">Join us for the launch</h2>
+
+        <address class="event-details">
+          <span><time datetime="2026-11-18T18:30">Wednesday 18 November, 18:30</time> to <time datetime="2026-11-18T21:00">21:00</time></span>
+          <span>desirelines books, [STREET ADDRESS], Berlin</span>
+        </address>
+
+        <p class="body-text">Celebrate the first issue of Remnants of a Future, the debut publication from Various Degrees. Meet some of the artists and contributors, flip through the pages, and stay for conversation about lost futures, new dreams, and the traces they leave in between. Drinks, good company, and a few fragments of the future to take home.</p>
+
+        <div class="launch-actions">
+          <a class="btn btn--outline btn--block" href="https://luma.com/zclqrs5o">RSVP on Luma</a>
+          <div class="launch-actions__secondary">
+            <a class="text-link" href="[MAPS LINK]">Open in Maps</a>
+            <a class="text-link" href="[ICS LINK]">Add to calendar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Pre-order -->
+    <section class="section pre-order" id="pre-order" aria-labelledby="pre-order-title">
+      <div class="section__inner">
+        <h2 class="section-title" id="pre-order-title">Pre-order Remnants of a Future</h2>
+
+        <p class="lede">[ONE SENTENCE: format, pages, edition, language]</p>
+
+        <p class="body-text">[PRICE] · [SHIPPING INFO]. Expected delivery: [DATE]. Pre-orders can also be collected at the launch.</p>
+
+        <a class="btn btn--primary btn--block" href="[STRIPE PREORDER LINK]">Pre-order now</a>
+
+        <p class="fine-print">Secure payment via Stripe. You’ll receive a confirmation by email. Questions? <a href="mailto:[EMAIL]">[EMAIL]</a></p>
+      </div>
+    </section>
+
+    <!-- 7. Support -->
+    <section class="section support" id="support" aria-labelledby="support-title">
+      <div class="section__inner">
+        <h2 class="section-title" id="support-title">Support the publication and the artists</h2>
+
+        <p class="body-text">Not after a copy? You can also help us cover [WHAT FUNDS COVER]. Every contribution goes directly to [SPECIFIC USE].</p>
+
+        <!-- Each button needs its own link from [STRIPE SUPPORT LINKS] -->
+        <ul class="amounts" aria-label="Choose a contribution">
+          <li><a class="btn btn--outline" href="[STRIPE SUPPORT LINKS]">[AMOUNT 1]</a></li>
+          <li><a class="btn btn--outline" href="[STRIPE SUPPORT LINKS]">[AMOUNT 2]</a></li>
+          <li><a class="btn btn--outline" href="[STRIPE SUPPORT LINKS]">[AMOUNT 3]</a></li>
+          <li><a class="btn btn--outline" href="[STRIPE SUPPORT LINKS]">[CUSTOM AMOUNT]</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- 8. Footer -->
+  <footer class="site-footer">
+    <p class="footer-meta">
+      <span>Various Degrees</span>
+      <span aria-hidden="true">·</span>
+      <a href="mailto:[EMAIL]">[EMAIL]</a>
+      <span aria-hidden="true">·</span>
+      <span>Instagram <a href="[INSTAGRAM LINK]">[@HANDLE]</a></span>
+    </p>
+    <p class="footer-legal">
+      <a href="[IMPRINT LINK]">Imprint</a>
+      <a href="[PRIVACY LINK]">Privacy</a>
+    </p>
+  </footer>
+
+  <script>
+    (function () {
+      // Sticky header: show once the hero has left the viewport.
+      var header = document.getElementById('site-header');
+      var hero = document.getElementById('top');
+      if ('IntersectionObserver' in window && header && hero) {
+        new IntersectionObserver(function (entries) {
+          header.classList.toggle('is-visible', !entries[0].isIntersecting);
+        }, { threshold: 0 }).observe(hero);
+      } else if (header) {
+        header.classList.add('is-visible');
+      }
+
+      // Contributor accordion. Panels start open in the HTML and are only
+      // collapsed here, so the bios stay readable without JavaScript.
+      var toggles = document.querySelectorAll('.contributor__toggle');
+      Array.prototype.forEach.call(toggles, function (btn) {
+        var item = btn.closest('.contributor');
+        var panel = document.getElementById(btn.getAttribute('aria-controls'));
+        if (!panel) return;
+        panel.hidden = true;
+        btn.addEventListener('click', function () {
+          var open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!open));
+          panel.hidden = open;
+          item.classList.toggle('is-open', !open);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
