@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'static preview, no install'",
+  "buildCommand": "rm -rf preview-dist && mkdir -p preview-dist/attached_assets && cp various-degrees.html preview-dist/index.html && cp 'attached_assets/01 Greek_1763915893499.png' preview-dist/attached_assets/",
+  "outputDirectory": "preview-dist"
+}
