@@ -1,7 +1,10 @@
 import { forwardRef } from "react";
 import { Section, SectionHeading } from "@/components/sections/Section";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { MAPS_URL, RSVP_URL } from "@/lib/links";
+import { DESIRELINES_INSTAGRAM_URL, MAPS_URL, RSVP_URL } from "@/lib/links";
+
+const detailLink =
+  "inline-flex min-h-11 items-center underline decoration-ink-muted/60 decoration-1 underline-offset-[5px] transition-colors duration-160 ease-out hover:text-ink-muted";
 
 export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
   return (
@@ -18,26 +21,39 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           good company, and a few fragments of the future to take home.
         </p>
 
-        <p className="mt-8 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:w-max md:flex-row md:gap-3 md:mt-12 md:whitespace-nowrap md:text-label">
-          <span>Wednesday 18 November, 18:30</span>
-          <span aria-hidden="true" className="hidden md:inline">
+        <p className="mt-8 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:mt-12 md:text-label lg:w-max lg:flex-row lg:gap-3 lg:whitespace-nowrap">
+          <span className="inline-flex min-h-11 items-center">Wednesday 18 November, 18:30</span>
+          <span aria-hidden="true" className="hidden lg:inline">
+            ·
+          </span>
+          <a
+            href={DESIRELINES_INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener"
+            aria-label="desirelines books on Instagram (opens in a new tab)"
+            className={detailLink}
+            data-testid="link-venue-instagram"
+          >
+            desirelines books
+          </a>
+          <span aria-hidden="true" className="hidden lg:inline">
             ·
           </span>
           <a
             href={MAPS_URL}
             target="_blank"
             rel="noopener"
-            className="inline-flex min-h-11 items-center underline decoration-ink-muted/60 decoration-1 underline-offset-[5px] transition-colors duration-160 ease-out hover:text-ink-muted"
+            aria-label="Fraenkelufer 28, 10999 Berlin in Google Maps (opens in a new tab)"
+            className={detailLink}
             data-testid="link-maps"
           >
-            desirelines books, Berlin
+            Fraenkelufer 28, 10999 Berlin
           </a>
         </p>
 
         <PrimaryButton href={RSVP_URL} className="mt-3 md:mt-4" data-testid="button-rsvp">
           RSVP
         </PrimaryButton>
-
       </div>
     </Section>
   );
