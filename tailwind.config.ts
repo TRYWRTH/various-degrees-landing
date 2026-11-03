@@ -123,10 +123,9 @@ export default {
         "body-m": ["16px", { lineHeight: "1.65" }],
         "panel-bio": ["19px", { lineHeight: "1.75" }],
         "panel-bio-m": ["16px", { lineHeight: "1.65" }],
-        // Top-bar wordmark (Playfair, like the hero title)
-        wordmark: ["15px", { lineHeight: "1", letterSpacing: "0.12em" }],
-        // 13px, shrinking a touch below ~406px wide so the top bar fits on small phones
-        "wordmark-m": ["min(13px, 3.2vw)", { lineHeight: "1", letterSpacing: "0.1em" }],
+        // Top bar: wordmark and Contact share one style; smaller on phones
+        nav: ["12px", { lineHeight: "1", letterSpacing: "0.2em" }],
+        "nav-m": ["10px", { lineHeight: "1", letterSpacing: "0.16em" }],
         // Launch date and venue
         detail: ["14px", { lineHeight: "1.5", letterSpacing: "0.2em" }],
         // 13px, shrinking a touch below ~366px wide so each line fits on one row
@@ -135,7 +134,7 @@ export default {
         "label-m": ["11px", { lineHeight: "1.5", letterSpacing: "0.2em" }],
         button: ["13px", { lineHeight: "1", letterSpacing: "0.14em" }],
         "button-compact": ["12px", { lineHeight: "1", letterSpacing: "0.14em" }],
-        "button-compact-m": ["11px", { lineHeight: "1", letterSpacing: "0.14em" }],
+        "button-compact-m": ["10px", { lineHeight: "1", letterSpacing: "0.14em" }],
         link: ["15px", { lineHeight: "1.4" }],
         note: ["13px", { lineHeight: "1.5" }],
         footer: ["14px", { lineHeight: "1.5" }],

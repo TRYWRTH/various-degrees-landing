@@ -30,7 +30,7 @@ export function PrimaryButton({
         "transition-colors duration-160 ease-out hover:bg-ink-hover",
         size === "default" && "h-12 w-full px-10 text-button md:w-auto",
         size === "compact" &&
-          "hit-area h-[34px] px-5 text-button-compact-m md:h-9 md:px-6 md:text-button-compact",
+          "hit-area h-[30px] px-4 text-button-compact-m md:h-9 md:px-6 md:text-button-compact",
         className,
       )}
       {...rest}

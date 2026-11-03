@@ -45,7 +45,7 @@ export function ContactPopover({ className }: ContactPopoverProps) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={popoverId}
-        className="inline-flex min-h-11 items-center font-sans text-label-m font-medium uppercase text-ink md:text-label"
+        className="inline-flex min-h-11 items-center font-sans text-nav-m font-medium uppercase text-ink transition-colors duration-160 hover:text-ink-muted md:text-nav"
         data-testid="button-contact"
       >
         Contact

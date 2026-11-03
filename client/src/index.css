@@ -279,11 +279,11 @@
     }
   }
 
-  /* Expands a compact control's hit area to at least 44px */
+  /* Expands a compact control's hit area to at least 44px (the 30px mobile pill + 2×7px) */
   .hit-area::before {
     content: "";
     position: absolute;
-    inset: -6px -4px;
+    inset: -7px -4px;
   }
 
   /* Contributor names: thin underline that draws in left-to-right */
