@@ -26,7 +26,7 @@ export const Order = forwardRef<HTMLElement, OrderProps>(function Order({ reveal
           <p className="font-sans text-body-m text-ink-muted md:text-body">
             Copies are available from €15. Any extra support goes directly toward funding the project
             and the artists involved. Contributions of €150 or more include a copy of the publication
-            plus an original, limited-run artwork selected from our artists.
+            plus an original, limited artwork from our artists.
           </p>
         </Reveal>
 
