@@ -7,7 +7,7 @@ The one-page site for *Remnants of a Future*, the debut publication from Various
 One section per screen (CSS scroll snapping) over a fixed background photo:
 
 1. **Hero** with the VHS glitch effect (runs only while the hero is in view)
-2. **Launch**: event details, RSVP, maps link and a generated `.ics` calendar file
+2. **Launch**: event details (venue links to Google Maps) and RSVP via Luma
 3. **About**
 4. **Contributors**: each name opens an accessible bio panel (data in `client/src/data/contributors.ts`)
 5. **Pre-order**

@@ -128,7 +128,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             className="slim-scrollbar mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-gutter md:mt-8 md:px-24"
             style={{ paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}
           >
-            <p className="mx-auto max-w-[70ch] font-sans text-panel-bio-m text-ink-muted md:text-panel-bio">
+            <p className="mx-auto max-w-[70ch] hyphens-auto text-justify font-sans text-panel-bio-m text-ink-muted md:text-panel-bio">
               {contributor.bio}
             </p>
           </div>
@@ -142,10 +142,6 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             )}
           />
         </div>
-
-        <p className="pointer-events-none mt-4 hidden font-sans text-note text-ink-muted md:block">
-          Press Esc or click outside to close
-        </p>
       </div>
     </div>
   );
