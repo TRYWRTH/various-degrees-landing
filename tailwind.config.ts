@@ -90,7 +90,6 @@ export default {
           fade: "rgba(20, 18, 15, 0.9)",
           clear: "rgba(20, 18, 15, 0)",
           border: "rgba(243, 240, 234, 0.16)",
-          divider: "rgba(243, 240, 234, 0.10)",
           text: "#C2BCB1",
         },
         hairline: {
@@ -156,10 +155,6 @@ export default {
         240: "240ms",
       },
       keyframes: {
-        "panel-up": {
-          from: { transform: "translateY(100%)" },
-          to: { transform: "translateY(0)" },
-        },
         "panel-in": {
           from: { opacity: "0", transform: "translateY(12px) scale(0.985)" },
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
@@ -178,7 +173,6 @@ export default {
         },
       },
       animation: {
-        "panel-up": "panel-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both",
         "panel-in": "panel-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both",
         "fade-in": "fade-in 200ms ease-out both",
         "accordion-down": "accordion-down 0.2s ease-out",

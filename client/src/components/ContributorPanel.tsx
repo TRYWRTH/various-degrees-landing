@@ -14,13 +14,12 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
 /**
- * Accessible contributor dialog.
- * Desktop: centred modal over a blurred scrim. Mobile: full-screen sheet that slides up.
- * Only the bio scrolls; label, name and Close stay pinned.
+ * Accessible contributor dialog: a centred box over a blurred scrim on every screen size
+ * (phones get a narrower box with tighter padding). Only the bio scrolls; label, name and
+ * Close stay pinned.
  */
 export function ContributorPanel({ contributor, onClose }: ContributorPanelProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
   const bioRef = useRef<HTMLDivElement>(null);
   const photoRef = useRef<HTMLImageElement>(null);
   const [showFade, setShowFade] = useState(true);
@@ -41,7 +40,9 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
   usePanelBackdropOffset(dialogRef, photoRef);
 
   useEffect(() => {
-    closeRef.current?.focus({ preventScroll: true });
+    // Focus the dialog itself rather than Close: iOS Safari draws the focus ring on a
+    // programmatically focused button even after a tap. Tab then moves to Close.
+    dialogRef.current?.focus({ preventScroll: true });
     window.addEventListener("resize", updateFade);
     return () => window.removeEventListener("resize", updateFade);
   }, [updateFade]);
@@ -62,7 +63,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
       const active = document.activeElement;
-      const inside = dialogRef.current.contains(active);
+      const inside = dialogRef.current.contains(active) && active !== dialogRef.current;
       if (e.shiftKey && (active === first || !inside)) {
         e.preventDefault();
         last.focus();
@@ -77,7 +78,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Scrim (desktop). Mobile is a full-screen sheet, so the scrim is never visible there. */}
+      {/* Scrim: click/tap outside the box to close */}
       <div
         className="absolute inset-0 animate-fade-in bg-night/55 backdrop-blur-md motion-reduce:animate-none"
         onClick={onClose}
@@ -85,16 +86,18 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
         data-testid="panel-scrim"
       />
 
-      <div className="pointer-events-none relative flex h-full flex-col md:items-center md:justify-center">
+      <div className="pointer-events-none relative flex h-full flex-col items-center justify-center">
         <div
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby={nameId}
+          tabIndex={-1}
           className={cn(
-            "panel-glass pointer-events-auto relative flex h-full w-full flex-col overflow-hidden",
-            "animate-panel-up motion-reduce:animate-none md:animate-panel-in",
-            "md:h-auto md:max-h-[min(700px,100svh-96px)] md:w-[min(820px,100vw-48px)] md:rounded-2xl md:border md:border-glass-border",
+            "panel-glass pointer-events-auto relative flex flex-col overflow-hidden rounded-2xl border border-glass-border outline-none",
+            "animate-panel-in motion-reduce:animate-none",
+            "max-h-[min(640px,100svh-112px)] w-[calc(100vw-32px)]",
+            "md:max-h-[min(700px,100svh-96px)] md:w-[min(820px,100vw-48px)]",
           )}
           data-testid="contributor-panel"
         >
@@ -102,14 +105,9 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <img ref={photoRef} src={backgroundImage} alt="" aria-hidden="true" className="panel-glass-photo" />
           <div className="panel-glass-tint" aria-hidden="true" />
 
-          {/* Close: own bar on mobile, floating top-right on desktop; text only, no pill.
-              z-3 keeps it above the name block, which overlaps it on desktop. */}
-          <div
-            className="relative z-[3] flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:border-0 md:p-0"
-            style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
-          >
+          {/* Close: floating top-right, text only. z-3 keeps it above the name block. */}
+          <div className="absolute right-2 top-2 z-[3] md:right-4 md:top-4">
             <button
-              ref={closeRef}
               type="button"
               onClick={onClose}
               className="inline-flex h-11 items-center gap-2 px-2 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:text-ink-muted"
@@ -119,7 +117,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             </button>
           </div>
 
-          <div className="relative z-[2] flex shrink-0 flex-col items-center px-gutter pt-8 text-center md:px-24 md:pt-20">
+          <div className="relative z-[2] flex shrink-0 flex-col items-center px-6 pt-14 text-center md:px-24 md:pt-20">
             {contributor.discipline && (
               <SectionLabel className="mb-4">{contributor.discipline}</SectionLabel>
             )}
@@ -156,8 +154,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             onScroll={updateFade}
             tabIndex={0}
             aria-label={`About ${contributor.name}`}
-            className="slim-scrollbar relative z-[2] mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-gutter md:mt-8 md:px-24"
-            style={{ paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}
+            className="slim-scrollbar relative z-[2] mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-12 md:mt-8 md:px-24 md:pb-[72px]"
           >
             <p className="mx-auto max-w-[70ch] hyphens-auto text-justify font-sans text-panel-bio-m text-glass-text md:text-panel-bio">
               {contributor.bio}
@@ -168,7 +165,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <div
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[72px] bg-gradient-to-t from-glass-fade to-glass-clear transition-opacity duration-200",
+              "pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-12 bg-gradient-to-t md:h-[72px] from-glass-fade to-glass-clear transition-opacity duration-200",
               showFade ? "opacity-100" : "opacity-0",
             )}
           />
