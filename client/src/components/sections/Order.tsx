@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { Reveal, Section, SectionTitle } from "@/components/sections/Section";
+import { Footer } from "@/components/sections/Footer";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ORDER_URL } from "@/lib/links";
 
@@ -15,8 +16,10 @@ export const Order = forwardRef<HTMLElement, OrderProps>(function Order({ reveal
       aria-labelledby="order-heading"
       tabIndex={-1}
       className="outline-none"
+      // The last screen ends with the footer strip pinned near its bottom edge
+      style={{ paddingBottom: "calc(16px + env(safe-area-inset-bottom))" }}
     >
-      <div className="flex w-full max-w-body flex-col items-center">
+      <div className="flex w-full max-w-body flex-1 flex-col items-center justify-center">
         <SectionTitle id="order-heading">Order your copy</SectionTitle>
 
         <Reveal show={revealed} index={0} className="mt-6 md:mt-8">
@@ -33,6 +36,8 @@ export const Order = forwardRef<HTMLElement, OrderProps>(function Order({ reveal
           </PrimaryButton>
         </Reveal>
       </div>
+
+      <Footer />
     </Section>
   );
 });

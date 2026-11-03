@@ -1,5 +1,3 @@
-import { forwardRef } from "react";
-
 /** Scroll back to the hero (the page scrolls inside the snap container). */
 function backToTop() {
   const hero = document.getElementById("hero");
@@ -9,18 +7,17 @@ function backToTop() {
   hero.focus({ preventScroll: true });
 }
 
-/** Short snap-end block: "Back to top" and the credits (contact lives in the top bar). */
-export const Footer = forwardRef<HTMLElement>(function Footer(_props, ref) {
+/**
+ * Page-end strip at the bottom of the last (Order) screen: "Back to top" and the
+ * credits. Contact lives in the top bar.
+ */
+export function Footer() {
   return (
-    <footer
-      id="footer"
-      ref={ref}
-      className="relative flex h-[calc(120px+env(safe-area-inset-bottom))] snap-end flex-col items-center justify-center px-6 pb-[env(safe-area-inset-bottom)] text-center font-sans md:h-[200px]"
-    >
+    <footer role="contentinfo" className="flex flex-col items-center text-center font-sans">
       <button
         type="button"
         onClick={backToTop}
-        className="group mb-2 inline-flex min-h-11 items-center gap-2 font-sans text-note text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:mb-4"
+        className="group mb-1 inline-flex min-h-11 items-center gap-2 font-sans text-note text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:mb-2"
         data-testid="button-back-to-top"
       >
         <span className="underline decoration-ink-muted/60 decoration-1 underline-offset-4">
@@ -51,4 +48,4 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_props, ref) {
       </div>
     </footer>
   );
-});
+}

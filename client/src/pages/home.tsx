@@ -7,12 +7,11 @@ import { Launch } from "@/components/sections/Launch";
 import { About } from "@/components/sections/About";
 import { Contributors } from "@/components/sections/Contributors";
 import { Order } from "@/components/sections/Order";
-import { Footer } from "@/components/sections/Footer";
 import { contributors } from "@/data/contributors";
 
-type SectionKey = "hero" | "launch" | "about" | "contributors" | "order" | "footer";
+type SectionKey = "hero" | "launch" | "about" | "contributors" | "order";
 
-const SECTION_ORDER: SectionKey[] = ["hero", "launch", "about", "contributors", "order", "footer"];
+const SECTION_ORDER: SectionKey[] = ["hero", "launch", "about", "contributors", "order"];
 
 /** Legibility overlay ramp: the value each section settles on. */
 const OVERLAY: Record<SectionKey, OverlayState> = {
@@ -21,7 +20,6 @@ const OVERLAY: Record<SectionKey, OverlayState> = {
   about: { hero: 0, alpha: 0.78, blur: 8 },
   contributors: { hero: 0, alpha: 0.78, blur: 8 },
   "order": { hero: 0, alpha: 0.84, blur: 10 },
-  footer: { hero: 0, alpha: 0.84, blur: 10 },
 };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -227,7 +225,6 @@ export default function Home() {
           onSelect={openContributor}
         />
         <Order ref={setSectionRef("order")} revealed={revealed.has("order")} />
-        <Footer ref={setSectionRef("footer")} />
       </main>
 
       {activeContributor && (
