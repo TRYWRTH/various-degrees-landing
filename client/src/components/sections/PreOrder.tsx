@@ -1,7 +1,13 @@
 import { forwardRef } from "react";
-import { Section, SectionHeading } from "@/components/sections/Section";
+import { Section, SectionHeading, labelClass } from "@/components/sections/Section";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { PREORDER_URL } from "@/lib/links";
+
+const SHIPPING_RATES: [string, string][] = [
+  ["Germany", "€4.50"],
+  ["EU", "€8.50"],
+  ["Rest of World", "€15"],
+];
 
 export const PreOrder = forwardRef<HTMLElement>(function PreOrder(_props, ref) {
   return (
@@ -24,17 +30,32 @@ export const PreOrder = forwardRef<HTMLElement>(function PreOrder(_props, ref) {
           artists.
         </p>
 
-        <div className="mt-6 flex flex-col gap-2 font-sans text-note text-ink-muted md:mt-8">
-          <p className="text-balance" data-testid="text-shipping">
-            Shipping: <span className="whitespace-nowrap">Germany €4.50</span> ·{" "}
-            <span className="whitespace-nowrap">EU €8.50</span> ·{" "}
-            <span className="whitespace-nowrap">Rest of the world €15</span>
-          </p>
-          <p className="text-balance" data-testid="text-shipping-info">
-            When making the payment, please add your shipping details (full name, address, postal
-            code and email address), or let us know you'll pick up your copy at the launch.
-          </p>
-        </div>
+        <dl className="mt-8 flex flex-col gap-6 md:mt-10">
+          <div className="flex flex-col items-center gap-2">
+            <dt className={labelClass}>Shipping rates</dt>
+            <dd data-testid="text-shipping">
+              <ul className="flex flex-col items-center gap-1 font-sans text-info text-ink md:flex-row md:flex-wrap md:justify-center md:gap-x-5">
+                {SHIPPING_RATES.map(([region, price]) => (
+                  <li key={region} className="whitespace-nowrap">
+                    {region}: <span className="text-ink-muted">{price}</span>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+
+          <div className="flex flex-col items-center gap-2">
+            <dt className={labelClass}>Payment note</dt>
+            <dd
+              className="text-balance font-sans text-info text-ink-muted"
+              data-testid="text-shipping-info"
+            >
+              Please include your full name, address, postal code, and email, or mention{" "}
+              <span className="whitespace-nowrap text-ink">“Launch Pickup”</span> to collect your
+              copy in person.
+            </dd>
+          </div>
+        </dl>
 
         <PrimaryButton href={PREORDER_URL} className="mt-8 md:mt-12" data-testid="button-preorder">
           Pre-order

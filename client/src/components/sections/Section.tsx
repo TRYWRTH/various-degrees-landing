@@ -27,14 +27,12 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
   );
 });
 
+export const labelClass =
+  "font-sans text-label-m font-medium uppercase text-ink-muted md:text-label";
+
 export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <p
-      className={cn(
-        "font-sans text-label-m font-medium uppercase text-ink-muted md:text-label",
-        className,
-      )}
-    >
+    <p className={cn(labelClass, className)}>
       {children}
     </p>
   );

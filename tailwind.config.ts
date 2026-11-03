@@ -128,6 +128,7 @@ export default {
         "button-compact-m": ["11px", { lineHeight: "1", letterSpacing: "0.14em" }],
         link: ["15px", { lineHeight: "1.4" }],
         note: ["13px", { lineHeight: "1.5" }],
+        info: ["15px", { lineHeight: "1.6" }],
         footer: ["14px", { lineHeight: "1.5" }],
         "footer-m": ["11px", { lineHeight: "1.5" }],
       },

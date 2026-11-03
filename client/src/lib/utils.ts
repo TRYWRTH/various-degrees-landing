@@ -13,7 +13,7 @@ const twMerge = extendTailwindMerge({
             "statement", "statement-m", "preorder", "preorder-m", "name", "name-m",
             "panel-name", "panel-name-m", "body", "body-m", "panel-bio", "panel-bio-m",
             "label", "label-m", "button", "button-compact", "button-compact-m",
-            "link", "note", "footer", "footer-m",
+            "link", "note", "info", "footer", "footer-m",
           ],
         },
       ],

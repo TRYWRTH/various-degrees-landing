@@ -21,11 +21,8 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           good company, and a few fragments of the future to take home.
         </p>
 
-        <p className="mt-8 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:mt-12 md:text-label lg:w-max lg:flex-row lg:gap-3 lg:whitespace-nowrap">
+        <p className="mt-8 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:mt-12 md:text-label">
           <span className="inline-flex min-h-11 items-center">Wednesday 18 November, 18:30</span>
-          <span aria-hidden="true" className="hidden lg:inline">
-            ·
-          </span>
           <a
             href={DESIRELINES_INSTAGRAM_URL}
             target="_blank"
@@ -36,9 +33,6 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           >
             desirelines books
           </a>
-          <span aria-hidden="true" className="hidden lg:inline">
-            ·
-          </span>
           <a
             href={MAPS_URL}
             target="_blank"
