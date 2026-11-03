@@ -27,16 +27,16 @@ export function Footer() {
 
       {/* Mobile: one line */}
       <p className="text-footer-m md:hidden">
-        <span className="text-ink/35" data-testid="text-copyright">
+        <span className="text-ink/60" data-testid="text-copyright">
           © 2026 Various Degrees. All rights reserved.
         </span>
-        <span className="text-ink/25"> · Designed by YRT</span>
+        <span className="text-ink/50"> · Designed by YRT</span>
       </p>
 
       {/* Desktop: two centred lines */}
       <div className="hidden flex-col items-center gap-2 text-footer md:flex">
-        <p className="text-ink/35">© 2026 Various Degrees. All rights reserved.</p>
-        <p className="text-ink/25" data-testid="text-credit">
+        <p className="text-ink/60">© 2026 Various Degrees. All rights reserved.</p>
+        <p className="text-ink/50" data-testid="text-credit">
           Designed by YRT
         </p>
       </div>

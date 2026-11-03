@@ -20,13 +20,13 @@ export const About = forwardRef<HTMLElement, AboutProps>(function About({ reveal
       <div className="flex w-full max-w-body flex-col items-center">
         <SectionTitle id="about-label">About</SectionTitle>
 
-        <div className="mt-6 flex flex-col gap-4 md:mt-8 md:gap-5">
+        <div className="mt-8 flex flex-col gap-5 md:mt-10 md:gap-6">
           {paragraphs.map((text, index) => (
             <p
               key={index}
               className={`
-                font-sans text-body-m text-ink-muted transition-all duration-1000 motion-reduce:transition-none
-                md:text-body
+                font-sans [text-wrap:pretty] transition-all duration-1000 motion-reduce:transition-none
+                ${index === 0 ? "mb-1 text-lead-m text-ink md:mb-2 md:text-lead" : "text-body-m text-ink-muted md:text-body"}
                 ${revealed ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ transitionDelay: `${index * 150}ms` }}

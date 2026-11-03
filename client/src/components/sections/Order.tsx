@@ -22,15 +22,18 @@ export const Order = forwardRef<HTMLElement, OrderProps>(function Order({ reveal
       <div className="flex w-full max-w-body flex-1 flex-col items-center justify-center">
         <SectionTitle id="order-heading">Order your copy</SectionTitle>
 
-        <Reveal show={revealed} index={0} className="mt-6 md:mt-8">
-          <p className="font-sans text-body-m text-ink-muted md:text-body">
-            Copies are available from €15. Any extra support goes directly toward funding the project
+        <Reveal show={revealed} index={0} className="mt-8 md:mt-10">
+          <p className="font-sans text-lead-m text-ink [text-wrap:balance] md:text-lead">
+            Copies are available from <span className="text-sand">€15</span>.
+          </p>
+          <p className="mt-4 font-sans text-body-m text-ink-muted [text-wrap:pretty] md:mt-5 md:text-body">
+            Any extra support goes directly toward funding the project
             and the artists involved. Contributions of €150 or more include a copy of the publication
             plus an original, limited artwork from our artists.
           </p>
         </Reveal>
 
-        <Reveal show={revealed} index={1} className="mt-8 flex w-full justify-center md:mt-12">
+        <Reveal show={revealed} index={1} className="mt-10 flex w-full justify-center">
           <PrimaryButton href={ORDER_URL} data-testid="button-order">
             Order here
           </PrimaryButton>

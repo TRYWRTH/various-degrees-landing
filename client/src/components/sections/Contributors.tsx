@@ -16,7 +16,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       <div className="flex w-full max-w-column flex-col items-center">
         <SectionTitle id="contributors-label">Contributors</SectionTitle>
 
-        <ul className="mt-6 flex w-full flex-col items-center md:mt-8">
+        <ul className="mt-8 flex w-full flex-col items-center md:mt-10">
           {contributors.map((contributor, index) => (
             <li
               key={contributor.slug}
@@ -30,7 +30,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
                 type="button"
                 onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
                 aria-haspopup="dialog"
-                className="group flex min-h-11 items-center justify-center px-2 font-sans text-body-m text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:min-h-12 md:text-body"
+                className="group flex min-h-12 items-center justify-center px-2 font-sans text-name-m text-ink/85 transition-colors duration-160 ease-out hover:text-ink md:min-h-14 md:text-name"
                 data-testid={`button-contributor-${contributor.slug}`}
               >
                 <span className="draw-underline">{contributor.name}</span>

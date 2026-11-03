@@ -43,7 +43,7 @@ export function SectionTitle({ id, children }: { id: string; children: ReactNode
   return (
     <h2
       id={id}
-      className="text-balance font-sans text-title-m font-medium uppercase text-ink-muted md:text-title"
+      className="text-balance font-sans text-eyebrow-m font-medium uppercase text-sand md:text-eyebrow"
     >
       {children}
     </h2>

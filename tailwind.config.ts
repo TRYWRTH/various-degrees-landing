@@ -82,6 +82,7 @@ export default {
           hover: "#D8D3C9",
         },
         "on-ink": "#121211",
+        sand: "#CDBFA6",
         night: "rgb(8 8 7)",
         surface: "#161614",
         // Contributor panel: "smoked glass" surface
@@ -142,7 +143,23 @@ export default {
         link: ["15px", { lineHeight: "1.4" }],
         note: ["13px", { lineHeight: "1.5" }],
         footer: ["14px", { lineHeight: "1.5" }],
-        "footer-m": ["11px", { lineHeight: "1.5" }],
+        "footer-m": ["12px", { lineHeight: "1.5" }],
+        // Section eyebrows (small caps headings above each section)
+        eyebrow: ["13px", { lineHeight: "1.4", letterSpacing: "0.26em" }],
+        "eyebrow-m": ["12px", { lineHeight: "1.4", letterSpacing: "0.26em" }],
+        // Lead paragraphs (first paragraph of About, price line of Order)
+        lead: ["24px", { lineHeight: "1.45" }],
+        "lead-m": ["20px", { lineHeight: "1.45" }],
+        // Contributor names
+        name: ["22px", { lineHeight: "1.3" }],
+        "name-m": ["20px", { lineHeight: "1.3" }],
+        // Launch: date, venue and address
+        date: ["16px", { lineHeight: "1.4", letterSpacing: "0.14em" }],
+        "date-m": ["min(15px, 3.9vw)", { lineHeight: "1.4", letterSpacing: "0.1em" }],
+        venue: ["14px", { lineHeight: "1.5", letterSpacing: "0.16em" }],
+        "venue-m": ["min(13px, 3.55vw)", { lineHeight: "1.5", letterSpacing: "0.16em" }],
+        address: ["13px", { lineHeight: "1.5", letterSpacing: "0.14em" }],
+        "address-m": ["min(12px, 3.3vw)", { lineHeight: "1.5", letterSpacing: "0.14em" }],
       },
       spacing: {
         topbar: "72px",
