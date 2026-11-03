@@ -114,7 +114,7 @@ export default function Home() {
       // Glitch only while the hero is in view
       setHeroActive(scrollY < windowHeight * 0.8);
 
-      // Top-bar Order: after the hero is ~80% scrolled out, hidden while Order is in view
+      // Top-bar Order: visible everywhere (hero included) except while the Order section is in view
       const pre = sectionRefs.current["order"];
       let orderInView = false;
       if (pre) {
@@ -124,7 +124,7 @@ export default function Home() {
         orderInView = overlap > windowHeight * 0.25;
       }
       setPastHero(scrollY > windowHeight * 0.8);
-      setShowTopOrder(scrollY > windowHeight * 0.8 && !orderInView);
+      setShowTopOrder(!orderInView);
     };
 
     const onScroll = () => {

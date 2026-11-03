@@ -8,7 +8,7 @@ type TopBarProps = {
   isLoaded: boolean;
   /** Wordmark: hidden on the hero, which already shows the title large. */
   showWordmark: boolean;
-  /** Compact Order (jumps to the Order section): hidden on the hero and while the Order section is in view. */
+  /** Compact Order (jumps to the Order section): hidden only while the Order section is in view. */
   showOrder: boolean;
 };
 
