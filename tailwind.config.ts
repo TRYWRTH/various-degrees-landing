@@ -90,8 +90,6 @@ export default {
           fade: "rgba(20, 18, 15, 0.9)",
           clear: "rgba(20, 18, 15, 0)",
           border: "rgba(243, 240, 234, 0.16)",
-          pill: "rgba(243, 240, 234, 0.10)",
-          "pill-hover": "rgba(243, 240, 234, 0.16)",
           divider: "rgba(243, 240, 234, 0.10)",
           text: "#C2BCB1",
         },

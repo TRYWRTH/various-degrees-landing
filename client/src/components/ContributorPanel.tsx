@@ -102,16 +102,17 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <img ref={photoRef} src={backgroundImage} alt="" aria-hidden="true" className="panel-glass-photo" />
           <div className="panel-glass-tint" aria-hidden="true" />
 
-          {/* Close: own bar on mobile, floating top-right pill on desktop */}
+          {/* Close: own bar on mobile, floating top-right on desktop; text only, no pill.
+              z-3 keeps it above the name block, which overlaps it on desktop. */}
           <div
-            className="relative z-[2] flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:border-0 md:p-0"
+            className="relative z-[3] flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:border-0 md:p-0"
             style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
           >
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-glass-pill px-5 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:bg-glass-pill-hover"
+              className="inline-flex h-11 items-center gap-2 px-2 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:text-ink-muted"
               data-testid="button-panel-close"
             >
               Close <span aria-hidden="true" className="text-[16px] leading-none">×</span>
