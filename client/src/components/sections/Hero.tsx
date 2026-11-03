@@ -14,7 +14,8 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ isLoaded 
     <section
       id="hero"
       ref={ref}
-      className="relative flex min-h-[100svh] snap-start snap-always items-center justify-center px-6 py-16"
+      tabIndex={-1}
+      className="relative flex outline-none min-h-[100svh] snap-start snap-always items-center justify-center px-6 py-16"
       style={{ transition: "opacity 0.3s ease-out" }}
     >
       <div className="flex flex-col items-center gap-3 md:gap-4">
