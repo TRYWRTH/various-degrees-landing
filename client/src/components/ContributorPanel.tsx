@@ -118,6 +118,26 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             >
               {contributor.name}
             </h2>
+            {contributor.link && (
+              <a
+                href={contributor.link.href}
+                target="_blank"
+                rel="noopener"
+                aria-label={`${contributor.name}${contributor.link.label.startsWith("@") ? " on Instagram" : ", website"} (opens in a new tab)`}
+                className="group mt-2 inline-flex min-h-11 items-center gap-1.5 font-sans text-link text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:mt-3"
+                data-testid="link-contributor"
+              >
+                <span className="underline decoration-ink-muted/60 decoration-1 underline-offset-[6px] group-hover:decoration-ink">
+                  {contributor.link.label}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="inline-block transition-transform duration-160 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                >
+                  ↗
+                </span>
+              </a>
+            )}
           </div>
 
           <div
