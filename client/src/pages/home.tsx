@@ -29,6 +29,7 @@ const PANEL_STATE_KEY = "vdContributor";
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [heroActive, setHeroActive] = useState(true);
+  const [pastHero, setPastHero] = useState(false);
   const [showTopOrder, setShowTopOrder] = useState(false);
   const [revealed, setRevealed] = useState<ReadonlySet<SectionKey>>(new Set());
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
@@ -122,6 +123,7 @@ export default function Home() {
         const overlap = Math.min(bottom, scrollY + windowHeight) - Math.max(top, scrollY);
         orderInView = overlap > windowHeight * 0.25;
       }
+      setPastHero(scrollY > windowHeight * 0.8);
       setShowTopOrder(scrollY > windowHeight * 0.8 && !orderInView);
     };
 
@@ -208,7 +210,7 @@ export default function Home() {
       <Background ref={backgroundRef} glitchActive={heroActive && !panelOpen} />
 
       <div aria-hidden={panelOpen || undefined}>
-        <TopBar isLoaded={isLoaded} showOrder={showTopOrder} />
+        <TopBar isLoaded={isLoaded} showWordmark={pastHero} showOrder={showTopOrder} />
       </div>
 
       <main

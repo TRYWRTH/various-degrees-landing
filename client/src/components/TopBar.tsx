@@ -1,26 +1,30 @@
 import type { MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 type TopBarProps = {
+  isLoaded: boolean;
+  /** Wordmark: hidden on the hero, which already shows the title large. */
+  showWordmark: boolean;
   /** Compact Order (jumps to the Order section): hidden on the hero and while the Order section is in view. */
   showOrder: boolean;
-  isLoaded: boolean;
 };
 
-/** Scroll to the Order section (details + order form) instead of leaving the site. */
-function goToOrder(e: MouseEvent<HTMLAnchorElement>) {
-  const section = document.getElementById("order");
-  if (!section) return;
-  e.preventDefault();
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  section.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  section.focus({ preventScroll: true });
-}
+/** In-page links: scroll inside the snap container instead of jumping to the hash. */
+const goTo = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+  if (scrollToSection(id)) e.preventDefault();
+};
 
-/** Fixed, fully transparent top bar: no background, no blur, no border. */
-export function TopBar({ showOrder, isLoaded }: TopBarProps) {
+const fade = (visible: boolean) =>
+  visible ? "pointer-events-auto visible opacity-100" : "invisible opacity-0";
+
+/**
+ * Fixed, fully transparent top bar: no background, no blur, no border.
+ * Left: "Various Degrees" wordmark (back to the top). Right: Contact, then Order.
+ */
+export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
   return (
     <header
       className={cn(
@@ -30,29 +34,47 @@ export function TopBar({ showOrder, isLoaded }: TopBarProps) {
       style={{ paddingTop: "env(safe-area-inset-top)", transitionDelay: "1200ms" }}
     >
       <div
-        className="flex h-topbar-m items-center justify-between md:h-topbar"
+        className="flex h-topbar-m items-center justify-between gap-3 md:h-topbar"
         style={{
           paddingLeft: "max(var(--topbar-pl), env(safe-area-inset-left))",
           paddingRight: "max(var(--topbar-pr), env(safe-area-inset-right))",
         }}
       >
-        <ContactPopover className="pointer-events-auto" />
-
-        <PrimaryButton
-          href="#order"
-          external={false}
-          onClick={goToOrder}
-          size="compact"
-          aria-hidden={!showOrder}
-          tabIndex={showOrder ? undefined : -1}
+        <a
+          href="#hero"
+          onClick={goTo("hero")}
+          aria-hidden={!showWordmark}
+          tabIndex={showWordmark ? undefined : -1}
           className={cn(
-            "transition-[opacity,visibility,background-color] duration-240 ease-out",
-            showOrder ? "pointer-events-auto visible opacity-100" : "invisible opacity-0",
+            "inline-flex min-h-11 items-center whitespace-nowrap font-display text-wordmark-m uppercase text-ink",
+            "transition-[opacity,visibility,color] duration-240 ease-out hover:text-ink-muted md:text-wordmark",
+            fade(showWordmark),
           )}
-          data-testid="button-order-topbar"
+          data-testid="link-wordmark"
         >
-          Order
-        </PrimaryButton>
+          Various Degrees
+        </a>
+
+        {/* ~24px between Contact and Order; 16px on very narrow phones so the bar fits */}
+        <div className="flex items-center gap-6 max-[359px]:gap-4">
+          <ContactPopover className="pointer-events-auto" />
+
+          <PrimaryButton
+            href="#order"
+            external={false}
+            onClick={goTo("order")}
+            size="compact"
+            aria-hidden={!showOrder}
+            tabIndex={showOrder ? undefined : -1}
+            className={cn(
+              "transition-[opacity,visibility,background-color] duration-240 ease-out max-[359px]:px-4",
+              fade(showOrder),
+            )}
+            data-testid="button-order-topbar"
+          >
+            Order
+          </PrimaryButton>
+        </div>
       </div>
     </header>
   );

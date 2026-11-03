@@ -124,6 +124,10 @@ export default {
         "body-m": ["16px", { lineHeight: "1.65" }],
         "panel-bio": ["19px", { lineHeight: "1.75" }],
         "panel-bio-m": ["16px", { lineHeight: "1.65" }],
+        // Top-bar wordmark (Playfair, like the hero title)
+        wordmark: ["15px", { lineHeight: "1", letterSpacing: "0.12em" }],
+        // 13px, shrinking a touch below ~406px wide so the top bar fits on small phones
+        "wordmark-m": ["min(13px, 3.2vw)", { lineHeight: "1", letterSpacing: "0.1em" }],
         // Launch date and venue
         detail: ["14px", { lineHeight: "1.5", letterSpacing: "0.2em" }],
         // 13px, shrinking a touch below ~366px wide so each line fits on one row

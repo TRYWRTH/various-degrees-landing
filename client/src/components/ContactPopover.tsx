@@ -6,7 +6,7 @@ type ContactPopoverProps = {
   className?: string;
 };
 
-/** "Contact" text button in the top bar + the email/Instagram popover, anchored top-left. */
+/** "Contact" text button in the top bar + the email/Instagram popover, anchored under it (right-aligned). */
 export function ContactPopover({ className }: ContactPopoverProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -54,7 +54,7 @@ export function ContactPopover({ className }: ContactPopoverProps) {
       {open && (
         <div
           id={popoverId}
-          className="absolute left-0 top-full animate-fade-in motion-reduce:animate-none"
+          className="absolute right-0 top-full animate-fade-in motion-reduce:animate-none"
           style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.6)" }}
           data-testid="contact-info"
         >
