@@ -30,7 +30,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
                 type="button"
                 onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
                 aria-haspopup="dialog"
-                className="group flex min-h-[50px] items-center justify-center px-2 font-sans text-name-m text-ink md:min-h-14 md:text-name"
+                className="group flex min-h-11 items-center justify-center px-2 font-sans text-body-m text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:min-h-12 md:text-body"
                 data-testid={`button-contributor-${contributor.slug}`}
               >
                 <span className="draw-underline">{contributor.name}</span>
