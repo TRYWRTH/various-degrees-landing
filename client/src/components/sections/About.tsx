@@ -17,18 +17,18 @@ const paragraphs: ReactNode[] = [
 export const About = forwardRef<HTMLElement, AboutProps>(function About({ revealed }, ref) {
   return (
     <Section id="about" ref={ref} aria-labelledby="about-label">
-      <div className="flex w-full max-w-column flex-col items-center">
+      <div className="flex w-full max-w-body flex-col items-center">
         <SectionLabel>
           <span id="about-label">About</span>
         </SectionLabel>
 
-        <div className="mt-8 flex flex-col gap-[22px] md:gap-7">
+        <div className="mt-6 flex flex-col gap-4 md:mt-8 md:gap-5">
           {paragraphs.map((text, index) => (
             <p
               key={index}
               className={`
-                font-forum text-statement-m text-ink transition-all duration-1000 motion-reduce:transition-none
-                md:text-statement
+                font-sans text-body-m text-ink-muted transition-all duration-1000 motion-reduce:transition-none
+                md:text-body
                 ${revealed ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"}
               `}
               style={{ transitionDelay: `${index * 150}ms` }}

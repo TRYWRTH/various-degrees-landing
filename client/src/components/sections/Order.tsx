@@ -12,12 +12,12 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
       tabIndex={-1}
       className="outline-none"
     >
-      <div className="flex w-full max-w-order flex-col items-center">
+      <div className="flex w-full max-w-body flex-col items-center">
         <SectionHeading>
           <span id="order-heading">Order your copy</span>
         </SectionHeading>
 
-        <p className="mt-6 font-forum text-order-m text-ink md:mt-8 md:text-order">
+        <p className="mt-6 font-sans text-body-m text-ink-muted md:mt-8 md:text-body">
           Copies are available from €15. Any extra support goes directly toward funding the project
           and the artists involved. Contributions of €150 or more include a copy of the publication
           plus an original, limited-run artwork selected from our artists.
