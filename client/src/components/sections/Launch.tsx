@@ -23,7 +23,9 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           good company, and a few fragments of the future to take home.
         </p>
 
-        <p className="mt-8 flex flex-col items-center gap-2.5 font-sans text-label-m font-medium uppercase text-ink md:mt-12 md:text-label">
+        {/* Margins differ so the *visible* gaps above and below the details match:
+            the paragraph's line spacing already adds space above the date. */}
+        <p className="mt-[26px] flex flex-col items-center gap-2.5 font-sans text-label-m font-medium uppercase text-ink md:mt-8 md:text-label">
           <span>Wednesday 18 November, 18:30</span>
           <a
             href={DESIRELINES_INSTAGRAM_URL}
@@ -47,7 +49,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           </a>
         </p>
 
-        <PrimaryButton href={RSVP_URL} className="mt-6 md:mt-7" data-testid="button-rsvp">
+        <PrimaryButton href={RSVP_URL} className="mt-9 md:mt-10" data-testid="button-rsvp">
           RSVP
         </PrimaryButton>
       </div>
