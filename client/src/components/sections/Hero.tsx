@@ -46,20 +46,20 @@ export const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ isLoaded 
         </p>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator: on phones small, faint and near the bottom edge, just a hint */}
       <div
         className={`
-          absolute bottom-24 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 transition-all duration-1000
-          md:bottom-8
+          absolute bottom-[calc(20px+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 transition-all duration-1000
+          md:bottom-8 md:gap-2
           ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
         `}
         style={{ transitionDelay: "1200ms" }}
         data-testid="scroll-indicator"
         aria-hidden="true"
       >
-        <p className="text-xs uppercase tracking-widest text-ink/70 md:text-sm">Scroll</p>
+        <p className="text-[10px] uppercase tracking-widest text-ink/50 md:text-sm md:text-ink/70">Scroll</p>
         <div className="animate-bounce">
-          <ChevronDown className="h-6 w-6 text-ink/70 md:h-8 md:w-8" />
+          <ChevronDown className="h-4 w-4 text-ink/50 md:h-8 md:w-8 md:text-ink/70" />
         </div>
       </div>
     </section>
