@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import type { Contributor } from "@/data/contributors";
 import { SectionLabel } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
@@ -105,15 +106,16 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <img ref={photoRef} src={backgroundImage} alt="" aria-hidden="true" className="panel-glass-photo" />
           <div className="panel-glass-tint" aria-hidden="true" />
 
-          {/* Close: floating top-right, text only. z-3 keeps it above the name block. */}
+          {/* Close: an × only, floating top-right (44px tap target). z-3 keeps it above the name block. */}
           <div className="absolute right-2 top-2 z-[3] md:right-4 md:top-4">
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-11 items-center gap-2 px-2 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:text-ink-muted"
+              aria-label="Close"
+              className="inline-flex h-11 w-11 items-center justify-center text-ink transition-colors duration-160 hover:text-ink-muted"
               data-testid="button-panel-close"
             >
-              Close <span aria-hidden="true" className="text-[16px] leading-none">×</span>
+              <X aria-hidden="true" className="h-5 w-5" strokeWidth={1.5} />
             </button>
           </div>
 
