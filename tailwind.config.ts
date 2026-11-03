@@ -126,6 +126,10 @@ export default {
         // Top bar: wordmark and Contact share one style; smaller on phones
         nav: ["12px", { lineHeight: "1", letterSpacing: "0.2em" }],
         "nav-m": ["10px", { lineHeight: "1", letterSpacing: "0.16em" }],
+        // The wordmark: same style, one step larger so it reads as the site name
+        // (shrinks a touch below ~370px wide so the bar still fits)
+        wordmark: ["14px", { lineHeight: "1", letterSpacing: "0.2em" }],
+        "wordmark-m": ["min(12px, 3.25vw)", { lineHeight: "1", letterSpacing: "0.16em" }],
         // Launch date and venue
         detail: ["14px", { lineHeight: "1.5", letterSpacing: "0.2em" }],
         // 13px, shrinking a touch below ~366px wide so each line fits on one row

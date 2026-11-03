@@ -11,7 +11,7 @@ const twMerge = extendTailwindMerge({
           text: [
             "display", "display-m", "subtitle", "subtitle-m", "title", "title-m",
             "panel-name", "panel-name-m", "body", "body-m", "panel-bio", "panel-bio-m",
-            "nav", "nav-m", "detail", "detail-m", "label", "label-m", "button", "button-compact", "button-compact-m",
+            "nav", "nav-m", "wordmark", "wordmark-m", "detail", "detail-m", "label", "label-m", "button", "button-compact", "button-compact-m",
             "link", "note", "footer", "footer-m",
           ],
         },

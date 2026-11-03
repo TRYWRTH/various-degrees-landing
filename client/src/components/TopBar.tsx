@@ -23,7 +23,8 @@ const fade = (visible: boolean) =>
 /**
  * Fixed, fully transparent top bar: no background, no blur, no border.
  * Left: "Various Degrees" wordmark (back to the top). Right: Contact, then Order.
- * Wordmark and Contact share one text style (Inter caps); everything is smaller on phones.
+ * Wordmark and Contact share one text style (Inter caps), the wordmark one step larger;
+ * everything is smaller on phones.
  */
 export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
   return (
@@ -47,8 +48,8 @@ export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
           aria-hidden={!showWordmark}
           tabIndex={showWordmark ? undefined : -1}
           className={cn(
-            "inline-flex min-h-11 items-center whitespace-nowrap font-sans text-nav-m font-medium uppercase text-ink",
-            "transition-[opacity,visibility,color] duration-240 ease-out hover:text-ink-muted md:text-nav",
+            "inline-flex min-h-11 items-center whitespace-nowrap font-sans text-wordmark-m font-medium uppercase text-ink",
+            "transition-[opacity,visibility,color] duration-240 ease-out hover:text-ink-muted md:text-wordmark",
             fade(showWordmark),
           )}
           data-testid="link-wordmark"
