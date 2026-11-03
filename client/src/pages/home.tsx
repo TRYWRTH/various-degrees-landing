@@ -6,13 +6,13 @@ import { Hero } from "@/components/sections/Hero";
 import { Launch } from "@/components/sections/Launch";
 import { About } from "@/components/sections/About";
 import { Contributors } from "@/components/sections/Contributors";
-import { PreOrder } from "@/components/sections/PreOrder";
+import { Order } from "@/components/sections/Order";
 import { Footer } from "@/components/sections/Footer";
 import { contributors } from "@/data/contributors";
 
-type SectionKey = "hero" | "launch" | "about" | "contributors" | "pre-order" | "footer";
+type SectionKey = "hero" | "launch" | "about" | "contributors" | "order" | "footer";
 
-const SECTION_ORDER: SectionKey[] = ["hero", "launch", "about", "contributors", "pre-order", "footer"];
+const SECTION_ORDER: SectionKey[] = ["hero", "launch", "about", "contributors", "order", "footer"];
 
 /** Legibility overlay ramp: the value each section settles on. */
 const OVERLAY: Record<SectionKey, OverlayState> = {
@@ -20,7 +20,7 @@ const OVERLAY: Record<SectionKey, OverlayState> = {
   launch: { hero: 0, alpha: 0.72, blur: 4 },
   about: { hero: 0, alpha: 0.78, blur: 8 },
   contributors: { hero: 0, alpha: 0.78, blur: 8 },
-  "pre-order": { hero: 0, alpha: 0.84, blur: 10 },
+  "order": { hero: 0, alpha: 0.84, blur: 10 },
   footer: { hero: 0, alpha: 0.84, blur: 10 },
 };
 
@@ -31,7 +31,7 @@ const PANEL_STATE_KEY = "vdContributor";
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [heroActive, setHeroActive] = useState(true);
-  const [showTopPreorder, setShowTopPreorder] = useState(false);
+  const [showTopOrder, setShowTopOrder] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
   const [showArtists, setShowArtists] = useState(false);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
@@ -116,16 +116,16 @@ export default function Home() {
       // Glitch only while the hero is in view
       setHeroActive(scrollY < windowHeight * 0.8);
 
-      // Top-bar Pre-order: after the hero is ~80% scrolled out, hidden while Pre-order is in view
-      const pre = sectionRefs.current["pre-order"];
-      let preorderInView = false;
+      // Top-bar Order: after the hero is ~80% scrolled out, hidden while Order is in view
+      const pre = sectionRefs.current["order"];
+      let orderInView = false;
       if (pre) {
         const top = pre.offsetTop;
         const bottom = top + pre.offsetHeight;
         const overlap = Math.min(bottom, scrollY + windowHeight) - Math.max(top, scrollY);
-        preorderInView = overlap > windowHeight * 0.25;
+        orderInView = overlap > windowHeight * 0.25;
       }
-      setShowTopPreorder(scrollY > windowHeight * 0.8 && !preorderInView);
+      setShowTopOrder(scrollY > windowHeight * 0.8 && !orderInView);
     };
 
     const onScroll = () => {
@@ -211,7 +211,7 @@ export default function Home() {
       <Background ref={backgroundRef} glitchActive={heroActive && !panelOpen} />
 
       <div aria-hidden={panelOpen || undefined}>
-        <TopBar isLoaded={isLoaded} showPreorder={showTopPreorder} />
+        <TopBar isLoaded={isLoaded} showOrder={showTopOrder} />
       </div>
 
       <main
@@ -227,7 +227,7 @@ export default function Home() {
           revealed={showArtists}
           onSelect={openContributor}
         />
-        <PreOrder ref={setSectionRef("pre-order")} />
+        <Order ref={setSectionRef("order")} />
         <Footer ref={setSectionRef("footer")} />
       </main>
 

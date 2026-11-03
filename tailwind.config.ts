@@ -111,8 +111,8 @@ export default {
         "heading-m": ["36px", { lineHeight: "1.1" }],
         statement: ["26px", { lineHeight: "1.5" }],
         "statement-m": ["20px", { lineHeight: "1.5" }],
-        preorder: ["25px", { lineHeight: "1.55" }],
-        "preorder-m": ["19px", { lineHeight: "1.55" }],
+        order: ["25px", { lineHeight: "1.55" }],
+        "order-m": ["19px", { lineHeight: "1.55" }],
         name: ["38px", { lineHeight: "1.2" }],
         "name-m": ["27px", { lineHeight: "1.2" }],
         "panel-name": ["48px", { lineHeight: "1.1" }],
@@ -139,7 +139,7 @@ export default {
       },
       maxWidth: {
         body: "600px",
-        preorder: "640px",
+        order: "640px",
         column: "720px",
       },
       transitionDuration: {

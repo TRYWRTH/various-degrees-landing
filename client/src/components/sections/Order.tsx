@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { Section, SectionHeading, labelClass } from "@/components/sections/Section";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { PREORDER_URL } from "@/lib/links";
+import { ORDER_URL } from "@/lib/links";
 
 const SHIPPING_RATES: [string, string][] = [
   ["Germany", "€4.50"],
@@ -9,21 +9,21 @@ const SHIPPING_RATES: [string, string][] = [
   ["Rest of World", "€15"],
 ];
 
-export const PreOrder = forwardRef<HTMLElement>(function PreOrder(_props, ref) {
+export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section
-      id="pre-order"
+      id="order"
       ref={ref}
-      aria-labelledby="pre-order-heading"
+      aria-labelledby="order-heading"
       tabIndex={-1}
       className="outline-none"
     >
-      <div className="flex w-full max-w-preorder flex-col items-center">
+      <div className="flex w-full max-w-order flex-col items-center">
         <SectionHeading>
-          <span id="pre-order-heading">Pre-order</span>
+          <span id="order-heading">Order</span>
         </SectionHeading>
 
-        <p className="mt-6 font-forum text-preorder-m text-ink md:mt-8 md:text-preorder">
+        <p className="mt-6 font-forum text-order-m text-ink md:mt-8 md:text-order">
           Copies are available from €15. If you're able to contribute more, your extra support goes
           straight into funding the project and supporting the artists involved. As a thank-you,
           contributions of €150 or more come with an original, limited-run artwork selected from our
@@ -57,8 +57,8 @@ export const PreOrder = forwardRef<HTMLElement>(function PreOrder(_props, ref) {
           </div>
         </dl>
 
-        <PrimaryButton href={PREORDER_URL} className="mt-8 md:mt-12" data-testid="button-preorder">
-          Pre-order
+        <PrimaryButton href={ORDER_URL} className="mt-8 md:mt-12" data-testid="button-order">
+          Order
         </PrimaryButton>
       </div>
     </Section>

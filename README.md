@@ -10,7 +10,7 @@ One section per screen (CSS scroll snapping) over a fixed background photo:
 2. **Launch**: event details (venue links to Google Maps) and RSVP via Luma
 3. **About**
 4. **Contributors**: each name opens an accessible bio panel (data in `client/src/data/contributors.ts`)
-5. **Pre-order**
+5. **Order**
 6. **Footer**
 
 Design tokens (colours, type scale) live in `tailwind.config.ts`; shared links in `client/src/lib/links.ts`.

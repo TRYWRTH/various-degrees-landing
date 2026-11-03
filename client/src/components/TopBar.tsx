@@ -4,14 +4,14 @@ import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { cn } from "@/lib/utils";
 
 type TopBarProps = {
-  /** Compact Pre-order (jumps to the Pre-order section): hidden on the hero and while the Pre-order section is in view. */
-  showPreorder: boolean;
+  /** Compact Order (jumps to the Order section): hidden on the hero and while the Order section is in view. */
+  showOrder: boolean;
   isLoaded: boolean;
 };
 
-/** Scroll to the Pre-order section (details + payment link) instead of leaving the site. */
-function goToPreorder(e: MouseEvent<HTMLAnchorElement>) {
-  const section = document.getElementById("pre-order");
+/** Scroll to the Order section (details + order form) instead of leaving the site. */
+function goToOrder(e: MouseEvent<HTMLAnchorElement>) {
+  const section = document.getElementById("order");
   if (!section) return;
   e.preventDefault();
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -20,7 +20,7 @@ function goToPreorder(e: MouseEvent<HTMLAnchorElement>) {
 }
 
 /** Fixed, fully transparent top bar: no background, no blur, no border. */
-export function TopBar({ showPreorder, isLoaded }: TopBarProps) {
+export function TopBar({ showOrder, isLoaded }: TopBarProps) {
   return (
     <header
       className={cn(
@@ -39,19 +39,19 @@ export function TopBar({ showPreorder, isLoaded }: TopBarProps) {
         <ContactPopover className="pointer-events-auto" />
 
         <PrimaryButton
-          href="#pre-order"
+          href="#order"
           external={false}
-          onClick={goToPreorder}
+          onClick={goToOrder}
           size="compact"
-          aria-hidden={!showPreorder}
-          tabIndex={showPreorder ? undefined : -1}
+          aria-hidden={!showOrder}
+          tabIndex={showOrder ? undefined : -1}
           className={cn(
             "transition-[opacity,visibility,background-color] duration-240 ease-out",
-            showPreorder ? "pointer-events-auto visible opacity-100" : "invisible opacity-0",
+            showOrder ? "pointer-events-auto visible opacity-100" : "invisible opacity-0",
           )}
-          data-testid="button-preorder-topbar"
+          data-testid="button-order-topbar"
         >
-          Pre-order
+          Order
         </PrimaryButton>
       </div>
     </header>
