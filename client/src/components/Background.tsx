@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import backgroundImage from "@assets/01 Greek_1763915893499.png";
+import backgroundImage from "@assets/01-greek.webp";
 
 export type OverlayState = {
   /** 0–1: how much of the hero's own gradient + vignette is shown */

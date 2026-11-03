@@ -3,7 +3,7 @@ import type { Contributor } from "@/data/contributors";
 import { SectionLabel } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
 import { usePanelBackdropOffset } from "@/hooks/use-panel-backdrop-offset";
-import backgroundImage from "@assets/01 Greek_1763915893499.png";
+import backgroundImage from "@assets/01-greek.webp";
 
 type ContributorPanelProps = {
   contributor: Contributor;
