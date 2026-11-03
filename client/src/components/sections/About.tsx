@@ -1,5 +1,5 @@
 import { forwardRef, type ReactNode } from "react";
-import { Section, SectionLabel } from "@/components/sections/Section";
+import { Section, SectionTitle } from "@/components/sections/Section";
 
 type AboutProps = {
   revealed: boolean;
@@ -18,9 +18,7 @@ export const About = forwardRef<HTMLElement, AboutProps>(function About({ reveal
   return (
     <Section id="about" ref={ref} aria-labelledby="about-label">
       <div className="flex w-full max-w-body flex-col items-center">
-        <SectionLabel>
-          <span id="about-label">About</span>
-        </SectionLabel>
+        <SectionTitle id="about-label">About</SectionTitle>
 
         <div className="mt-6 flex flex-col gap-4 md:mt-8 md:gap-5">
           {paragraphs.map((text, index) => (

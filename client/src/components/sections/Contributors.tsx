@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Section, SectionLabel } from "@/components/sections/Section";
+import { Section, SectionTitle } from "@/components/sections/Section";
 import { contributors } from "@/data/contributors";
 
 type ContributorsProps = {
@@ -14,9 +14,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
   return (
     <Section id="contributors" ref={ref} aria-labelledby="contributors-label">
       <div className="flex w-full max-w-column flex-col items-center">
-        <SectionLabel>
-          <span id="contributors-label">Contributors</span>
-        </SectionLabel>
+        <SectionTitle id="contributors-label">Contributors</SectionTitle>
 
         <ul className="mt-6 flex w-full flex-col items-center md:mt-8">
           {contributors.map((contributor, index) => (

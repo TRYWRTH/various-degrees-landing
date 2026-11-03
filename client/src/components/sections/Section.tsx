@@ -38,10 +38,45 @@ export function SectionLabel({ children, className }: { children: ReactNode; cla
   );
 }
 
-export function SectionHeading({ children, className }: { children: ReactNode; className?: string }) {
+/** Section heading: the small-caps style, used for every section. */
+export function SectionTitle({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <h2 className={cn("text-balance font-forum text-heading-m text-ink md:text-heading", className)}>
+    <h2
+      id={id}
+      className="text-balance font-sans text-title-m font-medium uppercase text-ink-muted md:text-title"
+    >
       {children}
     </h2>
+  );
+}
+
+/**
+ * Gentle fade-up once the section has scrolled into view. Children reveal one after
+ * another, `step` ms apart (pass each item's `index`).
+ */
+export function Reveal({
+  show,
+  index = 0,
+  step = 150,
+  className,
+  children,
+}: {
+  show: boolean;
+  index?: number;
+  step?: number;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "transition-all duration-1000 motion-reduce:transition-none",
+        show ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0",
+        className,
+      )}
+      style={{ transitionDelay: `${index * step}ms` }}
+    >
+      {children}
+    </div>
   );
 }

@@ -32,8 +32,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [heroActive, setHeroActive] = useState(true);
   const [showTopOrder, setShowTopOrder] = useState(false);
-  const [showDescription, setShowDescription] = useState(false);
-  const [showArtists, setShowArtists] = useState(false);
+  const [revealed, setRevealed] = useState<ReadonlySet<SectionKey>>(new Set());
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -142,21 +141,21 @@ export default function Home() {
     };
   }, []);
 
-  // Staggered reveal-on-view for About paragraphs and contributor names
+  // Staggered reveal-on-view for the content sections
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          if (entry.target.id === "about") timers.push(setTimeout(() => setShowDescription(true), 400));
-          if (entry.target.id === "contributors") timers.push(setTimeout(() => setShowArtists(true), 400));
+          const key = entry.target.id as SectionKey;
+          timers.push(setTimeout(() => setRevealed((prev) => new Set(prev).add(key)), 400));
           observer.unobserve(entry.target);
         });
       },
       { threshold: 0.3, rootMargin: "-10% 0px -10% 0px" },
     );
-    (["about", "contributors"] as const).forEach((key) => {
+    (["launch", "about", "contributors", "order"] as const).forEach((key) => {
       const el = sectionRefs.current[key];
       if (el) observer.observe(el);
     });
@@ -220,14 +219,14 @@ export default function Home() {
         className="snap-scroller relative z-10 h-[100svh] snap-y snap-mandatory overflow-y-auto overflow-x-hidden"
       >
         <Hero ref={setSectionRef("hero")} isLoaded={isLoaded} />
-        <Launch ref={setSectionRef("launch")} />
-        <About ref={setSectionRef("about")} revealed={showDescription} />
+        <Launch ref={setSectionRef("launch")} revealed={revealed.has("launch")} />
+        <About ref={setSectionRef("about")} revealed={revealed.has("about")} />
         <Contributors
           ref={setSectionRef("contributors")}
-          revealed={showArtists}
+          revealed={revealed.has("contributors")}
           onSelect={openContributor}
         />
-        <Order ref={setSectionRef("order")} />
+        <Order ref={setSectionRef("order")} revealed={revealed.has("order")} />
         <Footer ref={setSectionRef("footer")} />
       </main>
 
