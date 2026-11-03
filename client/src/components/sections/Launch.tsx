@@ -19,18 +19,7 @@ export const Launch = forwardRef<HTMLElement, LaunchProps>(function Launch({ rev
         <SectionTitle id="launch-heading">Publication launch</SectionTitle>
 
         <Reveal show={revealed} index={0} className="mt-6 md:mt-8">
-          <p className="font-sans text-body-m text-ink-muted md:text-body">
-            Celebrate the first issue of Remnants of a Future, the debut publication from Various
-            Degrees. Meet some of the artists and contributors, flip through the pages, and stay for
-            conversation about lost futures, new dreams, and the traces they leave in between. Drinks,
-            good company, and a few fragments of the future to take home.
-          </p>
-        </Reveal>
-
-        {/* Margins differ so the *visible* gaps above and below the details match:
-            the paragraph's line spacing already adds space above the date. */}
-        <Reveal show={revealed} index={1} className="mt-[26px] md:mt-8">
-          <p className="flex flex-col items-center gap-2.5 font-sans text-label-m font-medium uppercase text-ink md:text-label">
+          <p className="flex flex-col items-center gap-2.5 font-sans text-detail-m font-medium uppercase text-ink md:text-detail">
             <span>Wednesday 18 November, 18:30</span>
             <a
               href={DESIRELINES_INSTAGRAM_URL}
@@ -55,7 +44,16 @@ export const Launch = forwardRef<HTMLElement, LaunchProps>(function Launch({ rev
           </p>
         </Reveal>
 
-        <Reveal show={revealed} index={2} className="mt-9 flex w-full justify-center md:mt-10">
+        <Reveal show={revealed} index={1} className="mt-6 md:mt-8">
+          <p className="font-sans text-body-m text-ink-muted md:text-body">
+            Celebrate the first issue of Remnants of a Future, the debut publication from Various
+            Degrees. Meet some of the artists and contributors, flip through the pages, and stay for
+            conversation about lost futures, new dreams, and the traces they leave in between. Drinks,
+            good company, and a few fragments of the future to take home.
+          </p>
+        </Reveal>
+
+        <Reveal show={revealed} index={2} className="mt-8 flex w-full justify-center md:mt-12">
           <PrimaryButton href={RSVP_URL} data-testid="button-rsvp">
             RSVP
           </PrimaryButton>
