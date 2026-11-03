@@ -30,7 +30,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
           artists.
         </p>
 
-        <dl className="mt-8 flex flex-col gap-6 md:mt-10">
+        <dl className="mt-8 md:mt-10">
           <div className="flex flex-col items-center gap-2">
             <dt className={labelClass}>Shipping rates</dt>
             <dd data-testid="text-shipping">
@@ -43,22 +43,10 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
               </ul>
             </dd>
           </div>
-
-          <div className="flex flex-col items-center gap-2">
-            <dt className={labelClass}>Payment note</dt>
-            <dd
-              className="text-balance font-sans text-info text-ink-muted"
-              data-testid="text-shipping-info"
-            >
-              Please include your full name, address, postal code, and email, or mention{" "}
-              <span className="whitespace-nowrap text-ink">“Launch Pickup”</span> to collect your
-              copy in person.
-            </dd>
-          </div>
         </dl>
 
         <PrimaryButton href={ORDER_URL} className="mt-8 md:mt-12" data-testid="button-order">
-          Order
+          Order form
         </PrimaryButton>
       </div>
     </Section>
