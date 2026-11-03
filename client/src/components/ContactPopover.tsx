@@ -24,11 +24,16 @@ export function ContactPopover({ className }: ContactPopoverProps) {
         buttonRef.current?.focus();
       }
     };
+    // The page scrolls inside the snap container, not the window, so listen in the
+    // capture phase to catch scroll events from any element.
+    const onScroll = () => setOpen(false);
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("scroll", onScroll, { capture: true, passive: true });
     return () => {
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("scroll", onScroll, { capture: true });
     };
   }, [open]);
 
@@ -49,25 +54,26 @@ export function ContactPopover({ className }: ContactPopoverProps) {
       {open && (
         <div
           id={popoverId}
-          className="absolute left-0 top-full mt-2 animate-fade-in rounded-2xl border border-hairline bg-night/70 p-2 backdrop-blur-lg motion-reduce:animate-none"
+          className="absolute left-0 top-full animate-fade-in motion-reduce:animate-none"
+          style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.6)" }}
           data-testid="contact-info"
         >
           <a
             href="https://www.instagram.com/various.degrees/"
             target="_blank"
             rel="noopener"
-            className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-ink transition-colors hover:text-ink-muted"
+            className="flex min-h-11 items-center gap-3 text-ink transition-colors hover:text-ink-muted"
             data-testid="link-instagram"
           >
-            <Instagram className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+            <Instagram className="h-5 w-5 flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" aria-hidden="true" />
             <span className="whitespace-nowrap text-sm font-medium">@various.degrees</span>
           </a>
           <a
             href="mailto:v.degrees@proton.me"
-            className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-ink transition-colors hover:text-ink-muted"
+            className="flex min-h-11 items-center gap-3 text-ink transition-colors hover:text-ink-muted"
             data-testid="link-email"
           >
-            <Mail className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+            <Mail className="h-5 w-5 flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" aria-hidden="true" />
             <span className="whitespace-nowrap text-sm font-medium">v.degrees@proton.me</span>
           </a>
         </div>
