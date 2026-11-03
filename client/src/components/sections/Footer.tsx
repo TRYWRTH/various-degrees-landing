@@ -1,10 +1,30 @@
+import { scrollToSection } from "@/lib/scroll";
+
 /**
- * Credits along the bottom edge of the last (Order) screen. Kept faint on purpose.
- * (Back to the top: the "Various Degrees" wordmark in the top bar.)
+ * Bottom edge of the last (Order) screen: credits, kept faint on purpose.
+ * Phones also get "Back to top ↑" here, since the top bar has no wordmark on phones;
+ * on desktop the wordmark does that job.
  */
 export function Footer() {
   return (
     <footer role="contentinfo" className="flex flex-col items-center text-center font-sans">
+      <button
+        type="button"
+        onClick={() => scrollToSection("hero")}
+        className="group mb-1 inline-flex min-h-11 items-center gap-2 font-sans text-note text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:hidden"
+        data-testid="button-back-to-top"
+      >
+        <span className="underline decoration-ink-muted/60 decoration-1 underline-offset-4">
+          Back to top
+        </span>
+        <span
+          aria-hidden="true"
+          className="inline-block transition-transform duration-160 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none"
+        >
+          ↑
+        </span>
+      </button>
+
       {/* Mobile: one line */}
       <p className="text-footer-m md:hidden">
         <span className="text-ink/35" data-testid="text-copyright">

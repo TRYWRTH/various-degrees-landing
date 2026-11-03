@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { scrollToSection } from "@/lib/scroll";
@@ -25,8 +25,29 @@ const fade = (visible: boolean) =>
  * Left: "Various Degrees" wordmark (back to the top). Right: Contact, then Order.
  * Wordmark and Contact share one text style (Inter caps), the wordmark one step larger;
  * everything is smaller on phones.
+ *
+ * Phones: no wordmark, and when the Order button hides (on the Order screen) Contact
+ * slides right into the corner it leaves. Desktop keeps Contact in place.
  */
 export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
+  const groupRef = useRef<HTMLDivElement>(null);
+  const [contactShift, setContactShift] = useState(0);
+
+  // Phones only: how far Contact moves right to fill the hidden Order button's spot
+  useLayoutEffect(() => {
+    const update = () => {
+      const group = groupRef.current;
+      const order = group?.lastElementChild as HTMLElement | null;
+      if (!group || !order) return;
+      const isPhone = window.matchMedia("(max-width: 767px)").matches;
+      const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+      setContactShift(isPhone && !showOrder ? order.offsetWidth + gap : 0);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [showOrder]);
+
   return (
     <header
       className={cn(
@@ -48,7 +69,7 @@ export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
           aria-hidden={!showWordmark}
           tabIndex={showWordmark ? undefined : -1}
           className={cn(
-            "inline-flex min-h-11 items-center whitespace-nowrap font-sans text-wordmark-m font-medium uppercase text-ink",
+            "inline-flex min-h-11 items-center whitespace-nowrap font-sans text-wordmark-m font-medium uppercase text-ink max-md:hidden",
             "transition-[opacity,visibility,color] duration-240 ease-out hover:text-ink-muted md:text-wordmark",
             fade(showWordmark),
           )}
@@ -57,9 +78,14 @@ export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
           Various Degrees
         </a>
 
-        {/* ~24px between Contact and Order; 16px on very narrow phones so the bar fits */}
-        <div className="flex items-center gap-6 max-[359px]:gap-4">
-          <ContactPopover className="pointer-events-auto" />
+        {/* 24px between Contact and Order. ml-auto keeps the group right when the wordmark is hidden. */}
+        <div ref={groupRef} className="ml-auto flex items-center gap-6">
+          <div
+            className="pointer-events-auto transition-transform duration-240 ease-out motion-reduce:transition-none"
+            style={{ transform: contactShift ? `translateX(${contactShift}px)` : undefined }}
+          >
+            <ContactPopover />
+          </div>
 
           <PrimaryButton
             href="#order"
