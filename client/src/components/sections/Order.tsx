@@ -1,13 +1,7 @@
 import { forwardRef } from "react";
-import { Section, SectionHeading, labelClass } from "@/components/sections/Section";
+import { Section, SectionHeading } from "@/components/sections/Section";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ORDER_URL } from "@/lib/links";
-
-const SHIPPING_RATES: [string, string][] = [
-  ["Germany", "€4.50"],
-  ["EU", "€8.50"],
-  ["Rest of World", "€15"],
-];
 
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
@@ -20,33 +14,17 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
     >
       <div className="flex w-full max-w-order flex-col items-center">
         <SectionHeading>
-          <span id="order-heading">Order</span>
+          <span id="order-heading">Order your copy</span>
         </SectionHeading>
 
         <p className="mt-6 font-forum text-order-m text-ink md:mt-8 md:text-order">
-          Copies are available from €15. If you're able to contribute more, your extra support goes
-          straight into funding the project and supporting the artists involved. As a thank-you,
-          contributions of €150 or more come with an original, limited-run artwork selected from our
-          artists.
+          Copies are available from €15. Any extra support goes directly toward funding the project
+          and the artists involved. Contributions of €150 or more include a copy of the publication
+          plus an original, limited-run artwork selected from our artists.
         </p>
 
-        <dl className="mt-8 md:mt-10">
-          <div className="flex flex-col items-center gap-2">
-            <dt className={labelClass}>Shipping rates</dt>
-            <dd data-testid="text-shipping">
-              <ul className="flex flex-col items-center gap-1 font-sans text-info text-ink md:flex-row md:flex-wrap md:justify-center md:gap-x-5">
-                {SHIPPING_RATES.map(([region, price]) => (
-                  <li key={region} className="whitespace-nowrap">
-                    {region}: <span className="text-ink-muted">{price}</span>
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        </dl>
-
         <PrimaryButton href={ORDER_URL} className="mt-8 md:mt-12" data-testid="button-order">
-          Order form
+          Order here
         </PrimaryButton>
       </div>
     </Section>
