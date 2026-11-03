@@ -84,6 +84,17 @@ export default {
         "on-ink": "#121211",
         night: "rgb(8 8 7)",
         surface: "#161614",
+        // Contributor panel: "smoked glass" surface
+        glass: {
+          DEFAULT: "rgba(20, 18, 15, 0.62)",
+          fade: "rgba(20, 18, 15, 0.9)",
+          clear: "rgba(20, 18, 15, 0)",
+          border: "rgba(243, 240, 234, 0.16)",
+          pill: "rgba(243, 240, 234, 0.10)",
+          "pill-hover": "rgba(243, 240, 234, 0.16)",
+          divider: "rgba(243, 240, 234, 0.10)",
+          text: "#C2BCB1",
+        },
         hairline: {
           DEFAULT: "rgba(243, 240, 234, 0.12)",
           soft: "rgba(243, 240, 234, 0.08)",

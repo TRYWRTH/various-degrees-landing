@@ -86,22 +86,22 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           aria-modal="true"
           aria-labelledby={nameId}
           className={cn(
-            "pointer-events-auto relative flex h-full w-full flex-col overflow-hidden bg-surface",
+            "panel-glass pointer-events-auto relative flex h-full w-full flex-col overflow-hidden",
             "animate-panel-up motion-reduce:animate-none md:animate-panel-in",
-            "md:h-auto md:max-h-[min(700px,100svh-96px)] md:w-[min(820px,100vw-48px)] md:rounded-2xl md:border md:border-hairline",
+            "md:h-auto md:max-h-[min(700px,100svh-96px)] md:w-[min(820px,100vw-48px)] md:rounded-2xl md:border md:border-glass-border",
           )}
           data-testid="contributor-panel"
         >
           {/* Close: own bar on mobile, floating top-right pill on desktop */}
           <div
-            className="flex shrink-0 justify-end border-b border-hairline-soft p-3 md:absolute md:right-4 md:top-4 md:z-10 md:border-0 md:p-0"
+            className="flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:z-10 md:border-0 md:p-0"
             style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
           >
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-hairline-soft px-5 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:bg-hairline"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-glass-pill px-5 font-sans text-button-compact font-medium uppercase text-ink transition-colors duration-160 hover:bg-glass-pill-hover"
               data-testid="button-panel-close"
             >
               Close <span aria-hidden="true" className="text-[16px] leading-none">×</span>
@@ -124,10 +124,10 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
                 target="_blank"
                 rel="noopener"
                 aria-label={`${contributor.name}${contributor.link.label.startsWith("@") ? " on Instagram" : ", website"} (opens in a new tab)`}
-                className="group mt-2 inline-flex min-h-11 items-center gap-1.5 font-sans text-link text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:mt-3"
+                className="group mt-2 inline-flex min-h-11 items-center gap-1.5 font-sans text-link text-glass-text transition-colors duration-160 ease-out hover:text-ink md:mt-3"
                 data-testid="link-contributor"
               >
-                <span className="underline decoration-ink-muted/60 decoration-1 underline-offset-[6px] group-hover:decoration-ink">
+                <span className="underline decoration-glass-text/60 decoration-1 underline-offset-[6px] group-hover:decoration-ink">
                   {contributor.link.label}
                 </span>
                 <span
@@ -148,7 +148,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             className="slim-scrollbar mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-gutter md:mt-8 md:px-24"
             style={{ paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}
           >
-            <p className="mx-auto max-w-[70ch] hyphens-auto text-justify font-sans text-panel-bio-m text-ink-muted md:text-panel-bio">
+            <p className="mx-auto max-w-[70ch] hyphens-manual text-pretty text-left font-sans text-panel-bio-m text-glass-text md:text-panel-bio">
               {contributor.bio}
             </p>
           </div>
@@ -157,7 +157,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <div
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 h-[72px] bg-gradient-to-t from-surface to-transparent transition-opacity duration-200",
+              "pointer-events-none absolute inset-x-0 bottom-0 h-[72px] bg-gradient-to-t from-glass-fade to-glass-clear transition-opacity duration-200",
               showFade ? "opacity-100" : "opacity-0",
             )}
           />
