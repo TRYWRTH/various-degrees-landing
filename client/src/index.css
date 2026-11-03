@@ -335,24 +335,43 @@
     border-radius: 999px;
   }
 
-  /* Contributor panel: "smoked glass", a darkened, heavily blurred window onto the photo */
+  /*
+   * Contributor panel: "smoked glass", a window onto the photo.
+   * The panel draws its own blurred copy of the background photo, lined up with the
+   * page background by usePanelBackdropOffset (--bx/--by/--bw/--bh), under a smoked
+   * tint. (backdrop-filter alone only sees the already-darkened page behind it.)
+   */
   .panel-glass {
-    background: rgba(20, 18, 15, 0.62);
-    -webkit-backdrop-filter: blur(28px) saturate(1.1);
-    backdrop-filter: blur(28px) saturate(1.1);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
   }
-  /* Solid fallback: no backdrop-filter support (e.g. older Android in-app browsers) */
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .panel-glass {
-      background: rgb(24 22 19 / 0.96);
-    }
+  .panel-glass-photo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    width: var(--bw, 100vw);
+    height: var(--bh, 100svh);
+    max-width: none;
+    transform: translate(var(--bx, 0px), var(--by, 0px));
+    pointer-events: none;
+    filter: blur(28px) saturate(1.1);
+  }
+  .panel-glass-tint {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /* 0.72, not 0.62: the lowest tint that keeps the bio >= 4.5:1 where the bust shows through */
+    background: rgba(20, 18, 15, 0.72);
   }
   /* Solid fallback: the reader asked for less transparency */
   @media (prefers-reduced-transparency: reduce) {
-    .panel-glass {
+    .panel-glass-photo {
+      display: none;
+    }
+    .panel-glass-tint {
       background: rgb(24 22 19 / 0.96);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
     }
   }
 

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import type { Contributor } from "@/data/contributors";
 import { SectionLabel } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
+import { usePanelBackdropOffset } from "@/hooks/use-panel-backdrop-offset";
+import backgroundImage from "@assets/01 Greek_1763915893499.png";
 
 type ContributorPanelProps = {
   contributor: Contributor;
@@ -20,6 +22,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const bioRef = useRef<HTMLDivElement>(null);
+  const photoRef = useRef<HTMLImageElement>(null);
   const [showFade, setShowFade] = useState(true);
   const nameId = `contributor-name-${contributor.slug}`;
 
@@ -33,6 +36,9 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
     if (bioRef.current) bioRef.current.scrollTop = 0;
     updateFade();
   }, [contributor.slug, updateFade]);
+
+  // Keep the panel's photo lined up with the page background
+  usePanelBackdropOffset(dialogRef, photoRef);
 
   useEffect(() => {
     closeRef.current?.focus({ preventScroll: true });
@@ -92,9 +98,13 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           )}
           data-testid="contributor-panel"
         >
+          {/* Smoked glass: own blurred copy of the photo (z 0) + tint (z 1); content is z 2 */}
+          <img ref={photoRef} src={backgroundImage} alt="" aria-hidden="true" className="panel-glass-photo" />
+          <div className="panel-glass-tint" aria-hidden="true" />
+
           {/* Close: own bar on mobile, floating top-right pill on desktop */}
           <div
-            className="flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:z-10 md:border-0 md:p-0"
+            className="relative z-[2] flex shrink-0 justify-end border-b border-glass-divider p-3 md:absolute md:right-4 md:top-4 md:border-0 md:p-0"
             style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
           >
             <button
@@ -108,7 +118,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             </button>
           </div>
 
-          <div className="flex shrink-0 flex-col items-center px-gutter pt-8 text-center md:px-24 md:pt-20">
+          <div className="relative z-[2] flex shrink-0 flex-col items-center px-gutter pt-8 text-center md:px-24 md:pt-20">
             {contributor.discipline && (
               <SectionLabel className="mb-4">{contributor.discipline}</SectionLabel>
             )}
@@ -145,7 +155,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             onScroll={updateFade}
             tabIndex={0}
             aria-label={`About ${contributor.name}`}
-            className="slim-scrollbar mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-gutter md:mt-8 md:px-24"
+            className="slim-scrollbar relative z-[2] mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-gutter md:mt-8 md:px-24"
             style={{ paddingBottom: "calc(72px + env(safe-area-inset-bottom))" }}
           >
             <p className="mx-auto max-w-[70ch] hyphens-manual text-pretty text-left font-sans text-panel-bio-m text-glass-text md:text-panel-bio">
@@ -157,7 +167,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           <div
             aria-hidden="true"
             className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 h-[72px] bg-gradient-to-t from-glass-fade to-glass-clear transition-opacity duration-200",
+              "pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[72px] bg-gradient-to-t from-glass-fade to-glass-clear transition-opacity duration-200",
               showFade ? "opacity-100" : "opacity-0",
             )}
           />

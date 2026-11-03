@@ -86,7 +86,7 @@ export const Background = forwardRef<BackgroundHandle, BackgroundProps>(function
     <div className="fixed inset-0 z-0 overflow-hidden bg-night" aria-hidden="true">
       {/* Photo + glitch slices (blurred together by the ramp). Slight scale hides blurred edges. */}
       <div ref={photoRef} className="absolute inset-0 scale-[1.04]">
-        <img src={backgroundImage} alt="" className="h-full w-full object-cover" />
+        <img src={backgroundImage} alt="" className="h-full w-full object-cover" data-page-photo="" />
 
         {/* Glitch: VHS static/snow effect */}
         {showGlitch && (
