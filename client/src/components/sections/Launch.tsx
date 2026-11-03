@@ -11,7 +11,14 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           <span id="launch-heading">Publication launch</span>
         </SectionHeading>
 
-        <p className="mt-6 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:w-max md:flex-row md:gap-3 md:whitespace-nowrap md:text-label">
+        <p className="mt-6 font-sans text-body-m text-ink-muted md:mt-8 md:text-body">
+          Celebrate the first issue of Remnants of a Future, the debut publication from Various
+          Degrees. Meet some of the artists and contributors, flip through the pages, and stay for
+          conversation about lost futures, new dreams, and the traces they leave in between. Drinks,
+          good company, and a few fragments of the future to take home.
+        </p>
+
+        <p className="mt-8 flex flex-col items-center font-sans text-label-m font-medium uppercase text-ink md:w-max md:flex-row md:gap-3 md:mt-12 md:whitespace-nowrap md:text-label">
           <span>Wednesday 18 November, 18:30</span>
           <span aria-hidden="true" className="hidden md:inline">
             ·
@@ -27,14 +34,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           </a>
         </p>
 
-        <p className="mt-6 font-sans text-body-m text-ink-muted md:mt-8 md:text-body">
-          Celebrate the first issue of Remnants of a Future, the debut publication from Various
-          Degrees. Meet some of the artists and contributors, flip through the pages, and stay for
-          conversation about lost futures, new dreams, and the traces they leave in between. Drinks,
-          good company, and a few fragments of the future to take home.
-        </p>
-
-        <PrimaryButton href={RSVP_URL} className="mt-8 md:mt-12" data-testid="button-rsvp">
+        <PrimaryButton href={RSVP_URL} className="mt-3 md:mt-4" data-testid="button-rsvp">
           RSVP
         </PrimaryButton>
 

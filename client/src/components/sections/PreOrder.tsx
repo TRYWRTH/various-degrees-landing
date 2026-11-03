@@ -5,7 +5,13 @@ import { PREORDER_URL } from "@/lib/links";
 
 export const PreOrder = forwardRef<HTMLElement>(function PreOrder(_props, ref) {
   return (
-    <Section id="pre-order" ref={ref} aria-labelledby="pre-order-heading">
+    <Section
+      id="pre-order"
+      ref={ref}
+      aria-labelledby="pre-order-heading"
+      tabIndex={-1}
+      className="outline-none"
+    >
       <div className="flex w-full max-w-preorder flex-col items-center">
         <SectionHeading>
           <span id="pre-order-heading">Pre-order</span>

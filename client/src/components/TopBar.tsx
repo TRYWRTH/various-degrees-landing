@@ -1,13 +1,23 @@
+import type { MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { PREORDER_URL } from "@/lib/links";
 import { cn } from "@/lib/utils";
 
 type TopBarProps = {
-  /** Compact Pre-order: hidden on the hero and while the Pre-order section is in view. */
+  /** Compact Pre-order (jumps to the Pre-order section): hidden on the hero and while the Pre-order section is in view. */
   showPreorder: boolean;
   isLoaded: boolean;
 };
+
+/** Scroll to the Pre-order section (details + payment link) instead of leaving the site. */
+function goToPreorder(e: MouseEvent<HTMLAnchorElement>) {
+  const section = document.getElementById("pre-order");
+  if (!section) return;
+  e.preventDefault();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  section.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  section.focus({ preventScroll: true });
+}
 
 /** Fixed, fully transparent top bar: no background, no blur, no border. */
 export function TopBar({ showPreorder, isLoaded }: TopBarProps) {
@@ -29,7 +39,9 @@ export function TopBar({ showPreorder, isLoaded }: TopBarProps) {
         <ContactPopover className="pointer-events-auto" />
 
         <PrimaryButton
-          href={PREORDER_URL}
+          href="#pre-order"
+          external={false}
+          onClick={goToPreorder}
           size="compact"
           aria-hidden={!showPreorder}
           tabIndex={showPreorder ? undefined : -1}
