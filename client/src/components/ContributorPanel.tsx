@@ -112,10 +112,12 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [requestClose]);
 
-  // A click on empty space closes it; clicks on the text, links and buttons don't, and
-  // neither does the click that ends a text selection.
+  // A click anywhere closes it (name and bio text included), except on links and
+  // buttons, and except the click that ends a text selection.
   const onBackgroundClick = (e: MouseEvent<HTMLDivElement>) => {
-    if ((e.target as Element).closest("a, button, h2, p")) return;
+    // Everything closes except the Instagram / website link and the controls that do
+    // their own thing (previous / next, Close, Back)
+    if ((e.target as Element).closest("a, button")) return;
     if (window.getSelection()?.toString()) return;
     requestClose();
   };

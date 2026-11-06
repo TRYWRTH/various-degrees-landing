@@ -34,7 +34,9 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
 
       <div className="order-row mt-[clamp(56px,7.8vw,112px)] fit:mt-[clamp(20px,3.5vh,112px)]">
 
-        <div className={`${rightColumn} m-indent m-order-col m-order-p flex flex-col items-start gap-7 fit:gap-[clamp(16px,3vh,28px)]`}>
+        <div className={`${rightColumn} m-indent m-order-col flex flex-col items-start gap-7 fit:gap-[clamp(16px,3vh,28px)]`}>
+          {/* The paragraphs (only these) slide in on phones; the Order link stays put */}
+          <div className="m-order-p flex w-full flex-col gap-7 fit:gap-[clamp(16px,3vh,28px)]">
           <p className={`${paragraphClass} m-text`}>
             Copies of the first issue are available from €15. Each one supports a publication
             made by a group of artists, poets and writers, and any extra support goes directly
@@ -45,6 +47,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
             limited artwork from our artists, a piece of the collection to keep long after the
             issue is read.
           </p>
+          </div>
 
           <a
             href={ORDER_URL}
