@@ -628,7 +628,7 @@
 
 /*
  * Phones: everything is static except, each on its own view() timeline (it moves only
- * once it is on screen) and settling around the middle of the screen, with no exit:
+ * once it is on screen; position only, always fully opaque) and settling around the middle of the screen, with no exit:
  * Event's Date (from the left) and Place (from the right) rows, the About headline
  * (from the right, in three jumps), the Contributors cover and the Get a copy
  * paragraph (both from the right). Only with scroll-driven
@@ -636,42 +636,34 @@
  */
 @keyframes row-in-l {
   from {
-    opacity: 0;
     transform: translateX(-120px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 @keyframes row-in-r {
   from {
-    opacity: 0;
     transform: translateX(120px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 
 @keyframes about-in {
   from {
-    opacity: 0;
     transform: translateX(150px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 @keyframes cover-in {
   from {
-    opacity: 0;
     transform: translateX(110%);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
