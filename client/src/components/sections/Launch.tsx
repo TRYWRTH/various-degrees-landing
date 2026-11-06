@@ -21,7 +21,7 @@ const detailLink = "underline decoration-1 underline-offset-[5px] hover:text-whi
 export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
   return (
     <Section id="launch" ref={ref} aria-labelledby="launch-heading" className={sectionPad}>
-      <p className={numberLabelClass}>01 — Publication launch</p>
+      <p className={numberLabelClass}>01 — Event</p>
 
       <h2
         id="launch-heading"
@@ -30,7 +30,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
         Join us for the launch
       </h2>
 
-      <div className={`${rightColumn} mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12 fit:gap-[clamp(20px,4.5vh,48px)]`}>
+      <div className={`${rightColumn} mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12`}>
         {/* Date and time lead the details, a step up from the paragraph text */}
         <p
           className="font-tight text-[clamp(24px,2.2vw,34px)] fit:text-[clamp(22px,min(2.2vw,3.6vh),34px)] font-light leading-[1.2] tracking-[-0.025em] text-editorial-strong"

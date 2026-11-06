@@ -7,7 +7,7 @@ const footerText =
   "font-mono text-[12px] uppercase leading-[1.6] tracking-[0.08em] text-editorial-eyebrow";
 
 /**
- * Page footer: the same credits as before, now in the mono label style.
+ * Page footer: the copyright line in the mono label style.
  * Phones also get "Back to top ↑" here, as before.
  */
 export function Footer() {
@@ -36,17 +36,9 @@ export function Footer() {
           <span aria-hidden="true">↑</span>
         </button>
 
-        {/* Mobile: one line */}
-        <p className={cn(footerText, "md:hidden")}>
-          <span data-testid="text-copyright">© 2026 Various Degrees. All rights reserved.</span>
-          <span> · Designed by YRT</span>
+        <p className={footerText} data-testid="text-copyright">
+          © 2026 Various Degrees. All rights reserved.
         </p>
-
-        {/* Desktop: two lines */}
-        <div className={cn(footerText, "hidden flex-col gap-1 md:flex")}>
-          <p>© 2026 Various Degrees. All rights reserved.</p>
-          <p data-testid="text-credit">Designed by YRT</p>
-        </div>
       </div>
     </footer>
   );

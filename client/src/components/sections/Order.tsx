@@ -18,7 +18,7 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={sectionPad}>
-      <p className={numberLabelClass}>04 — The publication</p>
+      <p className={numberLabelClass}>04 — Get a copy</p>
 
       <h2
         id="order-heading"
