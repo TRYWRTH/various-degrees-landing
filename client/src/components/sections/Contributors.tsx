@@ -55,7 +55,6 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
             <em className="font-newsreader text-[19px] italic leading-none text-editorial-body">
               Remnants of a Future
             </em>
-            .
           </p>
         </Reveal>
 
@@ -95,9 +94,9 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
               href="#order"
               onClick={toOrder}
               className="inline-block py-2.5 font-sans text-[13px] font-medium uppercase leading-none tracking-[0.24em] text-editorial-strong underline decoration-editorial-link decoration-1 underline-offset-[6px] transition-colors duration-160 ease-out hover:text-white"
-              data-testid="link-preorder"
+              data-testid="link-order"
             >
-              Pre-order the publication <span aria-hidden="true">↓</span>
+              Order the publication <span aria-hidden="true">↓</span>
             </a>
           </Reveal>
         </div>
