@@ -20,7 +20,7 @@ export const About = forwardRef<HTMLElement>(function About(_props, ref) {
 
       <h1
         id="about-heading"
-        className={`${afterLabel} m-h40 font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h40 m-about-h font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
         data-testid="text-description-1"
       >
         A publication contemplating what happens when the future we imagined feels increasingly far
