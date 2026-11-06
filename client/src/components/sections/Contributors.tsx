@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties } from "react";
+import { forwardRef } from "react";
 import { afterLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
 import { contributors, type Contributor } from "@/data/contributors";
 
@@ -26,8 +26,6 @@ const rows: Contributor[][] = ROWS.map((row) =>
   row.map((slug) => bySlug.get(slug)).filter((c): c is Contributor => Boolean(c)),
 );
 rows[rows.length - 1].push(...contributors.filter((c) => !listed.has(c.slug)));
-/** Position of each name in reading order (phones stagger the scroll reveal by it). */
-const order = new Map(rows.flat().map((c, i) => [c.slug, i]));
 
 /**
  * The names in four fixed rows of large light type with faint "/" separators. Each name
@@ -42,18 +40,17 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       id="contributors"
       ref={ref}
       aria-labelledby="contributors-heading"
-      className={`${sectionPad} m-sec m-contrib m-st4`}
+      className={`${sectionPad} m-sec m-contrib`}
     >
       {/* Phones only: the publication cover, above the names. Add the file as
           client/public/assets/cover.jpg (served at /assets/cover.jpg). */}
-      <figure className="m-cover rv-r hidden" style={{ "--i": 0 } as CSSProperties}>
+      <figure className="m-cover hidden">
         <img src="/assets/cover.jpg" alt="Cover of Remnants of a Future" loading="lazy" />
       </figure>
 
       <h2
         id="contributors-heading"
-        className={`${numberLabelClass} rv m-label`}
-        style={{ "--i": 1 } as CSSProperties}
+        className={`${numberLabelClass}`}
       >
         03 — Contributors
       </h2>
@@ -62,11 +59,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         {rows.map((row, r) => (
           <ul key={r}>
             {row.map((contributor) => (
-              <li
-                key={contributor.slug}
-                className={(order.get(contributor.slug) ?? 0) % 2 ? "rv-r" : "rv"}
-                style={{ "--i": order.get(contributor.slug) } as CSSProperties}
-              >
+              <li key={contributor.slug}>
                 <button
                   type="button"
                   onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
@@ -83,8 +76,6 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         ))}
       </div>
 
-      {/* Phones: a thin rule that draws when the section reaches the centre */}
-      <span className="lock-rule hidden" aria-hidden="true" />
     </Section>
   );
 });

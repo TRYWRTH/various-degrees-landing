@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties } from "react";
+import { forwardRef } from "react";
 import {
   afterLabel,
   Arrow,
@@ -25,22 +25,20 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
       id="launch"
       ref={ref}
       aria-labelledby="launch-heading"
-      className={`${sectionPad} m-sec m-launch m-st4`}
+      className={`${sectionPad} m-sec m-launch`}
     >
-      <p className={`${numberLabelClass} rv m-label`}>01 — Event</p>
+      <p className={`${numberLabelClass}`}>01 — Event</p>
 
       <h2
         id="launch-heading"
         className={`${afterLabel} m-h56 font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
       >
         {/* The spans only stack on phones (index.css); on desktop they read as one line */}
-        <span className="m-line rv" style={{ "--i": 1 } as CSSProperties}>Join us</span>{" "}
-        <span className="m-line rv" style={{ "--i": 2 } as CSSProperties}>for the</span>{" "}
-        <span className="m-line rv" style={{ "--i": 3 } as CSSProperties}>launch</span>
+        <span className="m-line">Join us</span>{" "}
+        <span className="m-line">for the</span>{" "}
+        <span className="m-line">launch</span>
       </h2>
 
-      {/* Phones: a thin rule that draws when the section reaches the centre */}
-      <span className="lock-rule hidden" aria-hidden="true" />
 
       <div
         className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12`}
@@ -49,7 +47,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
             right under it, then 48px to the paragraph */}
         <div className="m-details flex flex-col items-start gap-3">
           {/* "Date" / "Place" keys exist only in the phone layout */}
-          <div className="m-row rv-r" style={{ "--i": 4 } as CSSProperties}>
+          <div className="m-row m-row-date">
           <span className="m-key hidden">Date</span>
           <p
             className="m-date font-tight text-[clamp(24px,2.2vw,34px)] fit:text-[clamp(22px,min(2.2vw,3.6vh),34px)] font-light leading-[1.2] tracking-[-0.025em] text-editorial-strong"
@@ -58,7 +56,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
             Wednesday 18 November, 18:30
           </p>
           </div>
-          <div className="m-row rv-r" style={{ "--i": 5 } as CSSProperties}>
+          <div className="m-row m-row-place">
           <span className="m-key hidden">Place</span>
           <p
             className={`${paragraphClass} m-place flex flex-col items-start gap-1 text-editorial-strong`}
@@ -87,7 +85,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           </div>
         </div>
 
-        <p className={`${paragraphClass} m-text m-indent rv-r`} style={{ "--i": 6 } as CSSProperties}>
+        <p className={`${paragraphClass} m-text m-indent`}>
           Celebrate the first issue of Remnants of a Future, the debut
           publication from Various Degrees. Meet some of the artists and
           contributors, flip through the pages, and stay for conversation about
@@ -99,8 +97,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           href={RSVP_URL}
           target="_blank"
           rel="noopener"
-          style={{ "--i": 7 } as CSSProperties}
-          className={`m-biglink m-indent rv inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
+          className={`m-biglink m-indent inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
           data-testid="button-rsvp"
         >
           RSVP

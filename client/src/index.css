@@ -606,7 +606,7 @@
     white-space: normal;
   }
   .name-rows li {
-    display: inline-block; /* inline-block so the reveal can move each name */
+    display: inline-block; /* keeps each name and its slash together */
   }
   .name-rows button::after {
     content: none;
@@ -622,130 +622,51 @@
 }
 
 /*
- * Scroll choreography on phones. Each section is its own view timeline (--sec):
- * - items arrive one after another from the sides in sharp steps: .rv from the left
- *   (labels, headline lines, links), .rv-r from the right (text, Date/Place, cover);
- *   --i orders them, --st is the stagger (6%, or 4% in fuller sections), and every
- *   entrance is done by cover 50%, when the section is centred;
- * - at the centre a thin rule draws and the label brightens;
- * - from cover 70% everything lifts away.
- * The title screen slides off to the left in steps over the first 60svh of scroll, so
- * nothing of it shows behind the Event section.
- * Only with support for scroll-driven animations and without reduced motion;
- * otherwise everything is simply visible and still.
+ * Phones: everything is static, except the Event section's Date and Place rows, which
+ * slide in (Date from the left, Place from the right) as each row itself comes into
+ * view, settling around the middle of the screen. No exit. Only with scroll-driven
+ * animation support and without reduced motion; otherwise the rows are simply there.
  */
-@media (max-width: 760px) {
-  .lock-rule {
-    display: block;
-    width: 56px;
-    height: 1px;
-    margin: 20px 0 20px var(--gutter);
-    background: rgb(244 241 234 / 0.6);
-    transform-origin: left;
+@keyframes row-in-l {
+  from {
+    opacity: 0;
+    transform: translateX(-120px);
   }
-  /* the Contributors headline is the label; its rule follows the names */
-  .m-contrib .lock-rule {
-    margin-bottom: 0;
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes row-in-r {
+  from {
+    opacity: 0;
+    transform: translateX(120px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-@keyframes rv-in-l {
-  from {
-    opacity: 0;
-    transform: translateX(-90px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes rv-in-r {
-  from {
-    opacity: 0;
-    transform: translateX(90px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes rv-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-40px);
-  }
-}
-@keyframes lock-draw {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-@keyframes label-lit {
-  from {
-    color: #bdb8ac;
-  }
-  to {
-    color: #f4f1ea;
-  }
-}
-@keyframes hero-out-m {
-  to {
-    transform: translateX(-100%);
-    opacity: 0;
+@media (max-width: 760px) {
+  /* The title screen is a normal block that scrolls away; no motion on phones */
+  .hero-title,
+  .hero-hint {
+    animation: none;
   }
 }
 
 @supports (animation-timeline: view()) {
   @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-    .m-sec {
-      view-timeline: --sec block;
+    .m-row-date,
+    .m-row-place {
+      animation: row-in-l linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
     }
-    .m-st4 {
-      --st: 4%;
-    }
-    .rv,
-    .rv-r {
-      --a: calc(var(--i, 0) * var(--st, 6%));
-      animation: rv-in-l steps(4, jump-end) both, rv-out linear forwards;
-      animation-timeline: --sec, --sec;
-      animation-range:
-        cover calc(4% + var(--a)) cover calc(18% + var(--a)),
-        cover 70% cover 100%;
-    }
-    .rv-r {
-      animation-name: rv-in-r, rv-out;
-    }
-    /* Labels: arrive from the left, brighten at the centre, lift away */
-    .m-label {
-      animation-name: rv-in-l, rv-out, label-lit;
-      animation-timing-function: steps(4, jump-end), linear, linear;
-      animation-fill-mode: both, forwards, both;
-      animation-timeline: --sec, --sec, --sec;
-      animation-range:
-        cover calc(4% + var(--a)) cover calc(18% + var(--a)),
-        cover 70% cover 100%,
-        cover 44% cover 52%;
-    }
-    .lock-rule {
-      animation: lock-draw steps(5, jump-end) both, rv-out linear forwards;
-      animation-timeline: --sec, --sec;
-      animation-range: cover 44% cover 52%, cover 70% cover 100%;
-    }
-    /* The title screen leaves to the left in sharp steps over the first 60svh */
-    .hero-title {
-      animation: hero-out-m steps(4) both;
-      animation-timeline: scroll(root block);
-      animation-range: 0 60svh;
-    }
-    .hero-hint {
-      pointer-events: none;
+    .m-row-place {
+      animation-name: row-in-r;
+      animation-range: entry 10% cover 45%;
     }
   }
 }

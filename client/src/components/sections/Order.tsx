@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties } from "react";
+import { forwardRef } from "react";
 import {
   afterLabel,
   Arrow,
@@ -18,23 +18,21 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
-      <p className={`${numberLabelClass} rv m-label`}>04 — Get a copy</p>
+      <p className={`${numberLabelClass}`}>04 — Get a copy</p>
 
       <h2
         id="order-heading"
         className={`${afterLabel} m-h56 font-tight text-[clamp(44px,8.4vw,132px)] fit:text-[clamp(44px,min(8.4vw,13vh),132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong`}
       >
         {/* The spans only stack on phones (index.css); on desktop they read as one line */}
-        <span className="m-line rv" style={{ "--i": 1 } as CSSProperties}>Remnants</span>{" "}
-        <span className="m-line rv" style={{ "--i": 2 } as CSSProperties}>of a</span>{" "}
-        <span className="m-line rv" style={{ "--i": 3 } as CSSProperties}>Future</span>
+        <span className="m-line">Remnants</span>{" "}
+        <span className="m-line">of a</span>{" "}
+        <span className="m-line">Future</span>
       </h2>
 
-      {/* Phones: a thin rule that draws when the section reaches the centre */}
-      <span className="lock-rule hidden" aria-hidden="true" />
 
       <div className={`${rightColumn} m-indent mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
-        <p className={`${paragraphClass} m-text rv-r`} style={{ "--i": 4 } as CSSProperties}>
+        <p className={`${paragraphClass} m-text`}>
           Copies are available from €15. Any extra support goes directly toward funding the project.
           Contributions of €150 or more include a copy of the publication
           plus an original, limited artwork from our artists.
@@ -44,8 +42,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
           href={ORDER_URL}
           target="_blank"
           rel="noopener"
-          style={{ "--i": 5 } as CSSProperties}
-          className={`m-biglink rv mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
+          className={`m-biglink mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
           data-testid="button-order"
         >
           Order
