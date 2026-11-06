@@ -932,4 +932,8 @@
   .m-sec#order {
     padding-bottom: var(--pb);
   }
+  /* cover → "03 — Contributors" label: the same 56px */
+  .m-contrib .m-cover {
+    margin-bottom: 56px;
+  }
 }
