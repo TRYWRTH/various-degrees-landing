@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { ORDER_URL } from "@/lib/links";
 import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
@@ -8,7 +9,7 @@ type TopBarProps = {
   isLoaded: boolean;
   /** Wordmark: hidden on the hero, which already shows the title large. */
   showWordmark: boolean;
-  /** Compact Order (jumps to the Order section): hidden only while the Order section is in view. */
+  /** Compact Order (opens the order form): hidden only while the Order section is in view. */
   showOrder: boolean;
 };
 
@@ -88,9 +89,7 @@ export function TopBar({ isLoaded, showWordmark, showOrder }: TopBarProps) {
           </div>
 
           <PrimaryButton
-            href="#order"
-            external={false}
-            onClick={goTo("order")}
+            href={ORDER_URL}
             size="compact"
             aria-hidden={!showOrder}
             tabIndex={showOrder ? undefined : -1}
