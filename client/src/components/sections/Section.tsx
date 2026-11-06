@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 type SectionProps = HTMLAttributes<HTMLElement> & {
   id: string;
   children: ReactNode;
+  /** Soft snapping on big screens (see index.css); "last" leaves room for the footer. */
+  snap?: "section" | "last";
 };
 
 /** Page gutter shared by the nav, every section and the footer. */
@@ -14,7 +16,7 @@ export const gutter = "px-[clamp(20px,5vw,72px)]";
  * Focusable (tabIndex -1) so in-page links can move focus here after scrolling.
  */
 export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
-  { id, className, children, ...rest },
+  { id, className, children, snap = "section", ...rest },
   ref,
 ) {
   return (
@@ -22,7 +24,12 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
       id={id}
       ref={ref}
       tabIndex={-1}
-      className={cn("relative outline-none", gutter, className)}
+      className={cn(
+        "relative outline-none",
+        snap === "last" ? "snap-section-last" : "snap-section",
+        gutter,
+        className,
+      )}
       {...rest}
     >
       <div className="mx-auto w-full max-w-[1296px]">{children}</div>

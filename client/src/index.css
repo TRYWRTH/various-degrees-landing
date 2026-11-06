@@ -166,6 +166,47 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* First screen: load fade (letter-spacing settles from 0.04em wider) and scroll-out */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    letter-spacing: calc(var(--ls) + 0.04em);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: var(--ls);
+  }
+}
+@keyframes hero-hint-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hero-out {
+  /* The page moves the title up at 1x; pushing it down 0.6x leaves ~0.4x */
+  to {
+    transform: translateY(60vh);
+    opacity: 0;
+    filter: blur(12px);
+  }
+}
+@keyframes hero-hint-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes hero-dim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -185,6 +226,67 @@
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
+    }
+  }
+
+  /*
+   * Soft scroll snapping on the main page: wide and tall enough screens only, never with
+   * reduced motion. "proximity" only settles on a section start when you stop close to
+   * it, so tall sections scroll freely and nothing can trap you. The last section is one
+   * screen minus the footer, so its snap point is the very bottom of the page and the
+   * footer (never a snap point itself) is always in view there.
+   */
+  @media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-snap-type: y proximity;
+    }
+    .snap-section {
+      min-height: 100svh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+    }
+    .snap-section-last {
+      min-height: calc(100svh - var(--footer-h, 0px));
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+    }
+    .snap-hero {
+      scroll-snap-align: start;
+    }
+  }
+
+  /*
+   * First screen motion (Hero.tsx). Nothing here runs with reduced motion: the title is
+   * simply static. Scroll-driven parts only run where the browser supports them.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-in {
+      animation: hero-in 1.2s ease-out both;
+    }
+    .hero-hint-in {
+      animation: hero-hint-in 1.2s ease-out 0.6s both;
+    }
+    @supports (animation-timeline: scroll()) {
+      /* Over the first screen of scrolling: drift up at ~0.4x, fade out, blur to 12px */
+      .hero-title {
+        animation: hero-out linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 100vh;
+      }
+      /* Gone as soon as scrolling starts */
+      .hero-hint {
+        animation: hero-hint-out linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 64px;
+      }
+      /* The photo darkens as the first screen leaves (Background.tsx) */
+      .hero-dim {
+        animation: hero-dim linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 100vh;
+      }
     }
   }
 

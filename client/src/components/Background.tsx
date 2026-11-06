@@ -36,6 +36,8 @@ export const Background = forwardRef<BackgroundHandle>(function Background(_prop
         data-page-photo=""
       />
       <div ref={flatRef} className="absolute inset-0 bg-night" style={{ opacity: 0.5 }} />
+      {/* Darkens as the first screen scrolls away (CSS scroll-driven, see .hero-dim) */}
+      <div className="hero-dim absolute inset-0 bg-night/20 opacity-0" />
       <div className="absolute inset-0 bg-night opacity-40 md:hidden" />
       <div
         className="absolute inset-0"

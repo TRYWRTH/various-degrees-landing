@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { gutter } from "@/components/sections/Section";
 import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
@@ -10,8 +11,20 @@ const footerText =
  * Phones also get "Back to top ↑" here, as before.
  */
 export function Footer() {
+  const ref = useRef<HTMLElement>(null);
+
+  // The last section uses this to end exactly one screen above the page bottom
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const observer = new ResizeObserver(() => root.style.setProperty("--footer-h", `${el.offsetHeight}px`));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <footer role="contentinfo" className={cn("relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
+    <footer ref={ref} role="contentinfo" className={cn("relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
       <div className="mx-auto flex w-full max-w-[1296px] flex-col items-start">
         <button
           type="button"

@@ -28,7 +28,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
         Join us for the launch
       </h2>
 
-      <div className={`${rightColumn} mt-[clamp(56px,7.8vw,112px)]`}>
+      <div className={`${rightColumn} mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12`}>
         {/* Date and time lead the details, a step up from the paragraph text */}
         <p
           className="font-tight text-[clamp(24px,2.2vw,34px)] font-light leading-[1.2] tracking-[-0.025em] text-editorial-strong"
@@ -36,7 +36,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
         >
           Wednesday 18 November, 18:30
         </p>
-        <p className={`${paragraphClass} mt-3 flex flex-col items-start gap-1 text-editorial-strong`}>
+        <p className={`${paragraphClass} flex flex-col items-start gap-1 text-editorial-strong`}>
           <a
             href={DESIRELINES_INSTAGRAM_URL}
             target="_blank"
@@ -59,7 +59,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           </a>
         </p>
 
-        <p className={`${paragraphClass} mt-7`}>
+        <p className={paragraphClass}>
           Celebrate the first issue of Remnants of a Future, the debut publication from Various
           Degrees. Meet some of the artists and contributors, flip through the pages, and stay for
           conversation about lost futures, new dreams, and the traces they leave in between. Drinks,
@@ -70,7 +70,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           href={RSVP_URL}
           target="_blank"
           rel="noopener"
-          className="mt-12 inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight text-[clamp(32px,3.4vw,52px)] font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white"
+          className="inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight text-[clamp(32px,3.4vw,52px)] font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white"
           data-testid="button-rsvp"
         >
           RSVP
