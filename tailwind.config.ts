@@ -90,8 +90,6 @@ export default {
           body: "#DAD6CC",
           strong: "#F4F1EA",
           link: "#8F8A7E",
-          surface: "#0F100C",
-          rule: "#25271F",
           "on-strong": "#0A0B08",
         },
         night: "rgb(8 8 7)",

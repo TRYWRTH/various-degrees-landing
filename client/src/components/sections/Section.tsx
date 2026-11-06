@@ -4,13 +4,11 @@ import { cn } from "@/lib/utils";
 type SectionProps = HTMLAttributes<HTMLElement> & {
   id: string;
   children: ReactNode;
-  /** Centre vignette behind the column; off for sections with their own flat surface. */
-  vignette?: boolean;
 };
 
 /** One full screen per section, snapped, with the centre vignette behind the column. */
 export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
-  { id, className, children, vignette = true, ...rest },
+  { id, className, children, ...rest },
   ref,
 ) {
   return (
@@ -23,7 +21,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
       )}
       {...rest}
     >
-      {vignette && <div className="section-vignette" aria-hidden="true" />}
+      <div className="section-vignette" aria-hidden="true" />
       {children}
     </section>
   );
