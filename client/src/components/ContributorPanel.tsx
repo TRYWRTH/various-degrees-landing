@@ -201,7 +201,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
               <div className={cn(rightColumn, "mt-[clamp(56px,6.7vw,96px)] min-[900px]:ml-0 min-[900px]:mt-0 min-[900px]:max-w-none")}>
                 {/* On wide screens the size also follows the window height, so short laptop screens fit too */}
                 <p
-                  className={cn(paragraphClass, "hyphens-none min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]")}
+                  className={cn(paragraphClass, "hyphens-none sm:text-justify min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]")}
                   data-testid="text-contributor-bio"
                 >
                   {contributor.bio}

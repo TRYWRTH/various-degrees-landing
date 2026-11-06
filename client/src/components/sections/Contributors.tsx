@@ -1,16 +1,35 @@
 import { forwardRef } from "react";
 import { afterLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
-import { contributors } from "@/data/contributors";
+import { contributors, type Contributor } from "@/data/contributors";
 
 type ContributorsProps = {
   onSelect: (slug: string, trigger: HTMLButtonElement) => void;
 };
 
 /**
- * The names as one flowing line of large type, alphabetical by first name, with a thin
- * CSS slash between them (`.name-flow`). Each name keeps its existing behaviour: it
- * opens that contributor's panel. A name only breaks inside itself when it is wider
- * than the whole line.
+ * Fixed line grouping (by slug), alphabetical by first name. The type is sized so the
+ * longest row, row 1, just fills the content width (`.name-rows` in index.css, divisor
+ * 19.8; row 1 is 19.55em wide). If a name is added or removed, check that row 1 still fits on one line at ~800px
+ * and 1440px wide, and adjust the grouping or the divisor. Anyone not listed here is
+ * added to the last row, so nobody silently disappears.
+ */
+const ROWS: string[][] = [
+  ["andrea-mikyska", "asmaa-azaizeh", "julio-clavijo"],
+  ["kevin-junk", "nicola-sebastian"],
+  ["sharlene-durfey-francois", "theresa-weber"],
+  ["tomer-rosenthal"],
+];
+
+const bySlug = new Map(contributors.map((c) => [c.slug, c]));
+const listed = new Set(ROWS.flat());
+const rows: Contributor[][] = ROWS.map((row) =>
+  row.map((slug) => bySlug.get(slug)).filter((c): c is Contributor => Boolean(c)),
+);
+rows[rows.length - 1].push(...contributors.filter((c) => !listed.has(c.slug)));
+
+/**
+ * The names in four fixed rows of large light type with faint "/" separators. Each name
+ * is a button that opens its bio popup; hovering one dims the others.
  */
 export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function Contributors(
   { onSelect },
@@ -22,23 +41,26 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         03 — Contributors
       </h2>
 
-      <ul
-        className={`name-flow ${afterLabel} font-tight text-[clamp(28px,4.2vw,64px)] fit:text-[clamp(28px,min(4.2vw,7vh),64px)] font-light leading-[1.15] tracking-[-0.03em] text-editorial-strong`}
-      >
-        {contributors.map((contributor) => (
-          <li key={contributor.slug}>
-            <button
-              type="button"
-              onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
-              aria-haspopup="dialog"
-              className="text-left decoration-1 underline-offset-[0.18em] hover:underline focus-visible:underline"
-              data-testid={`button-contributor-${contributor.slug}`}
-            >
-              {contributor.name}
-            </button>
-          </li>
+      <div className={`name-rows ${afterLabel} font-tight font-light text-editorial-strong`}>
+        {rows.map((row, r) => (
+          <ul key={r}>
+            {row.map((contributor) => (
+              <li key={contributor.slug}>
+                <button
+                  type="button"
+                  onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
+                  aria-haspopup="dialog"
+                  aria-label={contributor.name}
+                  className="text-left decoration-1 underline-offset-[0.18em] hover:underline focus-visible:underline"
+                  data-testid={`button-contributor-${contributor.slug}`}
+                >
+                  {contributor.name}
+                </button>
+              </li>
+            ))}
+          </ul>
         ))}
-      </ul>
+      </div>
     </Section>
   );
 });

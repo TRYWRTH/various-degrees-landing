@@ -298,15 +298,66 @@
     text-wrap: balance;
   }
 
-  /* Contributors: one flowing line of names, a thin slash between them (not in the text) */
-  .name-flow > li {
-    display: inline-block;
-    max-width: 100%;
+  /*
+   * Contributors: four fixed rows of names (Contributors.tsx). The size makes row 1 just
+   * fill the content width: the padded window width, but at most the 1296px content
+   * column, divided by 19.8 (row 1 measures 19.55em in Inter Tight, plus ~1% margin).
+   * A faint "/" follows every name except the very last one.
+   */
+  .name-rows {
+    font-size: calc(min(100vw - 2 * clamp(20px, 5vw, 72px), 1296px) / 19.8);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
   }
-  .name-flow > li:not(:last-child)::after {
+  .name-rows > ul {
+    display: flex;
+    gap: 0.28em;
+    white-space: nowrap;
+  }
+  /* Inside the button so it always follows the last word, even when a name wraps */
+  .name-rows button::after {
     content: "/";
-    margin: 0 0.32em;
+    display: inline-block;
+    margin-left: 0.28em;
     opacity: 0.35;
+    text-decoration: none;
+  }
+  .name-rows > ul:last-child > li:last-child button::after {
+    content: none;
+  }
+  /* Hovering a name dims the others */
+  .name-rows button {
+    transition: opacity 200ms ease-out;
+  }
+  .name-rows:has(button:hover) button:not(:hover) {
+    opacity: 0.4;
+  }
+  .name-rows button:hover::after,
+  .name-rows button:focus-visible::after {
+    text-decoration: none;
+  }
+  /*
+   * Narrow screens: no fixed grouping. All names flow as one wrapped text; each name
+   * (with its "/") stays in one piece unless it is wider than the whole line.
+   */
+  @media (max-width: 759px) {
+    .name-rows {
+      font-size: clamp(34px, 9vw, 56px);
+    }
+    .name-rows > ul {
+      display: inline;
+      white-space: normal;
+    }
+    .name-rows li {
+      display: inline-block;
+      max-width: 100%;
+      margin-right: 0.28em;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .name-rows button {
+      transition: none;
+    }
   }
 }
 
