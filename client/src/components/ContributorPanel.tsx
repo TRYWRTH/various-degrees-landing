@@ -215,7 +215,6 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
             the whole bio fits without scrolling. Phones: stacked, and the overlay scrolls. */}
         <div className="mx-auto flex w-full max-w-[1296px] flex-col min-[900px]:min-h-[100svh]">
           <div className="flex h-[72px] shrink-0 items-center justify-between gap-4">
-            <p className={cn(numberLabelClass, "bio-label")}>03 — Contributors</p>
             {/* Touch screens only: the one close hint */}
             <p className="bio-hint" aria-hidden="true">
               Click anywhere to close

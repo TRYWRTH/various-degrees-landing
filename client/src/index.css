@@ -1238,13 +1238,6 @@
   }
 }
 
-/* Phones: no section label in the bio view (the close hint stays top right) */
-@media (max-width: 760px) {
-  .bio-label {
-    display: none;
-  }
-}
-
 /* Phones: smaller previous / next artist links in the bio */
 @media (max-width: 760px) {
   .bio-nav {
