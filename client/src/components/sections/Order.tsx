@@ -20,7 +20,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
       {/* Desktop: text on the left, a large cover on the right; phones: text only */}
-      <div className="md:flex md:items-center md:justify-between md:gap-[clamp(40px,5vw,96px)]">
+      <div className="md:flex md:items-start md:justify-between md:gap-[clamp(40px,5vw,96px)]">
       <div className="md:min-w-0 md:flex-1">
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="04" name="Get a copy" />
@@ -57,7 +57,8 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
       </div>
       </div>
 
-      <figure className="hidden md:block md:aspect-[3/4] md:h-[min(76vh,760px)] md:shrink-0">
+      {/* top-aligned with the 04 label; sized to end above the footer */}
+      <figure className="hidden md:block md:aspect-[3/4] md:h-[min(68vh,700px)] md:shrink-0">
         <img
           src="/assets/cover.jpg"
           alt="Cover of Remnants of a Future"
