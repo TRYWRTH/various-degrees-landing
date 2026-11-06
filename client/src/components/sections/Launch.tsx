@@ -25,7 +25,7 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
       id="launch"
       ref={ref}
       aria-labelledby="launch-heading"
-      className={`${sectionPad} m-sec`}
+      className={`${sectionPad} m-sec m-launch`}
     >
       <p className={numberLabelClass}>01 — Event</p>
 

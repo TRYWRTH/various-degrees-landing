@@ -80,7 +80,7 @@ export function TopBar() {
     >
       <nav
         aria-label="Main"
-        className="mx-auto flex h-[72px] w-full max-w-[1296px] items-center justify-between gap-4"
+        className="m-nav mx-auto flex h-[72px] w-full max-w-[1296px] items-center justify-between gap-4"
       >
         <a
           href="#hero"

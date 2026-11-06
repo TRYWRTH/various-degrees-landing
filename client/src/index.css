@@ -511,15 +511,39 @@
     bottom: auto;
   }
 
-  /* Sections: one screen at least, 104px top / 72px bottom */
+  /*
+   * Sections: at least one screen tall, measured with the LARGE viewport (lvh: browser
+   * toolbar hidden). Safari's toolbar hides while you scroll, which makes the visible
+   * area taller than the small viewport; with svh-tall sections the page then ran out
+   * before "Get a copy" could reach the top, leaving the end of Contributors showing.
+   * Content that hugs the bottom (the contributor names) is still laid out for the small
+   * viewport, so it never sits under the toolbar.
+   */
   .m-sec {
-    min-height: 100svh;
-    padding-top: 104px;
-    padding-bottom: 72px;
+    min-height: 100lvh;
+    padding-top: 64px;
+    padding-bottom: 56px;
   }
-  /* The last section leaves room for the footer, so snapping never hides it */
+
+  /* Nav: smaller and lower-key on phones (still 44px tap targets), so sections can
+     start higher */
+  .m-nav {
+    height: 48px;
+  }
+  .m-nav > div > a,
+  .m-nav > div > div > button,
+  .m-nav > a {
+    font-size: 10px;
+  }
+  /* The last section plus the footer is exactly one large viewport */
   .m-sec.snap-section-last {
-    min-height: calc(100svh - var(--footer-h, 0px));
+    min-height: calc(100lvh - var(--footer-h, 0px));
+  }
+  /* Label to headline */
+  .m-sec h1,
+  .m-sec h2.m-h56,
+  .m-sec h2.m-h40 {
+    margin-top: 24px;
   }
 
   /* Headlines */
@@ -556,16 +580,36 @@
   }
 
   /* 01 Event: Date / Place grid with a 74px key column */
+  /* Kept compact so the whole event, RSVP included, sits well inside one phone screen */
   .m-launch-col {
+    margin-top: 18px;
     margin-left: 0;
     max-width: none;
-    gap: 36px;
+    gap: 20px;
+  }
+  .m-sec.m-launch {
+    padding-top: 56px;
+  }
+  .m-sec.m-launch h2.m-h56 {
+    margin-top: 16px;
+    font-size: 42px;
+  }
+  .m-launch .m-date {
+    font-size: 20px;
+  }
+  .m-launch .m-biglink {
+    font-size: 30px;
+  }
+  .m-launch-col .m-text {
+    font-size: 16px;
+    line-height: 1.45;
   }
   .m-details {
     display: grid;
     grid-template-columns: 74px minmax(0, 1fr);
     align-items: baseline;
-    row-gap: 18px;
+    column-gap: 0;
+    row-gap: 10px;
     width: 100%;
   }
   .m-key {
@@ -590,7 +634,8 @@
   .m-contrib > div {
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - 176px);
+    /* small viewport minus the section padding: the names sit above the toolbar */
+    min-height: calc(100svh - 120px);
   }
   .m-contrib h2 {
     position: relative;
