@@ -1,4 +1,4 @@
-# Various Degrees: Remnants of a Future
+# Various Degrees: Remnants of a Future!
 
 The one-page site for *Remnants of a Future*, the debut publication from Various Degrees: an art publication exploring lost futures, new dreams, and the traces they leave in between.
 
