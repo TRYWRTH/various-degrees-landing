@@ -579,18 +579,22 @@
 
   /* 03 Contributors: cover at the top, label + names pushed to the bottom */
   /*
-   * Label + names sit centred between the cover and the 04 label: the space above
-   * (cover margin) equals the space below (this section's bottom padding plus the next
-   * section's top padding), both (40px + --pb + --pt) / 2. Total height unchanged.
+   * Label + names: (40px + --pb + --pt) / 2 below the cover, and close to the 04 label
+   * after them: Contributors ends right at the names and Get a copy starts 56px below.
+   * Get a copy no longer stretches to a full screen, so the page ends sooner.
    */
   .m-sec.m-contrib {
     --gap-mid: calc((40px + var(--pb) + var(--pt)) / 2);
-    padding-bottom: calc(var(--gap-mid) - var(--pt));
+    padding-bottom: 0;
   }
   .m-contrib > div {
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - var(--gap-mid));
+    min-height: calc(100svh - var(--pt));
+  }
+  .m-sec#order {
+    min-height: 0;
+    padding-top: 56px;
   }
   /* The cover sits right-aligned directly above the label and the names, which stay
      at the bottom of the screen */
@@ -830,10 +834,11 @@
     flex-direction: column;
     min-height: calc(100svh - var(--pt) - var(--pb));
   }
-  /* ...and on through the top of Contributors, stopping 16px above the cover */
+  /* ...and on through the top of Contributors, stopping 28px above the cover (the same
+     gap as under the text) */
   .m-contrib .trail::before {
     top: calc(-1 * var(--pt));
-    bottom: 16px;
+    bottom: 28px;
   }
 }
 
