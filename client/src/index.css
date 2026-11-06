@@ -900,7 +900,7 @@
      edge (the section has 20px side padding) */
   .m-sec .m-indent.m-order-col {
     margin-left: calc(var(--gutter) * 1.6);
-    margin-right: -12px;
+    margin-right: 0; /* same right margin as the About text */
   }
   /* justified; 1.6x the gutter keeps the column wide enough for even word spacing */
   .m-order-col .m-order-p {
@@ -931,5 +931,20 @@
 @media (min-width: 761px) {
   .only-phone {
     display: none;
+  }
+}
+
+/* Desktop: a little more air between the lines of contributor names */
+@media (min-width: 761px) {
+  .name-rows {
+    line-height: 1.3;
+  }
+}
+
+/* Phones: body paragraphs justified (not the headlines), no word breaking */
+@media (max-width: 760px) {
+  .m-sec .m-text {
+    text-align: justify;
+    hyphens: none;
   }
 }
