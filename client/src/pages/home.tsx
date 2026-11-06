@@ -29,19 +29,13 @@ const DARKNESS: Record<SectionKey, number> = {
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/**
- * A section's position on the page. On phones each section sits in a sticky .pin
- * wrapper (Section.tsx), so its own offsetTop is relative to that wrapper; measure the
- * outer .pin instead whenever it is a real box (on desktop it is display: contents).
- */
+/** A section's position on the page. */
 function docTop(section: HTMLElement | null | undefined): number {
   if (!section) return 0;
-  const pin = section.closest<HTMLElement>(".pin");
-  const el = pin && getComputedStyle(pin).display !== "contents" ? pin : section;
-  return el.getBoundingClientRect().top + window.scrollY;
+  return section.getBoundingClientRect().top + window.scrollY;
 }
 
-/** Phones: the sections that pin and signal "centred", with their names. */
+/** Phones: the sections that signal "centred", with their names. */
 const CENTRED: { id: SectionKey; n: number; name: string }[] = [
   { id: "launch", n: 1, name: "Event" },
   { id: "about", n: 2, name: "About" },
@@ -107,112 +101,74 @@ export default function Home() {
     };
   }, []);
 
-  // Phones: pin fit check + "right position" signal.
-  // - A section pins (index.css) only if it fits in one small-viewport screen; otherwise
-  //   its .pin gets .pin-off and it scrolls normally.
-  // - A pinned section is centred while it is stuck (its .pin spans the whole screen);
-  //   an unpinned one while it covers the middle half of the screen. On entering, in the
-  //   same frame: class is-center (dash + label + thud in CSS), a 10ms vibration (after
-  //   the first interaction, where supported) and a polite announcement (not on first
-  //   load, not repeated for the same section twice in a row).
+  // Phones: "right position" signal. A section is centred while it crosses the middle
+  // band of the screen (IntersectionObserver, rootMargin -45% top and bottom). On
+  // entering, in the same callback: class is-center (dash + label + thud in CSS), a 10ms
+  // vibration (after the first interaction, where supported) and a polite announcement
+  // (not on first load, not repeated for the same section twice in a row).
   const liveRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const phone = window.matchMedia("(max-width: 760px)");
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const probe = document.createElement("div");
-    probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none";
-    document.body.appendChild(probe);
+    if (!("IntersectionObserver" in window)) return;
 
     let interacted = false;
-    let first = true;
+    let ready = false; // the observer's first report describes the page on load
     let lastAnnounced: string | null = null;
-    const centred = new Set<string>();
-    let frame = 0;
+    const byId = new Map(CENTRED.map((c) => [c.id as string, c]));
 
-    const parts = () =>
-      CENTRED.map((c) => {
-        const section = document.getElementById(c.id);
-        return { ...c, section, pin: section?.closest<HTMLElement>(".pin") ?? null };
-      });
-
-    const fit = () => {
-      const svh = probe.offsetHeight;
-      for (const { section, pin } of parts()) {
-        if (!section || !pin) continue;
-        pin.classList.toggle("pin-off", phone.matches && section.offsetHeight > svh + 1);
-      }
-    };
-
-    const update = () => {
-      frame = 0;
-      const vh = window.innerHeight;
-      for (const { id, n, name, section, pin } of parts()) {
-        if (!section || !pin) continue;
-        let isCentre = false;
-        if (phone.matches) {
-          const pinned = !reduce.matches && !pin.classList.contains("pin-off");
-          if (pinned) {
-            const r = pin.getBoundingClientRect();
-            isCentre = r.top <= 1 && r.bottom >= vh - 1;
-          } else {
-            const r = section.getBoundingClientRect();
-            isCentre = r.top <= vh * 0.25 && r.bottom >= vh * 0.75;
-          }
-        }
-        if (isCentre && !centred.has(id)) {
-          centred.add(id);
-          section.classList.add("is-center");
-          if (!first) {
-            if (interacted && !reduce.matches) {
-              try {
-                navigator.vibrate?.(10);
-              } catch {
-                /* unsupported: stay silent */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const section = entry.target as HTMLElement;
+          const info = byId.get(section.id);
+          if (!info) continue;
+          const isCentre = phone.matches && entry.isIntersecting;
+          const was = section.classList.contains("is-center");
+          if (isCentre && !was) {
+            section.classList.add("is-center");
+            if (ready) {
+              if (interacted && !reduce.matches) {
+                try {
+                  navigator.vibrate?.(10);
+                } catch {
+                  /* unsupported: stay silent */
+                }
+              }
+              if (lastAnnounced !== info.id && liveRef.current) {
+                liveRef.current.textContent = `Section ${info.n} of 4: ${info.name}`;
+                lastAnnounced = info.id;
               }
             }
-            if (lastAnnounced !== id && liveRef.current) {
-              liveRef.current.textContent = `Section ${n} of 4: ${name}`;
-              lastAnnounced = id;
-            }
+          } else if (!isCentre && was) {
+            section.classList.remove("is-center");
           }
-        } else if (!isCentre && centred.has(id)) {
-          centred.delete(id);
-          section.classList.remove("is-center");
         }
+        ready = true;
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    for (const c of CENTRED) {
+      const el = document.getElementById(c.id);
+      if (el) observer.observe(el);
+    }
+
+    const onInteract = () => {
+      interacted = true;
+    };
+    const onPhoneChange = () => {
+      if (!phone.matches) {
+        for (const c of CENTRED) document.getElementById(c.id)?.classList.remove("is-center");
       }
-      first = false;
     };
-
-    const onScroll = () => {
-      interacted = true;
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    const onTouch = () => {
-      interacted = true;
-    };
-    const onResize = () => {
-      fit();
-      onScroll();
-    };
-    const resizeObserver = new ResizeObserver(onResize);
-    for (const { section } of parts()) if (section) resizeObserver.observe(section);
-
-    fit();
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("touchstart", onTouch, { passive: true });
-    window.addEventListener("resize", onResize);
-    phone.addEventListener?.("change", onResize);
-    reduce.addEventListener?.("change", onResize);
+    window.addEventListener("touchstart", onInteract, { passive: true });
+    window.addEventListener("scroll", onInteract, { passive: true });
+    phone.addEventListener?.("change", onPhoneChange);
     return () => {
-      cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      probe.remove();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("touchstart", onTouch);
-      window.removeEventListener("resize", onResize);
-      phone.removeEventListener?.("change", onResize);
-      reduce.removeEventListener?.("change", onResize);
+      observer.disconnect();
+      window.removeEventListener("touchstart", onInteract);
+      window.removeEventListener("scroll", onInteract);
+      phone.removeEventListener?.("change", onPhoneChange);
     };
   }, []);
 

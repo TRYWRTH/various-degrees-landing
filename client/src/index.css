@@ -494,7 +494,7 @@
     --gutter: clamp(56px, 19vw, 74px);
     min-height: 100svh;
     /* 104 / 72 on phones about 844px tall, a little less on shorter ones so more
-       sections fit one screen (and can pin) */
+       sections fit one screen) */
     --pt: clamp(72px, 12.3svh, 104px);
     --pb: clamp(48px, 8.5svh, 72px);
     padding: var(--pt) 20px var(--pb);
@@ -629,41 +629,24 @@
 }
 
 /*
- * Phones: everything is static except, each on its own view() timeline (it moves only
- * once it is on screen; position only via `translate`, linear, always fully opaque) and settling around the middle of the screen, with no exit:
- * Event's Date (from the left) and Place (from the right) rows, the About headline
- * (from the right), the Contributors cover and the Get a copy paragraph (both from
- * the left). Only with scroll-driven
- * animation support and without reduced motion; otherwise the rows are simply there.
+ * Phones: everything is static except the side entries: Event's Date row (from the
+ * left) and Place row, the About headline, the Contributors cover and the Get a copy
+ * paragraph (all from the right). Only with scroll-driven animation support and
+ * without reduced motion; otherwise they are simply in place.
  */
-@keyframes row-in-l {
-  from {
-    translate: -120px 0;
-  }
-  to {
-    translate: 0 0;
-  }
-}
-@keyframes row-in-r {
-  from {
-    translate: 120px 0;
-  }
-  to {
-    translate: 0 0;
-  }
-}
 
-@keyframes about-in {
-  from {
-    translate: 100vw 0;
-  }
-  to {
-    translate: 0 0;
-  }
-}
-@keyframes cover-in {
+
+@keyframes enter-l {
   from {
     translate: -100vw 0;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@keyframes enter-r {
+  from {
+    translate: 100vw 0;
   }
   to {
     translate: 0 0;
@@ -680,92 +663,44 @@
 
 @supports (animation-timeline: view()) {
   @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-    .m-row-date,
-    .m-row-place {
-      animation: row-in-l linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 40%;
-    }
-    .m-row-place {
-      animation-name: row-in-r;
-      animation-range: entry 10% cover 45%;
-    }
-    /* About: the headline arrives from the right in three visible jumps */
     /*
-     * About headline: driven by the About wrapper's timeline (--about), so it starts
-     * the moment the section appears at the bottom and arrives as the pin begins. The
-     * wrapper is taller than the screen, so its entry 100% is when its top reaches the
-     * top of the screen (= pin start), so it glides in linearly and lands exactly then.
+     * One rule for every side entry: each element rides its section's timeline
+     * (--sec), starting the moment the section appears at the bottom of the screen and
+     * arriving exactly when the section is centred (cover 50%). Linear, no fade; the
+     * translate property only (the thud uses scale, so they never collide).
      */
-    .pin-about {
-      view-timeline: --about block;
+    .m-sec {
+      view-timeline: --sec block;
     }
-    .m-about-h {
-      animation: about-in linear both;
-      animation-timeline: --about;
-      animation-range: entry 0% entry 100%;
-    }
-    /* Side entries move with the translate property (the thud uses scale, so they never
-       override each other); hint the compositor */
     .m-row-date,
     .m-row-place,
     .m-about-h,
     .m-cover,
     .m-order-p {
+      animation: enter-r linear both;
+      animation-timeline: --sec;
+      animation-range: entry 0% cover 50%;
       will-change: translate;
     }
-    /*
-     * Contributors cover and Get a copy paragraph slide in from the left. They sit low
-     * in sections that pin, so they finish once fully on screen (entry 100%) — always
-     * before the pin starts, never frozen half-arrived during the hold.
-     */
-    .m-cover {
-      animation: cover-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
+    .m-row-date {
+      animation-name: enter-l;
     }
-    .m-order-p {
-      animation: row-in-l linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
+    /* The About headline keeps its entry while the thud (scale) plays on top */
+    .m-sec.is-center .m-about-h {
+      animation:
+        enter-r linear both,
+        settle 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 1;
+      animation-timeline: --sec, auto;
+      animation-range: entry 0% cover 50%, normal;
     }
   }
 }
 
 /* =========================================================================
- * Phones: pin + "right position" signal (logic in pages/home.tsx).
+ * Phones: "right position" signal (logic in pages/home.tsx): while a section crosses
+ * the middle band of the screen it has .is-center.
  * ========================================================================= */
-/* Desktop: the pin wrappers make no boxes and the drawn dash is not used */
-.pin,
-.pin-in {
-  display: contents;
-}
-
 @media (max-width: 760px) {
-  /*
-   * Each section holds still for about half a screen of scrolling: the outer .pin is
-   * one screen plus the hold, the inner .pin-in sticks to the top. No JS locking; the
-   * finger always moves the page. A section that does not fit in one small-viewport
-   * screen gets .pin-off (set by the page) and scrolls normally.
-   */
-  .pin {
-    display: block;
-    height: calc(100svh + var(--hold, 50svh));
-  }
-  .pin-in {
-    display: block;
-    position: sticky;
-    top: 0;
-    min-height: 100svh;
-    contain: layout;
-  }
-  .pin.pin-off {
-    height: auto;
-  }
-  .pin.pin-off > .pin-in {
-    position: static;
-  }
-
   /* Label dash: replaces the em dash, grows when the section is centred */
   .m-dash-text {
     display: none;
@@ -810,14 +745,8 @@
   }
 }
 
-/* Reduced motion: no pin, no thud, no transitions; the centred state just shows */
+/* Reduced motion: no thud, no transitions; the centred state just shows */
 @media (max-width: 760px) and (prefers-reduced-motion: reduce) {
-  .pin {
-    height: auto;
-  }
-  .pin-in {
-    position: static;
-  }
   .dash,
   .m-numlabel {
     transition: none;
@@ -828,7 +757,7 @@
  * Phones: a decorative trail of thin technical down arrows (↓) from the About text to the
  * Contributors cover, centred on the cover's column (right-aligned 276px cover,
  * 20px from the edge). Each half is a flex item that only fills space the section
- * already has (so it never changes section heights or the pin); the arrows are drawn
+ * already has (so it never changes section heights); the arrows are drawn
  * by an absolute layer that reaches the section edge, where the two halves meet.
  * ========================================================================= */
 @media (max-width: 760px) {
