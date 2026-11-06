@@ -244,6 +244,12 @@
   .snap-scroller::-webkit-scrollbar {
     display: none;
   }
+  /* In-page links glide; instant for people who prefer reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .snap-scroller {
+      scroll-behavior: smooth;
+    }
+  }
 
   /* Content sections: clear the fixed top bar and the safe areas */
   .section-pad {
