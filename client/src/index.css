@@ -1216,3 +1216,24 @@
     transition: none;
   }
 }
+
+/* Phones: the footer line is centred and barely visible; a tap lights it up briefly */
+@media (max-width: 760px) {
+  .d-footer > div {
+    align-items: center;
+  }
+  .d-footer p {
+    text-align: center;
+    opacity: 0.25;
+    transition: opacity 0.3s ease-out, color 0.3s ease-out;
+  }
+  .d-footer.is-lit p {
+    opacity: 1;
+    color: #f4f1ea;
+  }
+}
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .d-footer p {
+    transition: none;
+  }
+}
