@@ -632,8 +632,8 @@
  * Phones: everything is static except, each on its own view() timeline (it moves only
  * once it is on screen; position only via `translate`, linear, always fully opaque) and settling around the middle of the screen, with no exit:
  * Event's Date (from the left) and Place (from the right) rows, the About headline
- * (from the right, in three jumps), the Contributors cover and the Get a copy
- * paragraph (both from the right). Only with scroll-driven
+ * (from the right), the Contributors cover and the Get a copy paragraph (both from
+ * the left). Only with scroll-driven
  * animation support and without reduced motion; otherwise the rows are simply there.
  */
 @keyframes row-in-l {
@@ -663,7 +663,7 @@
 }
 @keyframes cover-in {
   from {
-    translate: 110% 0;
+    translate: -100vw 0;
   }
   to {
     translate: 0 0;
@@ -715,7 +715,7 @@
       will-change: translate;
     }
     /*
-     * Contributors cover and Get a copy paragraph slide in from the right. They sit low
+     * Contributors cover and Get a copy paragraph slide in from the left. They sit low
      * in sections that pin, so they finish once fully on screen (entry 100%) — always
      * before the pin starts, never frozen half-arrived during the hold.
      */
@@ -725,7 +725,7 @@
       animation-range: entry 0% entry 100%;
     }
     .m-order-p {
-      animation: row-in-r linear both;
+      animation: row-in-l linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 100%;
     }
@@ -825,7 +825,7 @@
 }
 
 /* =========================================================================
- * Phones: a decorative trail of small down arrows from the About text to the
+ * Phones: a decorative trail of thin technical down arrows (↓) from the About text to the
  * Contributors cover, centred on the cover's column (right-aligned 276px cover,
  * 20px from the edge). Each half is a flex item that only fills space the section
  * already has (so it never changes section heights or the pin); the arrows are drawn
@@ -833,7 +833,8 @@
  * ========================================================================= */
 @media (max-width: 760px) {
   .trail {
-    --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='22' viewBox='0 0 14 22'%3E%3Cpath d='M1 7l6 7 6-7' fill='none' stroke='%23BDB8AC' stroke-opacity='.6' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    /* a thin technical ↓ (stem + small head), one every 44px */
+    --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='44' viewBox='0 0 14 44'%3E%3Cpath d='M7 12v18M3.5 26.5L7 30l3.5-3.5' fill='none' stroke='%23BDB8AC' stroke-opacity='.6' stroke-width='1.2' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
     display: block;
     position: relative;
     flex: 1 1 0;
@@ -848,8 +849,9 @@
     position: absolute;
     left: 0;
     right: 0;
-    background: var(--arrow) repeat-y;
-    background-size: 14px 22px;
+    /* whole arrows only, flush with both ends; spare space is spread between them */
+    background: var(--arrow) no-repeat space;
+    background-size: 14px 44px;
   }
   /* About: from 28px below the last paragraph down to the section's bottom edge */
   .m-about > div {
@@ -860,7 +862,6 @@
   .m-about .trail::before {
     top: 28px; /* the gap lives in the drawing, so the trail adds no height */
     bottom: calc(-1 * var(--pb));
-    background-position: center bottom;
   }
   /* Contributors: from the section's top edge to 24px above the cover */
   .m-contrib .trail {
@@ -869,6 +870,5 @@
   .m-contrib .trail::before {
     top: calc(-1 * var(--pt));
     bottom: 0;
-    background-position: center top;
   }
 }
