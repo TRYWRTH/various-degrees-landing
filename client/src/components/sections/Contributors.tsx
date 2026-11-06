@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { afterLabel, NumLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
+import { RollingCover } from "@/components/RollingCover";
 import { contributors, type Contributor } from "@/data/contributors";
 
 type ContributorsProps = {
@@ -92,6 +93,9 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
           </ul>
         ))}
       </div>
+
+      {/* Desktop only: the rolling cover under the names, on the right */}
+      <RollingCover className="only-desktop contrib-roll" />
     </Section>
   );
 });

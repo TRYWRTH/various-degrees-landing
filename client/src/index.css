@@ -930,12 +930,6 @@
   }
 }
 
-/* Desktop: a little more air between the lines of contributor names */
-@media (min-width: 761px) {
-  .name-rows {
-    line-height: 1.3;
-  }
-}
 
 /* Phones: body paragraphs justified (not the headlines), no word breaking */
 @media (max-width: 760px) {
@@ -1066,14 +1060,13 @@
   }
 }
 
-/* Phones: headline, the window at full width, then the text */
+/* Phones: no rolling cover; the text keeps its usual 44px below the headline */
 @media (max-width: 760px) {
   .order-row {
-    margin-top: 44px;
+    margin-top: 0;
   }
-  .order-row > .roll {
-    --rw: calc(100vw - 40px);
-    height: calc(var(--rw) * 1.05);
+  .roll {
+    display: none;
   }
 }
 
@@ -1090,5 +1083,21 @@
   }
   .roll-img:nth-child(n + 2) {
     display: none;
+  }
+}
+
+/* Desktop: the rolling cover in Contributors, under the names on the right */
+@media (min-width: 761px) {
+  .contrib-roll {
+    --rw: 440px;
+    /* the space left under the names: screen height minus top padding (16vh, max
+       160px), label + gap + four lines of names (~4.6em at the names' size), the gap
+       above the window and the bottom padding */
+    height: clamp(
+      160px,
+      calc(100svh - clamp(112px, 16vh, 160px) - min(100vw - 2 * clamp(20px, 5vw, 72px), 1296px) / 19.8 * 4.62 - 70px - clamp(24px, 5vh, 56px) - clamp(24px, 4vh, 64px)),
+      420px
+    );
+    margin: clamp(24px, 5vh, 56px) 0 0 auto;
   }
 }

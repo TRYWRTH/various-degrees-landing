@@ -13,14 +13,10 @@ import {
 } from "@/components/sections/Section";
 import { ORDER_URL } from "@/lib/links";
 
-const COVER = "/assets/cover.jpg";
-
 /**
  * Get a copy. Built like About: label, About-size headline, then the text in the same
- * right column. Beside the text, a window in which the cover rolls upward without end
- * (index.css, .roll): copies of the cover overlap and fade into each other so the strip
- * reads as one continuous image. The window is exactly as tall as the text block.
- * Phones: headline, then the rolling window at full width, then the text.
+ * right column; same text on phones and desktop. The rolling cover is in Contributors
+ * (desktop only).
  */
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
@@ -31,21 +27,12 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
 
       <h2
         id="order-heading"
-        className={`${afterLabel} m-h40 m-head order-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h56 m-head order-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
       >
         Every copy carries a piece of the future we imagined
       </h2>
 
       <div className="order-row mt-[clamp(56px,7.8vw,112px)] fit:mt-[clamp(20px,3.5vh,112px)]">
-        {/* The rolling cover: the first copy carries the alt text, the rest are decoration */}
-        <div className="roll">
-          <div className="roll-stack">
-            <img src={COVER} alt="Cover of Remnants of a Future" className="roll-img" />
-            <img src={COVER} alt="" aria-hidden="true" className="roll-img" />
-            <img src={COVER} alt="" aria-hidden="true" className="roll-img" />
-            <img src={COVER} alt="" aria-hidden="true" className="roll-img" />
-          </div>
-        </div>
 
         <div className={`${rightColumn} m-indent m-order-col m-order-p flex flex-col items-start gap-7 fit:gap-[clamp(16px,3vh,28px)]`}>
           <p className={`${paragraphClass} m-text`}>
