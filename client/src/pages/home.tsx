@@ -105,7 +105,8 @@ export default function Home() {
   // rises: it starts the moment the section appears at the bottom (progress 0) and is
   // in place when the section is centred (progress 1). The furthest progress reached is
   // remembered, so scrolling back up never moves anything back; scrolling down again
-  // carries on from there. Off on desktop and with reduced motion (elements just sit
+  // carries on from there. Back on the first screen they reset and play again on the
+  // way down. Off on desktop and with reduced motion (elements just sit
   // in place).
   useEffect(() => {
     const phone = window.matchMedia("(max-width: 760px)");
@@ -129,6 +130,8 @@ export default function Home() {
       const active = phone.matches && !reduce.matches;
       const vh = window.innerHeight;
       const vw = window.innerWidth;
+      // Back on the first screen: arm the entries again, so they replay on the way down
+      if (window.scrollY < vh * 0.5) for (const item of items) item.reached = 0;
       for (const item of items) {
         if (!active) {
           item.el.style.translate = "";

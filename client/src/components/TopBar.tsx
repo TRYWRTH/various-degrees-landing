@@ -1,14 +1,8 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { Arrow, gutter } from "@/components/sections/Section";
 import { ORDER_URL } from "@/lib/links";
-import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
-
-/** In-page links: scroll smoothly (instantly with reduced motion) and move focus there. */
-const goTo = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-  if (scrollToSection(id)) e.preventDefault();
-};
 
 /** Shared nav text style: DM Mono caps. */
 export const navText =
@@ -22,8 +16,7 @@ const navLink = cn(
 /**
  * Fixed nav: Contact and Order (the order form, new tab) in the top-right corner of every
  * screen. They hide while the page is moving and fade back in once it has settled, so
- * they never slide over text. "Various Degrees" (back to the top) behaves the same but
- * only on the first screen, so it never sits on top of a section's label.
+ * they never slide over text. On phones they show on the first screen only.
  * Keyboard focus keeps a link visible. Only the links take clicks.
  */
 
@@ -68,7 +61,6 @@ export function TopBar() {
     };
   }, []);
 
-  const showWordmark = settled && !pastHero;
 
   return (
     <header
@@ -82,22 +74,6 @@ export function TopBar() {
         aria-label="Main"
         className="m-nav mx-auto flex h-[72px] w-full max-w-[1296px] items-center justify-between gap-4"
       >
-        <a
-          href="#hero"
-          onClick={goTo("hero")}
-          aria-hidden={pastHero || undefined}
-          tabIndex={pastHero ? -1 : undefined}
-          className={cn(
-            navLink,
-            "transition-opacity motion-reduce:transition-none",
-            showWordmark
-              ? "pointer-events-auto opacity-100 duration-200"
-              : "pointer-events-none opacity-0 duration-150 focus-visible:opacity-100",
-          )}
-          data-testid="link-wordmark"
-        >
-          Various Degrees
-        </a>
 
         <div
           className={cn(

@@ -898,11 +898,25 @@
   /* Get a copy: the text block sits further right, its right edge 8px from the screen
      edge (the section has 20px side padding) */
   .m-sec .m-indent.m-order-col {
-    margin-left: calc(var(--gutter) * 1.5);
+    margin-left: calc(var(--gutter) * 1.6);
     margin-right: -12px;
+  }
+  /* justified; 1.6x the gutter keeps the column wide enough for even word spacing */
+  .m-order-col .m-order-p {
+    text-align: justify;
+    hyphens: none;
   }
   /* cover → "03 — Contributors" label: the same 56px */
   .m-contrib .m-cover {
     margin-bottom: 56px;
   }
+}
+
+/* =========================================================================
+ * Accent colour (phones and desktop): the contributor names and the big RSVP and
+ * Order links take the red of the cover lettering, so they stand out.
+ * ========================================================================= */
+.name-rows,
+.accent-link {
+  color: #f05741;
 }

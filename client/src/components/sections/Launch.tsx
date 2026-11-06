@@ -43,6 +43,16 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
       </h2>
 
 
+      {/* Desktop: the publication cover on the left of the details */}
+      <div className="md:flex md:items-start md:gap-[clamp(32px,4vw,64px)]">
+      <figure className="hidden md:mt-[clamp(32px,4vw,56px)] md:block md:aspect-[3/4] md:w-[min(24vw,40vh,340px)] md:shrink-0">
+        <img
+          src="/assets/cover.jpg"
+          alt="Cover of Remnants of a Future"
+          loading="lazy"
+          className="h-full w-full object-cover"
+        />
+      </figure>
       <div
         className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12`}
       >
@@ -100,12 +110,13 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           href={RSVP_URL}
           target="_blank"
           rel="noopener"
-          className={`m-biglink m-indent inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
+          className={`accent-link m-biglink m-indent inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
           data-testid="button-rsvp"
         >
           RSVP
           <Arrow size={40} stroke={1.1} />
         </a>
+      </div>
       </div>
     </Section>
   );

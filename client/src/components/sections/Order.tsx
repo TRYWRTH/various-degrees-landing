@@ -45,7 +45,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
           href={ORDER_URL}
           target="_blank"
           rel="noopener"
-          className={`m-biglink mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
+          className={`accent-link m-biglink mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
           data-testid="button-order"
         >
           Order
