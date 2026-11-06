@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import type { Contributor } from "@/data/contributors";
 import { Arrow, gutter, numberLabelClass, paragraphClass, rightColumn } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
@@ -44,7 +44,8 @@ function ExternalArrow() {
  * under a darker overlay. The whole overlay scrolls when the bio is long.
  *
  * Focus moves to the dialog on open (the dialog itself, so iOS doesn't draw a ring on
- * Close after a tap; Tab then reaches Close), Tab is trapped inside, Esc and Close fade it
+ * Close after a tap; Tab then reaches Close), Tab is trapped inside, Esc, Close, Back
+ * and a click on empty space fade it
  * out, and the page returns focus to the name of the artist last shown.
  *
  * Previous / next swap the artist in place: back to the top, focus stays on the link
@@ -111,6 +112,14 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [requestClose]);
 
+  // A click on empty space closes it; clicks on the text, links and buttons don't, and
+  // neither does the click that ends a text selection.
+  const onBackgroundClick = (e: MouseEvent<HTMLDivElement>) => {
+    if ((e.target as Element).closest("a, button, h2, p")) return;
+    if (window.getSelection()?.toString()) return;
+    requestClose();
+  };
+
   const isInstagram = contributor.link?.label.startsWith("@");
 
   return (
@@ -120,6 +129,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
       aria-modal="true"
       aria-labelledby={nameId}
       tabIndex={-1}
+      onClick={onBackgroundClick}
       className={cn(
         "fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-night outline-none",
         "transition-opacity duration-200 ease-out motion-reduce:transition-none",
@@ -201,11 +211,12 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
                 <button
                   type="button"
                   onClick={requestClose}
-                  className="mt-[clamp(32px,5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight text-[clamp(32px,min(3.4vw,6vh),52px)] font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white"
+                  className="mt-[clamp(24px,4vh,40px)] inline-flex items-center gap-2.5 border-b border-current pb-1 font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-none tracking-[-0.01em] text-editorial-strong hover:text-white min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]"
                   data-testid="button-panel-back"
                 >
+                  {/* Same size as the bio text */}
                   <span className="rotate-180">
-                    <Arrow size={40} stroke={1.1} />
+                    <Arrow size={18} />
                   </span>
                   Back
                 </button>
