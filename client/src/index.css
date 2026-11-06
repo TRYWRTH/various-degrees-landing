@@ -626,7 +626,7 @@
     margin-top: 28px;
     color: #f05741; /* the cover's lettering */
     font-size: calc((100vw - 40px) / 14.2);
-    line-height: 1.12;
+    line-height: 1.4;
     letter-spacing: -0.035em;
   }
   .name-rows > ul {
