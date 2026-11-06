@@ -898,3 +898,38 @@
     }
   }
 }
+
+/* =========================================================================
+ * Phones: sections sit close together. No section stretches to a full screen any
+ * more; each starts 56px below the previous section's content (title screen → 01,
+ * 01 → 02, 03 names → 04). About → Contributors keeps the thin line between the
+ * text and the cover: 28px clear, 72px of line, 28px clear (128px in all).
+ * ========================================================================= */
+@media (max-width: 760px) {
+  .m-sec,
+  .m-sec.snap-section-last {
+    min-height: 0;
+    padding-top: 56px;
+    padding-bottom: 0;
+  }
+  .m-about > div,
+  .m-contrib > div {
+    min-height: 0;
+  }
+  .m-sec.m-contrib {
+    padding-top: 128px;
+  }
+  /* the line now lives in Contributors' top padding: from 28px below the About text
+     to 28px above the cover */
+  .m-about .trail {
+    display: none;
+  }
+  .m-contrib .trail::before {
+    top: calc(-128px + 28px);
+    bottom: 28px;
+  }
+  /* the page still ends with the usual space before the footer */
+  .m-sec#order {
+    padding-bottom: var(--pb);
+  }
+}
