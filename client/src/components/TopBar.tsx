@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { Arrow, gutter } from "@/components/sections/Section";
 import { ORDER_URL } from "@/lib/links";
@@ -20,25 +20,62 @@ const navLink = cn(
 );
 
 /**
- * Nav over the first screen (it scrolls away with it): "Various Degrees" on the left
- * back to the top, Contact and Order (the order form, new tab) on the right as plain
- * text links.
+ * Fixed nav: Contact and Order (the order form, new tab) stay in the top-right corner on
+ * every screen. "Various Degrees" (back to the top) shows on the first screen only and
+ * fades out once you scroll past it, so it never sits on top of a section's label.
+ * Transparent, with a soft dark text shadow so the links stay readable when text
+ * scrolls underneath. Only the links take clicks; the rest of the bar lets them through.
  */
 export function TopBar() {
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      setPastHero(window.scrollY > window.innerHeight * 0.5);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <header
-      className={cn("absolute inset-x-0 top-0 z-20", gutter)}
-      style={{ paddingTop: "env(safe-area-inset-top)" }}
+      className={cn("pointer-events-none fixed inset-x-0 top-0 z-20", gutter)}
+      style={{
+        paddingTop: "env(safe-area-inset-top)",
+        textShadow: "0 0 10px rgb(10 11 8 / 0.9), 0 0 2px rgb(10 11 8 / 0.8)",
+      }}
     >
       <nav
         aria-label="Main"
         className="mx-auto flex h-[72px] w-full max-w-[1296px] items-center justify-between gap-4"
       >
-        <a href="#hero" onClick={goTo("hero")} className={navLink} data-testid="link-wordmark">
+        <a
+          href="#hero"
+          onClick={goTo("hero")}
+          aria-hidden={pastHero || undefined}
+          tabIndex={pastHero ? -1 : undefined}
+          className={cn(
+            navLink,
+            "transition-opacity duration-200 motion-reduce:transition-none",
+            pastHero ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
+          )}
+          data-testid="link-wordmark"
+        >
           Various Degrees
         </a>
 
-        <div className="flex items-center gap-6 min-[480px]:gap-10">
+        <div className="pointer-events-auto ml-auto flex items-center gap-6 min-[480px]:gap-10">
           <ContactPopover />
           {/* Straight to the order form, like the Order link in the publication section */}
           <a
