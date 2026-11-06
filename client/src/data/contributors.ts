@@ -50,7 +50,7 @@ export const contributors: Contributor[] = [
     slug: "theresa-weber",
     name: "Theresa Weber",
     link: { href: "https://www.instagram.com/therrytail/", label: "@therrytail" },
-    bio: "Theresa Weber is an artist, currently living and working in Berlin. Through material collage, textile installation and collaborative performance, the artist seeks to question existing power hierarchies and fixed categorizations. From her perspective as an artist with Jamaican, German and Greek background, her practice often refers to Caribbean discourse, ancient mythologies and historical research. Represented through contemporary body-marks and archival techniques, her practice exemplifies the constant transformation within every tradition. On the dynamic field between transparency and opacity, Weber’s practice creates space for strength and resilience, through nuance and fragility.",
+    bio: "Theresa Weber is an artist, currently living and working in Berlin. From her perspective as an artist with Jamaican, German and Greek background, her practice often refers to Caribbean discourse, ancient mythologies and historical research. Represented through contemporary body-marks and archival techniques, her practice exemplifies the constant transformation within every tradition and questions existing power hierarchies. On the dynamic field between transparency and opacity, Weber’s practice creates space for strength and resilience, through nuance and fragility.",
   },
   {
     slug: "tomer-rosenthal",

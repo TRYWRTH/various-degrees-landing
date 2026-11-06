@@ -26,7 +26,7 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
           className="mt-[clamp(16px,2vw,28px)] font-tight text-[clamp(22px,2.4vw,36px)] font-light italic leading-[1.2] tracking-[-0.02em] text-editorial-body"
           data-testid="text-subtitle"
         >
-          Remnants of a future
+          Remnants of a Future
         </p>
       </div>
     </section>
