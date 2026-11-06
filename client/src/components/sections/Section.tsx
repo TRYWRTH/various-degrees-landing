@@ -68,7 +68,7 @@ export const afterLabel = "mt-[clamp(36px,4vw,56px)] fit:mt-[clamp(20px,4vh,56px
  * section is one screen tall (`fit`), it follows the window height so everything fits.
  */
 export const sectionPad =
-  "pt-[clamp(88px,10.4vw,150px)] pb-[clamp(104px,11.8vw,170px)] fit:py-[clamp(40px,7vh,112px)]";
+  "pt-[clamp(88px,10.4vw,150px)] pb-[clamp(104px,11.8vw,170px)] fit:pt-[clamp(112px,16vh,160px)] fit:pb-[clamp(24px,4vh,64px)]";
 
 /** Large headlines (About, Launch): on `fit` screens the size also follows the height. */
 export const headlineSize = "text-[clamp(36px,5.4vw,84px)] fit:text-[clamp(36px,min(5.4vw,9vh),84px)]";

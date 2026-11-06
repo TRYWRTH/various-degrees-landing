@@ -224,13 +224,14 @@
       min-height: 100svh;
       scroll-snap-align: start;
       display: flex;
-      align-items: center;
+      /* content starts at the same distance from the top in every section */
+      align-items: flex-start;
     }
     .snap-section-last {
       min-height: calc(100svh - var(--footer-h, 0px));
       scroll-snap-align: start;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
     .snap-hero {
       scroll-snap-align: start;
