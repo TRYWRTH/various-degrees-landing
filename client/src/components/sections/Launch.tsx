@@ -34,17 +34,15 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
 
       <h2
         id="launch-heading"
-        className={`${afterLabel} m-h56 m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h40 m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
       >
-        {/* The spans only stack on phones (index.css); on desktop they read as one line */}
-        <span className="m-line">Join us</span>{" "}
-        <span className="m-line">for the</span>{" "}
-        <span className="m-line">launch</span>
+        {/* Styled like the About headline: wraps over several lines */}
+        Join us for the launch of the first issue of Remnants of a Future
       </h2>
 
 
       <div
-        className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12`}
+        className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] fit:mt-[clamp(20px,3vh,40px)] flex flex-col items-start gap-12 fit:gap-[clamp(16px,3vh,32px)]`}
       >
         {/* Date and time lead the details, a step up from the paragraph text; the venue sits
             right under it, then 48px to the paragraph */}
