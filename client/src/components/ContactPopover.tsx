@@ -55,7 +55,9 @@ export function ContactPopover({ className }: ContactPopoverProps) {
       {open && (
         <div
           id={popoverId}
-          className="absolute right-0 top-full animate-fade-in rounded-sm bg-night/85 px-4 py-1 motion-reduce:animate-none"
+          className="absolute right-0 top-full flex animate-fade-in flex-col items-end motion-reduce:animate-none"
+          // Text only: a soft dark shadow behind the letters keeps them readable on the photo
+          style={{ textShadow: "0 0 10px rgb(10 11 8 / 0.9), 0 0 2px rgb(10 11 8 / 0.8)" }}
           data-testid="contact-info"
         >
           <a

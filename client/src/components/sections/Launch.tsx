@@ -28,16 +28,15 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
         Join us for the launch
       </h2>
 
-      {/* Date and time one size up from the headline, like the publication title */}
-      <p
-        className="text-balance mt-[clamp(12px,1.6vw,24px)] font-tight text-[clamp(44px,8.4vw,132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong"
-        data-testid="text-launch-date"
-      >
-        Wednesday 18 November, 18:30
-      </p>
-
       <div className={`${rightColumn} mt-[clamp(56px,7.8vw,112px)]`}>
-        <p className={`${paragraphClass} flex flex-col items-start gap-1 text-editorial-strong`}>
+        {/* Date and time lead the details, a step up from the paragraph text */}
+        <p
+          className="font-tight text-[clamp(24px,2.2vw,34px)] font-light leading-[1.2] tracking-[-0.025em] text-editorial-strong"
+          data-testid="text-launch-date"
+        >
+          Wednesday 18 November, 18:30
+        </p>
+        <p className={`${paragraphClass} mt-3 flex flex-col items-start gap-1 text-editorial-strong`}>
           <a
             href={DESIRELINES_INSTAGRAM_URL}
             target="_blank"

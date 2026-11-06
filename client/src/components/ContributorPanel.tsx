@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Contributor } from "@/data/contributors";
-import { gutter, numberLabelClass, paragraphClass, rightColumn } from "@/components/sections/Section";
+import { Arrow, gutter, numberLabelClass, paragraphClass, rightColumn } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
 import backgroundImage from "@assets/01-greek.webp";
 
 type ContributorPanelProps = {
   contributor: Contributor;
+  /** Neighbours in the list (wrapping around), for the previous / next links. */
+  previous: Contributor;
+  next: Contributor;
+  onNavigate: (slug: string) => void;
   onClose: () => void;
 };
 
@@ -41,22 +45,36 @@ function ExternalArrow() {
  *
  * Focus moves to the dialog on open (the dialog itself, so iOS doesn't draw a ring on
  * Close after a tap; Tab then reaches Close), Tab is trapped inside, Esc and Close fade it
- * out, and the page returns focus to the name that opened it.
+ * out, and the page returns focus to the name of the artist last shown.
+ *
+ * Previous / next swap the artist in place: back to the top, focus stays on the link
+ * that was pressed (so you can keep pressing it), and the new name is announced.
  */
-export function ContributorPanel({ contributor, onClose }: ContributorPanelProps) {
+export function ContributorPanel({ contributor, previous, next, onNavigate, onClose }: ContributorPanelProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const closingRef = useRef(false);
+  const browsingRef = useRef(false);
   const nameId = `contributor-name-${contributor.slug}`;
 
-  // Fade in on the next frame; focus the dialog and start at its top
+  // Fade in on the next frame; focus the dialog and start at its top.
+  // When browsing to a neighbour, only jump back to the top.
   useEffect(() => {
     const dialog = dialogRef.current;
-    dialog?.focus({ preventScroll: true });
     if (dialog) dialog.scrollTop = 0;
+    if (browsingRef.current) {
+      browsingRef.current = false;
+      return;
+    }
+    dialog?.focus({ preventScroll: true });
     const frame = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(frame);
   }, [contributor.slug]);
+
+  const browse = (slug: string) => {
+    browsingRef.current = true;
+    onNavigate(slug);
+  };
 
   // Fade out, then let the page unmount it (and restore focus)
   const requestClose = useCallback(() => {
@@ -137,7 +155,7 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
           </div>
 
           <div className="min-[900px]:flex min-[900px]:flex-1 min-[900px]:items-center min-[900px]:pb-[clamp(48px,9vh,96px)] min-[900px]:pt-[clamp(24px,4vh,48px)]">
-            <div className="w-full min-[900px]:grid min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,600px)] min-[900px]:items-start min-[900px]:gap-x-[clamp(48px,6vw,96px)]">
+            <div className="w-full min-[900px]:grid min-[900px]:grid-cols-[minmax(0,1fr)_min(600px,55%)] min-[900px]:items-start min-[900px]:gap-x-[clamp(48px,6vw,96px)]">
               <div>
                 {contributor.discipline && (
                   <p className={cn(numberLabelClass, "mb-6 mt-[clamp(40px,5.6vw,80px)] min-[900px]:mt-0")}>
@@ -178,9 +196,58 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
                 >
                   {contributor.bio}
                 </p>
+
+                {/* Second exit, right where the reading ends */}
+                <button
+                  type="button"
+                  onClick={requestClose}
+                  className="mt-[clamp(32px,5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight text-[clamp(32px,min(3.4vw,6vh),52px)] font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white"
+                  data-testid="button-panel-back"
+                >
+                  <span className="rotate-180">
+                    <Arrow size={40} stroke={1.1} />
+                  </span>
+                  Back
+                </button>
               </div>
             </div>
           </div>
+
+          {/* Browse without closing: previous on the left, next on the right (wraps around) */}
+          <nav
+            aria-label="Other contributors"
+            className="mt-[clamp(56px,6.7vw,96px)] flex shrink-0 items-start justify-between gap-6 font-tight text-[clamp(17px,1.4vw,20px)] font-normal leading-[1.3] text-editorial-body min-[900px]:mt-0 min-[900px]:pb-[clamp(16px,4vh,40px)]"
+          >
+            <button
+              type="button"
+              onClick={() => browse(previous.slug)}
+              className="inline-flex min-h-11 max-w-[48%] items-center gap-2 text-left decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
+              data-testid="button-panel-previous"
+            >
+              <span className="rotate-180">
+                <Arrow size={16} />
+              </span>
+              <span>
+                <span className="sr-only">Previous: </span>
+                {previous.name}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => browse(next.slug)}
+              className="inline-flex min-h-11 max-w-[48%] items-center gap-2 text-right decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
+              data-testid="button-panel-next"
+            >
+              <span>
+                <span className="sr-only">Next: </span>
+                {next.name}
+              </span>
+              <Arrow size={16} />
+            </button>
+          </nav>
+          <p className="sr-only" aria-live="polite">
+            {contributor.name}
+          </p>
         </div>
       </div>
     </div>

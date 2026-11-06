@@ -142,6 +142,16 @@ export default function Home() {
     window.history.pushState({ ...(window.history.state ?? {}), [PANEL_STATE_KEY]: slug }, "");
   }, []);
 
+  // Previous / next inside the panel: swap the artist without a new history entry, and
+  // return focus to this artist's name on close
+  const browseContributor = useCallback((slug: string) => {
+    setActiveSlug(slug);
+    panelTriggerRef.current = document.querySelector<HTMLButtonElement>(
+      `[data-testid="button-contributor-${slug}"]`,
+    );
+    window.history.replaceState({ ...(window.history.state ?? {}), [PANEL_STATE_KEY]: slug }, "");
+  }, []);
+
   const closeContributor = useCallback(() => {
     if (window.history.state?.[PANEL_STATE_KEY]) {
       window.history.back(); // popstate handler clears the panel
@@ -170,7 +180,10 @@ export default function Home() {
     }
   }, [panelOpen]);
 
-  const activeContributor = contributors.find((c) => c.slug === activeSlug) ?? null;
+  const activeIndex = contributors.findIndex((c) => c.slug === activeSlug);
+  const activeContributor = activeIndex >= 0 ? contributors[activeIndex] : null;
+  const neighbour = (step: number) =>
+    contributors[(activeIndex + step + contributors.length) % contributors.length];
 
   return (
     <div className="relative w-full overflow-x-clip">
@@ -189,7 +202,13 @@ export default function Home() {
       </div>
 
       {activeContributor && (
-        <ContributorPanel contributor={activeContributor} onClose={closeContributor} />
+        <ContributorPanel
+          contributor={activeContributor}
+          previous={neighbour(-1)}
+          next={neighbour(1)}
+          onNavigate={browseContributor}
+          onClose={closeContributor}
+        />
       )}
     </div>
   );
