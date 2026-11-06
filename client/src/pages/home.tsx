@@ -18,7 +18,7 @@ const OVERLAY: Record<SectionKey, OverlayState> = {
   hero: { hero: 1, alpha: 0, blur: 0 },
   launch: { hero: 0, alpha: 0.72, blur: 4 },
   about: { hero: 0, alpha: 0.6, blur: 8 },
-  contributors: { hero: 0, alpha: 0.78, blur: 8 },
+  contributors: { hero: 0, alpha: 0.5, blur: 8 },
   "order": { hero: 0, alpha: 0.84, blur: 10 },
 };
 
