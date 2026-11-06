@@ -629,9 +629,9 @@
 }
 
 /*
- * Phones: everything is static except the side entries: Event's Date row (from the
- * left) and Place row, the About headline, the Contributors cover and the Get a copy
- * paragraph (all from the right). Only with scroll-driven animation support and
+ * Phones: everything is static except the side entries: from the left Event's Date
+ * row, the Contributors cover and the Get a copy paragraph; from the right Event's
+ * Place row and the About headline. Only with scroll-driven animation support and
  * without reduced motion; otherwise they are simply in place.
  */
 
@@ -682,7 +682,9 @@
       animation-range: entry 0% cover 50%;
       will-change: translate;
     }
-    .m-row-date {
+    .m-row-date,
+    .m-cover,
+    .m-order-p {
       animation-name: enter-l;
     }
     /* The About headline keeps its entry while the thud (scale) plays on top */
