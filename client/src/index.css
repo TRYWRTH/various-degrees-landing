@@ -902,11 +902,7 @@
     margin-left: calc(var(--gutter) * 1.6);
     margin-right: 0; /* same right margin as the About text */
   }
-  /* justified; 1.6x the gutter keeps the column wide enough for even word spacing */
-  .m-order-col .m-order-p {
-    text-align: justify;
-    hyphens: none;
-  }
+
   /* cover → "03 — Contributors" label: the same 56px */
   .m-contrib .m-cover {
     margin-bottom: 56px;
@@ -974,5 +970,125 @@
 @media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
   .d-footer {
     scroll-snap-align: end;
+  }
+}
+
+/* =========================================================================
+ * 04 Get a copy: the rolling cover. Copies of the cover are stacked so each overlaps
+ * the one above by 30% of its height and fades in at the top (mask), so the grass of
+ * one dissolves into the sky of the next. The stack moves up by one period
+ * (P = height - overlap) per pass, from -P to -2P, forever: seamless because every
+ * copy is identical. Sizes come from --rw (window width).
+ * ========================================================================= */
+@keyframes roll-up {
+  from {
+    transform: translateY(calc(-1 * var(--p)));
+  }
+  to {
+    transform: translateY(calc(-2 * var(--p)));
+  }
+}
+.order-head {
+  /* break as "Every copy carries a piece of the / future we imagined", no balancing */
+  text-wrap: wrap;
+  max-width: 15.6em;
+}
+.m-sec .order-head {
+  text-wrap: wrap;
+}
+.roll {
+  --rh: calc(var(--rw) * 4 / 3);
+  --ov: calc(var(--rh) * 0.3);
+  --p: calc(var(--rh) - var(--ov));
+  position: relative;
+  overflow: hidden;
+  width: var(--rw);
+  flex: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.roll-stack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--rw);
+  height: calc(3 * var(--p) + var(--rh));
+  transform: translateY(calc(-1 * var(--p)));
+  animation: roll-up 13s linear infinite;
+  will-change: transform;
+}
+.roll-img {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: var(--rw);
+  height: var(--rh);
+  max-width: none;
+  object-fit: cover;
+}
+.roll-img:nth-child(2) {
+  top: var(--p);
+}
+.roll-img:nth-child(3) {
+  top: calc(2 * var(--p));
+}
+.roll-img:nth-child(4) {
+  top: calc(3 * var(--p));
+}
+.roll-img:nth-child(n + 2) {
+  --fade: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, 0.12) 40px,
+    rgba(0, 0, 0, 0.45) 90px,
+    rgba(0, 0, 0, 0.8) 140px,
+    #000 180px
+  );
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+
+/* Desktop: the window sits 56px left of the text column (same column as About) and
+   is exactly as tall as the text block */
+@media (min-width: 761px) {
+  .order-row {
+    container-type: inline-size;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    gap: 56px;
+  }
+  .order-row > .roll {
+    --rw: clamp(160px, calc(100cqw - 600px - 56px), 440px);
+  }
+  .order-row > .m-order-col {
+    flex: 0 1 600px;
+    margin-left: 0;
+  }
+}
+
+/* Phones: headline, the window at full width, then the text */
+@media (max-width: 760px) {
+  .order-row {
+    margin-top: 44px;
+  }
+  .order-row > .roll {
+    --rw: calc(100vw - 40px);
+    height: calc(var(--rw) * 1.05);
+  }
+}
+
+/* Reduced motion: one still cover */
+@media (prefers-reduced-motion: reduce) {
+  .roll-stack {
+    animation: none;
+    transform: none;
+    height: 100%;
+  }
+  .roll-img:first-child {
+    top: 0;
+    height: 100%;
+  }
+  .roll-img:nth-child(n + 2) {
+    display: none;
   }
 }
