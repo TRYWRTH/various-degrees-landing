@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useLayoutEffect, useRef } from "react";
 import {
   afterLabel,
   Arrow,
@@ -13,15 +13,45 @@ import {
 import { ORDER_URL } from "@/lib/links";
 
 /**
- * The publication: the title set very large, the tiers text in the narrow right column,
- * and "Order" as a large text link to the order form (where the tier is chosen).
+ * The publication: the title set very large; below it on desktop the cover on the left
+ * and the tiers text with the "Order" link (to the order form) beside it, centred on
+ * the cover.
  */
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
+  // Desktop: the cover takes all the height left under the headline, down to the
+  // footer (the section must fit one screen), at most 760px. Re-measured on resize.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const coverRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const row = rowRef.current;
+    const cover = coverRef.current;
+    const section = row?.closest("section");
+    const inner = section?.firstElementChild as HTMLElement | null;
+    if (!row || !cover || !section || !inner) return;
+    const fit = () => {
+      if (window.innerWidth < 768) {
+        cover.style.height = "";
+        return;
+      }
+      const cs = getComputedStyle(section);
+      const footer = document.querySelector("footer")?.offsetHeight ?? 0;
+      const above = row.getBoundingClientRect().top - inner.getBoundingClientRect().top;
+      const room =
+        window.innerHeight - footer - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - above - 8;
+      cover.style.height = `${Math.round(Math.max(220, Math.min(760, room)))}px`;
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    const observer = new ResizeObserver(fit);
+    observer.observe(inner);
+    return () => {
+      window.removeEventListener("resize", fit);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
-      {/* Desktop: text on the left, a large cover on the right; phones: text only */}
-      <div className="md:flex md:items-start md:justify-between md:gap-[clamp(40px,5vw,96px)]">
-      <div className="md:min-w-0 md:flex-1">
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="04" name="Get a copy" />
       </p>
@@ -36,36 +66,39 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
         <span className="m-line">Future</span>
       </h2>
 
+      {/* Desktop: under the headline, the cover large on the left and the text + Order
+          link on the right, centred on the cover's middle. Phones: text only. */}
+      <div
+        ref={rowRef}
+        className="md:mt-[clamp(28px,5vh,56px)] md:flex md:items-center md:gap-[clamp(40px,5vw,96px)]"
+      >
+        <figure ref={coverRef} className="hidden md:block md:aspect-[3/4] md:shrink-0">
+          <img
+            src="/assets/cover.jpg"
+            alt="Cover of Remnants of a Future"
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        </figure>
 
-      <div className={`${rightColumn} m-indent m-order-col mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
-        <p className={`${paragraphClass} m-text m-order-p`}>
-          Copies are available from €15. Any extra support goes directly toward funding the project.
-          Contributions of €150 or more include a copy of the publication
-          plus an original, limited artwork from our artists.
-        </p>
+        <div className={`${rightColumn} m-indent m-order-col mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)] md:!mt-0 md:ml-0 md:min-w-0 md:flex-1`}>
+          <p className={`${paragraphClass} m-text m-order-p`}>
+            Copies are available from €15. Any extra support goes directly toward funding the project.
+            Contributions of €150 or more include a copy of the publication
+            plus an original, limited artwork from our artists.
+          </p>
 
-        <a
-          href={ORDER_URL}
-          target="_blank"
-          rel="noopener"
-          className={`accent-link m-biglink mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
-          data-testid="button-order"
-        >
-          Order
-          <Arrow size={40} stroke={1.1} />
-        </a>
-      </div>
-      </div>
-
-      {/* top-aligned with the 04 label; sized to end above the footer */}
-      <figure className="hidden md:block md:aspect-[3/4] md:h-[min(68vh,700px)] md:shrink-0">
-        <img
-          src="/assets/cover.jpg"
-          alt="Cover of Remnants of a Future"
-          loading="lazy"
-          className="h-full w-full object-cover"
-        />
-      </figure>
+          <a
+            href={ORDER_URL}
+            target="_blank"
+            rel="noopener"
+            className={`accent-link m-biglink mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
+            data-testid="button-order"
+          >
+            Order
+            <Arrow size={40} stroke={1.1} />
+          </a>
+        </div>
       </div>
     </Section>
   );
