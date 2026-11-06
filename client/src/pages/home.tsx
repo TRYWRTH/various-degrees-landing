@@ -31,6 +31,10 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 const PANEL_STATE_KEY = "vdContributor";
 
+/** Intro: how long the title screen stays, then how long the glide to Launch takes. */
+const INTRO_HOLD_MS = 3000;
+const INTRO_GLIDE_MS = 1400;
+
 export default function Home() {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
@@ -48,6 +52,51 @@ export default function Home() {
       const { [PANEL_STATE_KEY]: _stale, ...rest } = window.history.state;
       window.history.replaceState(rest, "");
     }
+  }, []);
+
+  // Intro: show the title screen, then glide on to the first section by itself.
+  // Skipped with reduced motion or when the page opens anywhere but the top (a #link,
+  // a restored scroll position), and cancelled by any input from the visitor,
+  // before or during the glide. Scrolls only: focus stays where it is.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.location.hash || window.scrollY > 0) return;
+
+    let timer = 0;
+    let frame = 0;
+    const inputs = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+    const cancel = () => {
+      window.clearTimeout(timer);
+      cancelAnimationFrame(frame);
+      inputs.forEach((type) => window.removeEventListener(type, cancel));
+      window.removeEventListener("scroll", onEarlyScroll);
+    };
+    // Someone scrolled before the glide started (scrollbar drag, find-in-page, ...)
+    const onEarlyScroll = () => {
+      if (!frame && window.scrollY > 0) cancel();
+    };
+
+    const glide = () => {
+      window.removeEventListener("scroll", onEarlyScroll);
+      const target = sectionRefs.current.launch;
+      if (!target || window.scrollY > 0) return cancel();
+      const from = window.scrollY;
+      const distance = target.offsetTop - from;
+      const start = performance.now();
+      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / INTRO_GLIDE_MS);
+        window.scrollTo({ top: from + distance * ease(t), behavior: "instant" });
+        if (t < 1) frame = requestAnimationFrame(step);
+        else cancel();
+      };
+      frame = requestAnimationFrame(step);
+    };
+
+    inputs.forEach((type) => window.addEventListener(type, cancel, { passive: true }));
+    window.addEventListener("scroll", onEarlyScroll, { passive: true });
+    timer = window.setTimeout(glide, INTRO_HOLD_MS);
+    return cancel;
   }, []);
 
   // Darkness ramp: interpolate between neighbouring sections as each one scrolls in
