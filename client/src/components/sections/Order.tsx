@@ -19,6 +19,9 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
+      {/* Desktop: text on the left, a large cover on the right; phones: text only */}
+      <div className="md:flex md:items-center md:justify-between md:gap-[clamp(40px,5vw,96px)]">
+      <div className="md:min-w-0 md:flex-1">
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="04" name="Get a copy" />
       </p>
@@ -51,6 +54,17 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
           Order
           <Arrow size={40} stroke={1.1} />
         </a>
+      </div>
+      </div>
+
+      <figure className="hidden md:block md:aspect-[3/4] md:h-[min(76vh,760px)] md:shrink-0">
+        <img
+          src="/assets/cover.jpg"
+          alt="Cover of Remnants of a Future"
+          loading="lazy"
+          className="h-full w-full object-cover"
+        />
+      </figure>
       </div>
     </Section>
   );
