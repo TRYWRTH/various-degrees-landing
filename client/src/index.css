@@ -932,6 +932,12 @@
   .m-sec#order {
     padding-bottom: var(--pb);
   }
+  /* Get a copy: the text block sits further right, its right edge 8px from the screen
+     edge (the section has 20px side padding) */
+  .m-sec .m-indent.m-order-col {
+    margin-left: calc(var(--gutter) * 1.5);
+    margin-right: -12px;
+  }
   /* cover → "03 — Contributors" label: the same 56px */
   .m-contrib .m-cover {
     margin-bottom: 56px;

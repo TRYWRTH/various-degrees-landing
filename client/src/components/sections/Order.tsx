@@ -34,7 +34,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
       </h2>
 
 
-      <div className={`${rightColumn} m-indent mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
+      <div className={`${rightColumn} m-indent m-order-col mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
         <p className={`${paragraphClass} m-text m-order-p`}>
           Copies are available from €15. Any extra support goes directly toward funding the project.
           Contributions of €150 or more include a copy of the publication
