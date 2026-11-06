@@ -47,7 +47,7 @@ export const About = forwardRef<HTMLElement, AboutProps>(function About({ reveal
               data-testid="text-description-1"
             >
               A publication contemplating what happens when the future we imagined feels
-              increasingly far away.
+              increasingly far away
             </h1>
           </Reveal>
         </div>
