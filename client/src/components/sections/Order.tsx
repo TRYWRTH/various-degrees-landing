@@ -18,7 +18,7 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
-      <p className={`${numberLabelClass} rv`}>04 — Get a copy</p>
+      <p className={`${numberLabelClass} rv m-label`}>04 — Get a copy</p>
 
       <h2
         id="order-heading"
@@ -30,8 +30,11 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
         <span className="m-line rv" style={{ "--i": 3 } as CSSProperties}>Future</span>
       </h2>
 
+      {/* Phones: a thin rule that draws when the section reaches the centre */}
+      <span className="lock-rule hidden" aria-hidden="true" />
+
       <div className={`${rightColumn} m-indent mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
-        <p className={`${paragraphClass} m-text rv`} style={{ "--i": 4 } as CSSProperties}>
+        <p className={`${paragraphClass} m-text rv-r`} style={{ "--i": 4 } as CSSProperties}>
           Copies are available from €15. Any extra support goes directly toward funding the project.
           Contributions of €150 or more include a copy of the publication
           plus an original, limited artwork from our artists.

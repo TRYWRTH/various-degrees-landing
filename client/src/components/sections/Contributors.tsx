@@ -42,15 +42,19 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       id="contributors"
       ref={ref}
       aria-labelledby="contributors-heading"
-      className={`${sectionPad} m-sec m-contrib`}
+      className={`${sectionPad} m-sec m-contrib m-st4`}
     >
       {/* Phones only: the publication cover, above the names. Add the file as
           client/public/assets/cover.jpg (served at /assets/cover.jpg). */}
-      <figure className="m-cover rv rv-img hidden">
+      <figure className="m-cover rv-r hidden" style={{ "--i": 0 } as CSSProperties}>
         <img src="/assets/cover.jpg" alt="Cover of Remnants of a Future" loading="lazy" />
       </figure>
 
-      <h2 id="contributors-heading" className={`${numberLabelClass} rv`}>
+      <h2
+        id="contributors-heading"
+        className={`${numberLabelClass} rv m-label`}
+        style={{ "--i": 1 } as CSSProperties}
+      >
         03 — Contributors
       </h2>
 
@@ -60,7 +64,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
             {row.map((contributor) => (
               <li
                 key={contributor.slug}
-                className="rv"
+                className={(order.get(contributor.slug) ?? 0) % 2 ? "rv-r" : "rv"}
                 style={{ "--i": order.get(contributor.slug) } as CSSProperties}
               >
                 <button
@@ -78,6 +82,9 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
           </ul>
         ))}
       </div>
+
+      {/* Phones: a thin rule that draws when the section reaches the centre */}
+      <span className="lock-rule hidden" aria-hidden="true" />
     </Section>
   );
 });
