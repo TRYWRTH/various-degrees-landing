@@ -45,7 +45,7 @@ export const About = forwardRef<HTMLElement>(function About(_props, ref) {
         </p>
       </div>
 
-      {/* Phones: decorative arrow trail down to the cover (index.css) */}
+      {/* Phones: a thin decorative line from the text down to the next section (index.css) */}
       <span className="trail hidden" aria-hidden="true" />
     </Section>
   );

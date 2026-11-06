@@ -28,6 +28,17 @@ const rows: Contributor[][] = ROWS.map((row) =>
 rows[rows.length - 1].push(...contributors.filter((c) => !listed.has(c.slug)));
 
 /**
+ * Phones group the same names in five lines instead: two, two, one, one, two. A line
+ * ends after these names (index.css adds the break after their slash).
+ */
+const PHONE_LINE_ENDS = new Set([
+  "asmaa-azaizeh",
+  "kevin-junk",
+  "nicola-sebastian",
+  "sharlene-durfey-francois",
+]);
+
+/**
  * The names in four fixed rows of large light type with faint "/" separators. Each name
  * is a button that opens its bio popup; hovering one dims the others.
  */
@@ -42,9 +53,6 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       aria-labelledby="contributors-heading"
       className={`${sectionPad} m-sec m-contrib`}
     >
-      {/* Phones: decorative arrow trail from the About text down to the cover */}
-      <span className="trail hidden" aria-hidden="true" />
-
       {/* Phones only: the publication cover, above the names. Add the file as
           client/public/assets/cover.jpg (served at /assets/cover.jpg). */}
       <figure className="m-cover hidden">
@@ -62,7 +70,10 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         {rows.map((row, r) => (
           <ul key={r}>
             {row.map((contributor) => (
-              <li key={contributor.slug}>
+              <li
+                key={contributor.slug}
+                className={PHONE_LINE_ENDS.has(contributor.slug) ? "m-line-end" : undefined}
+              >
                 <button
                   type="button"
                   onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
@@ -78,9 +89,6 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
           </ul>
         ))}
       </div>
-
-      {/* Phones: decorative + trail on the left, from the names down to section 04 */}
-      <span className="trail trail-left hidden" aria-hidden="true" />
     </Section>
   );
 });

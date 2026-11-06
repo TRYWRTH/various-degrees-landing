@@ -602,18 +602,24 @@
   .m-contrib h2 {
     margin-top: 0;
   }
+  /*
+   * Names: five fixed lines (two, two, one, one, two names), as large as the widest
+   * line allows: the content width divided by that line's width in ems (the widest,
+   * "Andrea Mikyska / Asmaa Azaizeh /", is 14.04em; 14.2 leaves ~1% to spare). If
+   * names change, re-measure and adjust.
+   */
   .m-contrib .name-rows {
     margin-top: 28px;
-    font-size: 22px;
-    line-height: 1.22;
-    letter-spacing: -0.03em;
+    font-size: calc((100vw - 40px) / 14.2);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
   }
   .name-rows > ul {
     display: inline;
     white-space: normal;
   }
   .name-rows li {
-    display: inline-block; /* keeps each name and its slash together */
+    display: inline;
   }
   .name-rows button::after {
     content: none;
@@ -625,6 +631,12 @@
   }
   .name-rows > ul:last-child > li:last-child::after {
     content: none;
+  }
+  /* end of a phone line: the slash, then a line break */
+  .name-rows li.m-line-end::after {
+    content: "/\A";
+    white-space: pre;
+    margin-right: 0; /* otherwise it would indent the next line */
   }
 }
 
@@ -756,16 +768,13 @@
 }
 
 /* =========================================================================
- * Phones: a decorative trail of thin bright + marks from the About text to the
- * Contributors cover, centred on the cover's column (right-aligned 276px cover,
- * 20px from the edge). Each half is a flex item that only fills space the section
- * already has (so it never changes section heights); the arrows are drawn
- * by an absolute layer that reaches the section edge, where the two halves meet.
+ * Phones: a thin straight line under the About text, in the cover's column (centred
+ * on the right-aligned 276px cover, 20px from the edge), running from 28px below the
+ * text to the section's bottom edge. A flex item that only fills space the section
+ * already has, drawn by an absolute layer, so it never changes the section's height.
  * ========================================================================= */
 @media (max-width: 760px) {
   .trail {
-    /* a thin, bright + (12px), one every 44px */
-    --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='44' viewBox='0 0 14 44'%3E%3Cpath d='M7 16v12M1 22h12' fill='none' stroke='%23F4F1EA' stroke-opacity='.85' stroke-width='1.2' stroke-linecap='square'/%3E%3C/svg%3E");
     display: block;
     position: relative;
     flex: 1 1 0;
@@ -778,53 +787,20 @@
   .trail::before {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
-    /* whole arrows only, flush with both ends; spare space is spread between them */
-    background: var(--arrow) no-repeat space;
-    background-size: 14px 44px;
+    top: 28px;
+    bottom: calc(-1 * var(--pb));
+    left: 6.5px;
+    width: 1px;
+    background: rgb(244 241 234 / 0.6);
   }
-  /* About: from 28px below the last paragraph down to the section's bottom edge */
   .m-about > div {
     display: flex;
     flex-direction: column;
     min-height: calc(100svh - var(--pt) - var(--pb));
   }
-  .m-about .trail::before {
-    top: 28px; /* the gap lives in the drawing, so the trail adds no height */
-    bottom: calc(-1 * var(--pb));
-  }
-  /* Contributors: from the section's top edge to 24px above the cover */
-  .m-contrib .trail {
-    margin-bottom: 24px;
-  }
-  .m-contrib .trail::before {
-    top: calc(-1 * var(--pt));
-    bottom: 0;
-  }
 }
 
 @media (max-width: 760px) {
-  /*
-   * Second + trail, on the left in line with the labels: from just below the
-   * contributor names to the bottom of Contributors, then from the top of Get a copy to
-   * 24px above its label. Zero-height markers, so no section changes height.
-   */
-  .trail.trail-left {
-    flex: none;
-    height: 0;
-    align-self: flex-start;
-    margin: 0;
-  }
-  .m-contrib .trail-left::before {
-    top: 16px;
-    bottom: calc(-1 * var(--pb));
-  }
-  #order .trail-left::before {
-    top: calc(-1 * var(--pt));
-    bottom: 24px;
-  }
-
   /* Contact and Order only on the first screen */
   .m-nav-past {
     visibility: hidden;
