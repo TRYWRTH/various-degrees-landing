@@ -36,17 +36,15 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
   { onSelect },
   ref,
 ) {
-  // Phones: the photo fragment above the names glitches in once, when the section is
-  // about half in view (index.css, `.gl`). Harmless elsewhere: `.gl` is hidden there.
+  // Phones: the photo fragment above the names glitches in every 5 seconds while the
+  // section is at least half in view, restarting each time it comes back into view
+  // (index.css, `.gl`). Harmless elsewhere: `.gl` is hidden there.
   useEffect(() => {
     const section = document.getElementById("contributors");
     if (!section || !("IntersectionObserver" in window)) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          section.classList.add("in-view");
-          observer.disconnect();
-        }
+        for (const e of entries) section.classList.toggle("in-view", e.isIntersecting);
       },
       { threshold: 0.5 },
     );

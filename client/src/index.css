@@ -461,43 +461,43 @@
  * ========================================================================= */
 @keyframes gl-wrap {
   0% { opacity: 0; }
-  3% { opacity: 0.9; }
-  5% { opacity: 0.2; }
-  8% { opacity: 0.85; }
-  14% { opacity: 0.5; }
-  20% { opacity: 0.8; }
-  55% { opacity: 0.7; }
-  100% { opacity: 0; }
+  2.4% { opacity: 0.9; }
+  4% { opacity: 0.2; }
+  6.4% { opacity: 0.85; }
+  11.2% { opacity: 0.5; }
+  16% { opacity: 0.8; }
+  44% { opacity: 0.7; }
+  80%, 100% { opacity: 0; }
 }
 @keyframes gl-a {
-  0%, 2% { transform: none; }
-  3% { transform: translateX(-30px); }
-  7% { transform: translateX(18px); }
-  12% { transform: translateX(-8px); }
-  19% { transform: translateX(26px); }
-  27% { transform: translateX(-14px); }
-  34% { transform: translateX(6px); }
-  40%, 100% { transform: none; }
+  0%, 1.6% { transform: none; }
+  2.4% { transform: translateX(-30px); }
+  5.6% { transform: translateX(18px); }
+  9.6% { transform: translateX(-8px); }
+  15.2% { transform: translateX(26px); }
+  21.6% { transform: translateX(-14px); }
+  27.2% { transform: translateX(6px); }
+  32%, 100% { transform: none; }
 }
 @keyframes gl-b {
-  0%, 3% { transform: none; }
-  4% { transform: translateX(24px); }
-  9% { transform: translateX(-30px); }
-  15% { transform: translateX(12px); }
-  22% { transform: translateX(-20px); }
-  30% { transform: translateX(30px); }
-  36% { transform: translateX(-6px); }
-  40%, 100% { transform: none; }
+  0%, 2.4% { transform: none; }
+  3.2% { transform: translateX(24px); }
+  7.2% { transform: translateX(-30px); }
+  12% { transform: translateX(12px); }
+  17.6% { transform: translateX(-20px); }
+  24% { transform: translateX(30px); }
+  28.8% { transform: translateX(-6px); }
+  32%, 100% { transform: none; }
 }
 @keyframes gl-c {
-  0%, 4% { transform: none; }
-  5% { transform: translateX(-16px); }
-  10% { transform: translateX(30px); }
-  17% { transform: translateX(-26px); }
-  25% { transform: translateX(10px); }
-  31% { transform: translateX(-30px); }
-  38% { transform: translateX(14px); }
-  40%, 100% { transform: none; }
+  0%, 3.2% { transform: none; }
+  4% { transform: translateX(-16px); }
+  8% { transform: translateX(30px); }
+  13.6% { transform: translateX(-26px); }
+  20% { transform: translateX(10px); }
+  24.8% { transform: translateX(-30px); }
+  30.4% { transform: translateX(14px); }
+  32%, 100% { transform: none; }
 }
 
 @media (max-width: 760px) {
@@ -612,7 +612,8 @@
     content: none;
   }
 
-  /* Foggy photo fragment above the names: glitches in once, holds, fades out */
+  /* Foggy photo fragment above the names: every 5s it glitches in (first 4s), holds,
+     fades out and rests 1s, for as long as the section is in view */
   .gl {
     --m: radial-gradient(ellipse 27% 24% at 43% 46%, #000 0%, rgba(0, 0, 0, 0.75) 40%, transparent 100%),
       radial-gradient(ellipse 20% 28% at 63% 41%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 100%),
@@ -646,13 +647,14 @@
     inset: 0;
     background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
   }
-  .m-contrib.in-view .gl { animation: gl-wrap 4s forwards; }
-  .m-contrib.in-view .gl i:nth-child(1) { animation: gl-a 4s steps(1) forwards; }
-  .m-contrib.in-view .gl i:nth-child(2) { animation: gl-b 4s steps(1) reverse forwards; }
-  .m-contrib.in-view .gl i:nth-child(3) { animation: gl-c 4s steps(1) forwards; }
-  .m-contrib.in-view .gl i:nth-child(4) { animation: gl-a 4s steps(1) reverse forwards; }
-  .m-contrib.in-view .gl i:nth-child(5) { animation: gl-b 4s steps(1) forwards; }
-  .m-contrib.in-view .gl i:nth-child(6) { animation: gl-c 4s steps(1) forwards; }
+  .m-contrib.in-view .gl { animation: gl-wrap 5s infinite; }
+  /* Slices 2 and 4 run in reverse; the -3s offset keeps their jerks in the visible part */
+  .m-contrib.in-view .gl i:nth-child(1) { animation: gl-a 5s steps(1) infinite; }
+  .m-contrib.in-view .gl i:nth-child(2) { animation: gl-b 5s steps(1) -3s reverse infinite; }
+  .m-contrib.in-view .gl i:nth-child(3) { animation: gl-c 5s steps(1) infinite; }
+  .m-contrib.in-view .gl i:nth-child(4) { animation: gl-a 5s steps(1) -3s reverse infinite; }
+  .m-contrib.in-view .gl i:nth-child(5) { animation: gl-b 5s steps(1) infinite; }
+  .m-contrib.in-view .gl i:nth-child(6) { animation: gl-c 5s steps(1) infinite; }
 }
 
 /* Reduced motion: no glitch, just a quiet static patch */
@@ -668,11 +670,12 @@
   }
 }
 
-/* Soft snapping on phones: settles on a section start when you stop near one, but a
-   quick flick still passes several sections */
+/* Snapping on phones: every scroll settles exactly on a section start (mandatory);
+   a quick flick can still pass several sections (snap-stop: normal). A section taller
+   than the screen scrolls through normally. */
 @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
   html {
-    scroll-snap-type: y proximity;
+    scroll-snap-type: y mandatory;
   }
   #hero,
   .m-sec {

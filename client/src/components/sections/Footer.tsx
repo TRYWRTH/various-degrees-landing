@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
 import { gutter } from "@/components/sections/Section";
-import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 const footerText =
@@ -8,7 +7,6 @@ const footerText =
 
 /**
  * Page footer: the copyright line in the mono label style.
- * Phones also get "Back to top ↑" here, as before.
  */
 export function Footer() {
   const ref = useRef<HTMLElement>(null);
@@ -26,15 +24,6 @@ export function Footer() {
   return (
     <footer ref={ref} role="contentinfo" className={cn("relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
       <div className="mx-auto flex w-full max-w-[1296px] flex-col items-start">
-        <button
-          type="button"
-          onClick={() => scrollToSection("hero")}
-          className={cn(footerText, "mb-3 inline-flex min-h-11 items-center gap-2 text-editorial-strong md:hidden")}
-          data-testid="button-back-to-top"
-        >
-          <span className="underline decoration-1 underline-offset-4">Back to top</span>
-          <span aria-hidden="true">↑</span>
-        </button>
 
         <p className={footerText} data-testid="text-copyright">
           © 2026 Various Degrees. All rights reserved.
