@@ -20,33 +20,50 @@ const navLink = cn(
 );
 
 /**
- * Fixed nav: Contact and Order (the order form, new tab) stay in the top-right corner on
- * every screen. "Various Degrees" (back to the top) shows on the first screen only and
- * fades out once you scroll past it, so it never sits on top of a section's label.
- * Transparent, with a soft dark text shadow so the links stay readable when text
- * scrolls underneath. Only the links take clicks; the rest of the bar lets them through.
+ * Fixed nav: Contact and Order (the order form, new tab) in the top-right corner of every
+ * screen. They hide while the page is moving and fade back in once it has settled, so
+ * they never slide over text. "Various Degrees" (back to the top) behaves the same but
+ * only on the first screen, so it never sits on top of a section's label.
+ * Keyboard focus keeps a link visible. Only the links take clicks.
  */
+
+/** How long the page must be still before the links fade back in. */
+const SETTLE_MS = 220;
+
 export function TopBar() {
   const [pastHero, setPastHero] = useState(false);
+  const [settled, setSettled] = useState(true);
 
   useEffect(() => {
     let frame = 0;
+    let timer = 0;
     const update = () => {
       frame = 0;
       setPastHero(window.scrollY > window.innerHeight * 0.5);
     };
+    const settle = () => {
+      window.clearTimeout(timer);
+      update();
+      setSettled(true);
+    };
     const onScroll = () => {
+      setSettled(false);
       if (!frame) frame = requestAnimationFrame(update);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(settle, SETTLE_MS);
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", update);
     return () => {
       cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", update);
     };
   }, []);
+
+  const showWordmark = settled && !pastHero;
 
   return (
     <header
@@ -67,15 +84,24 @@ export function TopBar() {
           tabIndex={pastHero ? -1 : undefined}
           className={cn(
             navLink,
-            "transition-opacity duration-200 motion-reduce:transition-none",
-            pastHero ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100",
+            "transition-opacity motion-reduce:transition-none",
+            showWordmark
+              ? "pointer-events-auto opacity-100 duration-300"
+              : "pointer-events-none opacity-0 duration-150 focus-visible:opacity-100",
           )}
           data-testid="link-wordmark"
         >
           Various Degrees
         </a>
 
-        <div className="pointer-events-auto ml-auto flex items-center gap-6 min-[480px]:gap-10">
+        <div
+          className={cn(
+            "ml-auto flex items-center gap-6 transition-opacity motion-reduce:transition-none min-[480px]:gap-10",
+            settled
+              ? "pointer-events-auto opacity-100 duration-300"
+              : "pointer-events-none opacity-0 duration-150 focus-within:pointer-events-auto focus-within:opacity-100",
+          )}
+        >
           <ContactPopover />
           {/* Straight to the order form, like the Order link in the publication section */}
           <a
