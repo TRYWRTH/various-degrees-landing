@@ -240,6 +240,12 @@
     html {
       scroll-snap-type: y mandatory;
     }
+    /* A long trackpad stroke stops at the next section instead of flying past several */
+    .snap-hero,
+    .snap-section,
+    .snap-section-last {
+      scroll-snap-stop: always;
+    }
   }
 
   /*
