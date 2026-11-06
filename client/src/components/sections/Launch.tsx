@@ -34,10 +34,17 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
 
       <h2
         id="launch-heading"
-        className={`${afterLabel} m-h40 m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h56 m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
       >
-        {/* Styled like the About headline: wraps over several lines */}
-        Join us for the launch of the first issue of Remnants of a Future
+        {/* Phones and desktop have different headlines (index.css: .only-phone /
+            .only-desktop, split at 760px like the rest of the phone layout) */}
+        <span className="only-phone">
+          <span className="m-line">Join us</span> <span className="m-line">for the</span>{" "}
+          <span className="m-line">launch</span>
+        </span>
+        <span className="only-desktop">
+          Join us for the launch of the first issue of Remnants of a Future
+        </span>
       </h2>
 
 

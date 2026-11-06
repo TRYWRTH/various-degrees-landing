@@ -921,3 +921,15 @@
 .accent-link {
   color: #f05741;
 }
+
+/* Content that differs between phones (up to 760px) and desktop */
+@media (max-width: 760px) {
+  .only-desktop {
+    display: none;
+  }
+}
+@media (min-width: 761px) {
+  .only-phone {
+    display: none;
+  }
+}
