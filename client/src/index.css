@@ -1237,3 +1237,10 @@
     transition: none;
   }
 }
+
+/* Phones: no section label in the bio view (the close hint stays top right) */
+@media (max-width: 760px) {
+  .bio-label {
+    display: none;
+  }
+}
