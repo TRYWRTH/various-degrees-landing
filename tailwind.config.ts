@@ -82,6 +82,8 @@ export default {
           hover: "#D8D3C9",
         },
         "on-ink": "#121211",
+        // Section headlines (About, Launch, ...): dark red, kept light enough to read on night
+        heading: "#B03A32",
         night: "rgb(8 8 7)",
         surface: "#161614",
         // Contributor panel: "smoked glass" surface
