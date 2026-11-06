@@ -578,10 +578,19 @@
   }
 
   /* 03 Contributors: cover at the top, label + names pushed to the bottom */
+  /*
+   * Label + names sit centred between the cover and the 04 label: the space above
+   * (cover margin) equals the space below (this section's bottom padding plus the next
+   * section's top padding), both (40px + --pb + --pt) / 2. Total height unchanged.
+   */
+  .m-sec.m-contrib {
+    --gap-mid: calc((40px + var(--pb) + var(--pt)) / 2);
+    padding-bottom: calc(var(--gap-mid) - var(--pt));
+  }
   .m-contrib > div {
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - var(--pt) - var(--pb));
+    min-height: calc(100svh - var(--gap-mid));
   }
   /* The cover sits right-aligned directly above the label and the names, which stay
      at the bottom of the screen */
@@ -590,7 +599,7 @@
     width: 276px;
     max-width: 100%;
     aspect-ratio: 3 / 4;
-    margin: auto 0 40px;
+    margin: auto 0 var(--gap-mid);
     align-self: flex-end;
   }
   .m-cover img {
@@ -610,6 +619,7 @@
    */
   .m-contrib .name-rows {
     margin-top: 28px;
+    color: #f05741; /* the cover's lettering */
     font-size: calc((100vw - 40px) / 14.2);
     line-height: 1.12;
     letter-spacing: -0.035em;
@@ -666,10 +676,32 @@
 }
 
 @media (max-width: 760px) {
-  /* The title screen is a normal block that scrolls away; no motion on phones */
+  /* The title screen scrolls away normally; no drift on phones (it would slide into
+     the Event headline). The fade comes from the rule below. */
   .hero-title,
   .hero-hint {
     animation: none;
+  }
+}
+@keyframes hero-fade {
+  to {
+    opacity: 0;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+    /* The title fades out over the first 60% of a screen of scrolling */
+    .hero-title {
+      animation: hero-fade linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 60svh;
+    }
+    /* The Scroll hint is gone as soon as scrolling starts */
+    .hero-hint {
+      animation: hero-hint-out linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 48px;
+    }
   }
 }
 
@@ -768,9 +800,9 @@
 }
 
 /* =========================================================================
- * Phones: a thin straight line under the About text, in the cover's column (centred
- * on the right-aligned 276px cover, 20px from the edge), running from 28px below the
- * text to the section's bottom edge. A flex item that only fills space the section
+ * Phones: a thin straight line in the cover's column (centred on the right-aligned
+ * 276px cover, 20px from the edge), from 28px below the About text, across into
+ * Contributors, to 16px above the cover. A flex item that only fills space the section
  * already has, drawn by an absolute layer, so it never changes the section's height.
  * ========================================================================= */
 @media (max-width: 760px) {
@@ -797,6 +829,11 @@
     display: flex;
     flex-direction: column;
     min-height: calc(100svh - var(--pt) - var(--pb));
+  }
+  /* ...and on through the top of Contributors, stopping 16px above the cover */
+  .m-contrib .trail::before {
+    top: calc(-1 * var(--pt));
+    bottom: 16px;
   }
 }
 

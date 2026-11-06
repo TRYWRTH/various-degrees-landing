@@ -53,6 +53,9 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       aria-labelledby="contributors-heading"
       className={`${sectionPad} m-sec m-contrib`}
     >
+      {/* Phones: the thin line from the About text ends here, 16px above the cover */}
+      <span className="trail hidden" aria-hidden="true" />
+
       {/* Phones only: the publication cover, above the names. Add the file as
           client/public/assets/cover.jpg (served at /assets/cover.jpg). */}
       <figure className="m-cover hidden">
