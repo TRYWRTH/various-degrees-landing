@@ -22,7 +22,7 @@ export function Footer() {
   }, []);
 
   return (
-    <footer ref={ref} role="contentinfo" className={cn("relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
+    <footer ref={ref} role="contentinfo" className={cn("d-footer relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
       <div className="mx-auto flex w-full max-w-[1296px] flex-col items-start">
 
         <p className={footerText} data-testid="text-copyright">

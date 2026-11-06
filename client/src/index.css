@@ -948,3 +948,23 @@
     hyphens: none;
   }
 }
+
+/* Desktop: the footer line is centred and barely visible; it lights up on hover */
+@media (min-width: 761px) {
+  .d-footer > div {
+    align-items: center;
+  }
+  .d-footer p {
+    opacity: 0.25;
+    transition: opacity 0.3s ease-out, color 0.3s ease-out;
+  }
+  .d-footer:hover p {
+    opacity: 1;
+    color: #f4f1ea;
+  }
+}
+@media (min-width: 761px) and (prefers-reduced-motion: reduce) {
+  .d-footer p {
+    transition: none;
+  }
+}
