@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 import { ContactPopover } from "@/components/ContactPopover";
 import { Arrow, gutter } from "@/components/sections/Section";
+import { ORDER_URL } from "@/lib/links";
 import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,8 @@ const navLink = cn(
 
 /**
  * Nav over the first screen (it scrolls away with it): "Various Degrees" on the left
- * back to the top, Contact and Order on the right as plain text links.
+ * back to the top, Contact and Order (the order form, new tab) on the right as plain
+ * text links.
  */
 export function TopBar() {
   return (
@@ -38,9 +40,11 @@ export function TopBar() {
 
         <div className="flex items-center gap-6 min-[480px]:gap-10">
           <ContactPopover />
+          {/* Straight to the order form, like the Order link in the publication section */}
           <a
-            href="#order"
-            onClick={goTo("order")}
+            href={ORDER_URL}
+            target="_blank"
+            rel="noopener"
             className={cn(navLink, "gap-2 underline")}
             data-testid="link-order-nav"
           >
