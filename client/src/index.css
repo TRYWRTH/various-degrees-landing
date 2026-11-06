@@ -756,7 +756,7 @@
 }
 
 /* =========================================================================
- * Phones: a decorative trail of thin technical down arrows (↓) from the About text to the
+ * Phones: a decorative trail of thin bright + marks from the About text to the
  * Contributors cover, centred on the cover's column (right-aligned 276px cover,
  * 20px from the edge). Each half is a flex item that only fills space the section
  * already has (so it never changes section heights); the arrows are drawn
@@ -764,8 +764,8 @@
  * ========================================================================= */
 @media (max-width: 760px) {
   .trail {
-    /* a thin technical ↓ (stem + small head), one every 44px */
-    --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='44' viewBox='0 0 14 44'%3E%3Cpath d='M7 12v18M3.5 26.5L7 30l3.5-3.5' fill='none' stroke='%23BDB8AC' stroke-opacity='.6' stroke-width='1.2' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
+    /* a thin, bright + (12px), one every 44px */
+    --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='44' viewBox='0 0 14 44'%3E%3Cpath d='M7 16v12M1 22h12' fill='none' stroke='%23F4F1EA' stroke-opacity='.85' stroke-width='1.2' stroke-linecap='square'/%3E%3C/svg%3E");
     display: block;
     position: relative;
     flex: 1 1 0;
@@ -801,5 +801,42 @@
   .m-contrib .trail::before {
     top: calc(-1 * var(--pt));
     bottom: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  /*
+   * Second + trail, on the left in line with the labels: from just below the
+   * contributor names to the bottom of Contributors, then from the top of Get a copy to
+   * 24px above its label. Zero-height markers, so no section changes height.
+   */
+  .trail.trail-left {
+    flex: none;
+    height: 0;
+    align-self: flex-start;
+    margin: 0;
+  }
+  .m-contrib .trail-left::before {
+    top: 16px;
+    bottom: calc(-1 * var(--pb));
+  }
+  #order .trail-left::before {
+    top: calc(-1 * var(--pt));
+    bottom: 24px;
+  }
+
+  /* Contact and Order only on the first screen */
+  .m-nav-past {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Bio popup: the handle sits right under the name; no Back link */
+  .m-bio-link {
+    margin-top: 14px;
+  }
+  .m-bio-back {
+    display: none;
   }
 }

@@ -79,6 +79,8 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         ))}
       </div>
 
+      {/* Phones: decorative + trail on the left, from the names down to section 04 */}
+      <span className="trail trail-left hidden" aria-hidden="true" />
     </Section>
   );
 });

@@ -102,6 +102,8 @@ export function TopBar() {
         <div
           className={cn(
             "ml-auto flex items-center gap-6 transition-opacity motion-reduce:transition-none min-[480px]:gap-10",
+            // Phones: Contact and Order only on the first screen
+            pastHero && "m-nav-past",
             settled
               ? "pointer-events-auto opacity-100 duration-200"
               : "pointer-events-none opacity-0 duration-150 focus-within:pointer-events-auto focus-within:opacity-100",

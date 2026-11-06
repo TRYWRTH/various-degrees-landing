@@ -19,6 +19,9 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
+      {/* Phones: end of the + trail coming down from the contributor names */}
+      <span className="trail trail-left hidden" aria-hidden="true" />
+
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="04" name="Get a copy" />
       </p>

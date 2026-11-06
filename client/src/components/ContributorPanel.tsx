@@ -189,7 +189,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${contributor.name}${isInstagram ? " on Instagram" : ", website"} (opens in a new tab)`}
-                    className="mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
+                    className="m-bio-link mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
                     data-testid="link-contributor"
                   >
                     {contributor.link.label}
@@ -211,7 +211,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
                 <button
                   type="button"
                   onClick={requestClose}
-                  className="mt-[clamp(24px,4vh,40px)] inline-flex items-center gap-2.5 border-b border-current pb-1 font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-none tracking-[-0.01em] text-editorial-strong hover:text-white min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]"
+                  className="m-bio-back mt-[clamp(24px,4vh,40px)] inline-flex items-center gap-2.5 border-b border-current pb-1 font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-none tracking-[-0.01em] text-editorial-strong hover:text-white min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]"
                   data-testid="button-panel-back"
                 >
                   {/* Same size as the bio text */}
