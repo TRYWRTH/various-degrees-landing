@@ -27,8 +27,11 @@ const navLink = cn(
  * Keyboard focus keeps a link visible. Only the links take clicks.
  */
 
-/** How long the page must be still before the links fade back in. */
-const SETTLE_MS = 220;
+/**
+ * Fallback: how long the page must be still before the links fade back in. Browsers
+ * with the scrollend event bring them back the moment scrolling (and snapping) ends.
+ */
+const SETTLE_MS = 120;
 
 export function TopBar() {
   const [pastHero, setPastHero] = useState(false);
@@ -54,11 +57,13 @@ export function TopBar() {
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scrollend", settle);
     window.addEventListener("resize", update);
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(timer);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scrollend", settle);
       window.removeEventListener("resize", update);
     };
   }, []);
@@ -86,7 +91,7 @@ export function TopBar() {
             navLink,
             "transition-opacity motion-reduce:transition-none",
             showWordmark
-              ? "pointer-events-auto opacity-100 duration-300"
+              ? "pointer-events-auto opacity-100 duration-200"
               : "pointer-events-none opacity-0 duration-150 focus-visible:opacity-100",
           )}
           data-testid="link-wordmark"
@@ -98,7 +103,7 @@ export function TopBar() {
           className={cn(
             "ml-auto flex items-center gap-6 transition-opacity motion-reduce:transition-none min-[480px]:gap-10",
             settled
-              ? "pointer-events-auto opacity-100 duration-300"
+              ? "pointer-events-auto opacity-100 duration-200"
               : "pointer-events-none opacity-0 duration-150 focus-within:pointer-events-auto focus-within:opacity-100",
           )}
         >
