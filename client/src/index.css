@@ -968,3 +968,11 @@
     transition: none;
   }
 }
+
+/* Desktop: Get a copy can be taller than the screen (large cover); the page end is a
+   snap point too, so the footer is always reachable */
+@media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+  .d-footer {
+    scroll-snap-align: end;
+  }
+}

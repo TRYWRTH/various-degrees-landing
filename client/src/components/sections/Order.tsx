@@ -1,4 +1,4 @@
-import { forwardRef, useLayoutEffect, useRef } from "react";
+import { forwardRef } from "react";
 import {
   afterLabel,
   Arrow,
@@ -18,38 +18,6 @@ import { ORDER_URL } from "@/lib/links";
  * the cover.
  */
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
-  // Desktop: the cover takes all the height left under the headline, down to the
-  // footer (the section must fit one screen), at most 760px. Re-measured on resize.
-  const rowRef = useRef<HTMLDivElement>(null);
-  const coverRef = useRef<HTMLElement>(null);
-  useLayoutEffect(() => {
-    const row = rowRef.current;
-    const cover = coverRef.current;
-    const section = row?.closest("section");
-    const inner = section?.firstElementChild as HTMLElement | null;
-    if (!row || !cover || !section || !inner) return;
-    const fit = () => {
-      if (window.innerWidth < 768) {
-        cover.style.height = "";
-        return;
-      }
-      const cs = getComputedStyle(section);
-      const footer = document.querySelector("footer")?.offsetHeight ?? 0;
-      const above = row.getBoundingClientRect().top - inner.getBoundingClientRect().top;
-      const room =
-        window.innerHeight - footer - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - above - 8;
-      cover.style.height = `${Math.round(Math.max(220, Math.min(760, room)))}px`;
-    };
-    fit();
-    window.addEventListener("resize", fit);
-    const observer = new ResizeObserver(fit);
-    observer.observe(inner);
-    return () => {
-      window.removeEventListener("resize", fit);
-      observer.disconnect();
-    };
-  }, []);
-
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
       <p className={`${numberLabelClass} m-numlabel`}>
@@ -68,11 +36,9 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
 
       {/* Desktop: under the headline, the cover large on the left and the text + Order
           link on the right, centred on the cover's middle. Phones: text only. */}
-      <div
-        ref={rowRef}
-        className="md:mt-[clamp(28px,5vh,56px)] md:flex md:items-center md:gap-[clamp(40px,5vw,96px)]"
-      >
-        <figure ref={coverRef} className="hidden md:block md:aspect-[3/4] md:shrink-0">
+      {/* The cover is large (about half the content width); the section grows to fit it */}
+      <div className="md:mt-[clamp(28px,5vh,56px)] md:flex md:items-center md:gap-[clamp(40px,5vw,96px)]">
+        <figure className="hidden md:block md:aspect-[3/4] md:w-[min(50%,720px)] md:shrink-0">
           <img
             src="/assets/cover.jpg"
             alt="Cover of Remnants of a Future"
