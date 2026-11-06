@@ -16,7 +16,7 @@ const italic = "font-light italic";
 /** The statement set large, then the two supporting paragraphs in the narrow right column. */
 export const About = forwardRef<HTMLElement>(function About(_props, ref) {
   return (
-    <Section id="about" ref={ref} aria-labelledby="about-heading" className={`${sectionPad} m-sec`}>
+    <Section id="about" ref={ref} pinClassName="pin-about" aria-labelledby="about-heading" className={`${sectionPad} m-sec`}>
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="02" name="About" />
       </p>

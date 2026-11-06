@@ -653,7 +653,7 @@
 
 @keyframes about-in {
   from {
-    transform: translateX(150px);
+    transform: translateX(100vw);
   }
   to {
     transform: none;
@@ -689,10 +689,20 @@
       animation-range: entry 10% cover 45%;
     }
     /* About: the headline arrives from the right in three visible jumps */
+    /*
+     * About headline: driven by the About wrapper's timeline (--about), so it starts
+     * the moment the section appears at the bottom and arrives as the pin begins. The
+     * wrapper is taller than the screen, so its entry 100% is when its top reaches the
+     * top of the screen (= pin start). steps(5, jump-start) reaches its last position
+     * at 80% of the range, so the range runs to entry 125% to land exactly then.
+     */
+    .pin-about {
+      view-timeline: --about block;
+    }
     .m-about-h {
-      animation: about-in steps(3, jump-end) both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 40%;
+      animation: about-in steps(5, jump-start) both;
+      animation-timeline: --about;
+      animation-range: entry 0% entry 125%;
     }
     /*
      * Contributors cover and Get a copy paragraph slide in from the right. They sit low

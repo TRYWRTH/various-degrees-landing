@@ -6,6 +6,8 @@ type SectionProps = HTMLAttributes<HTMLElement> & {
   children: ReactNode;
   /** Soft snapping on big screens (see index.css); "last" leaves room for the footer. */
   snap?: "section" | "last";
+  /** Extra class on the phone pin wrapper (e.g. to name its scroll timeline). */
+  pinClassName?: string;
 };
 
 /** Page gutter shared by the nav, every section and the footer. */
@@ -16,13 +18,13 @@ export const gutter = "px-[clamp(20px,5vw,72px)]";
  * Focusable (tabIndex -1) so in-page links can move focus here after scrolling.
  */
 export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
-  { id, className, children, snap = "section", ...rest },
+  { id, className, children, snap = "section", pinClassName, ...rest },
   ref,
 ) {
   // Phones: .pin / .pin-in hold the section still for half a screen of scrolling
   // (index.css). Both wrappers are display: contents on desktop, so it is unaffected.
   return (
-    <div className="pin">
+    <div className={cn("pin", pinClassName)}>
       <div className="pin-in">
         <section
           id={id}
