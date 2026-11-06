@@ -1102,3 +1102,18 @@
     );
   }
 }
+
+/* Desktop (comparison version): About headline split into three tapering lines,
+   "A publication contemplating what / happens when the future we imagined / feels
+   increasingly far away" (set by width, in em so it holds at every size); paragraphs
+   justified into a solid block. Phones unchanged. */
+@media (min-width: 761px) {
+  #about-heading {
+    text-wrap: wrap;
+    max-width: 16.2em;
+  }
+  #about .m-text {
+    text-align: justify;
+    hyphens: none;
+  }
+}
