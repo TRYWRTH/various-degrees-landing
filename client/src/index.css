@@ -1244,3 +1244,10 @@
     display: none;
   }
 }
+
+/* Phones: smaller previous / next artist links in the bio */
+@media (max-width: 760px) {
+  .bio-nav {
+    font-size: 14px;
+  }
+}

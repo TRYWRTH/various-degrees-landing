@@ -282,7 +282,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
           {/* Browse without closing: previous on the left, next on the right (wraps around) */}
           <nav
             aria-label="Other contributors"
-            className="mt-[clamp(56px,6.7vw,96px)] flex shrink-0 items-start justify-between gap-6 font-tight text-[clamp(17px,1.4vw,20px)] font-normal leading-[1.3] text-[rgb(244_241_234/0.6)] min-[900px]:mt-0 min-[900px]:pb-[clamp(16px,4vh,40px)]"
+            className="bio-nav mt-[clamp(56px,6.7vw,96px)] flex shrink-0 items-start justify-between gap-6 font-tight text-[clamp(17px,1.4vw,20px)] font-normal leading-[1.3] text-[rgb(244_241_234/0.6)] min-[900px]:mt-0 min-[900px]:pb-[clamp(16px,4vh,40px)]"
           >
             <button
               type="button"
