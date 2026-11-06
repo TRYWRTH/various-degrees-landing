@@ -19,12 +19,18 @@ const detailLink = "underline decoration-1 underline-offset-[5px] hover:text-whi
 export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
   return (
     <Section id="launch" ref={ref} aria-labelledby="launch-heading" className={sectionPad}>
-      <h2 id="launch-heading" className={numberLabelClass}>
-        01 — Publication launch
+      <p className={numberLabelClass}>01 — Publication launch</p>
+
+      <h2
+        id="launch-heading"
+        className={`${afterLabel} font-tight text-[clamp(36px,5.4vw,84px)] font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+      >
+        Join us for the launch
       </h2>
 
+      {/* Date and time one size up from the headline, like the publication title */}
       <p
-        className={`${afterLabel} font-tight text-[clamp(36px,5.4vw,84px)] font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className="text-balance mt-[clamp(12px,1.6vw,24px)] font-tight text-[clamp(44px,8.4vw,132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong"
         data-testid="text-launch-date"
       >
         Wednesday 18 November, 18:30
