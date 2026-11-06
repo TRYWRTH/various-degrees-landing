@@ -457,49 +457,8 @@
 
 /* =========================================================================
  * Mobile redesign (max-width 760px). Everything below applies to phones only;
- * desktop is unaffected. Hooks: m-* classes in the section components.
+ * desktop is unaffected. Hooks: m-* and rv classes in the section components.
  * ========================================================================= */
-@keyframes gl-wrap {
-  0% { opacity: 0; }
-  2.4% { opacity: 0.9; }
-  4% { opacity: 0.2; }
-  6.4% { opacity: 0.85; }
-  11.2% { opacity: 0.5; }
-  16% { opacity: 0.8; }
-  44% { opacity: 0.7; }
-  80%, 100% { opacity: 0; }
-}
-@keyframes gl-a {
-  0%, 1.6% { transform: none; }
-  2.4% { transform: translateX(-30px); }
-  5.6% { transform: translateX(18px); }
-  9.6% { transform: translateX(-8px); }
-  15.2% { transform: translateX(26px); }
-  21.6% { transform: translateX(-14px); }
-  27.2% { transform: translateX(6px); }
-  32%, 100% { transform: none; }
-}
-@keyframes gl-b {
-  0%, 2.4% { transform: none; }
-  3.2% { transform: translateX(24px); }
-  7.2% { transform: translateX(-30px); }
-  12% { transform: translateX(12px); }
-  17.6% { transform: translateX(-20px); }
-  24% { transform: translateX(30px); }
-  28.8% { transform: translateX(-6px); }
-  32%, 100% { transform: none; }
-}
-@keyframes gl-c {
-  0%, 3.2% { transform: none; }
-  4% { transform: translateX(-16px); }
-  8% { transform: translateX(30px); }
-  13.6% { transform: translateX(-26px); }
-  20% { transform: translateX(10px); }
-  24.8% { transform: translateX(-30px); }
-  30.4% { transform: translateX(14px); }
-  32%, 100% { transform: none; }
-}
-
 @media (max-width: 760px) {
   /*
    * The background photo: on a tall phone screen the whole portrait photo would show,
@@ -511,22 +470,7 @@
     bottom: auto;
   }
 
-  /*
-   * Sections: at least one screen tall, measured with the LARGE viewport (lvh: browser
-   * toolbar hidden). Safari's toolbar hides while you scroll, which makes the visible
-   * area taller than the small viewport; with svh-tall sections the page then ran out
-   * before "Get a copy" could reach the top, leaving the end of Contributors showing.
-   * Content that hugs the bottom (the contributor names) is still laid out for the small
-   * viewport, so it never sits under the toolbar.
-   */
-  .m-sec {
-    min-height: 100lvh;
-    padding-top: 64px;
-    padding-bottom: 56px;
-  }
-
-  /* Nav: smaller and lower-key on phones (still 44px tap targets), so sections can
-     start higher */
+  /* Nav: small and low-key on phones, still 44px tap targets */
   .m-nav {
     height: 48px;
   }
@@ -535,20 +479,31 @@
   .m-nav > a {
     font-size: 10px;
   }
-  /* The last section plus the footer is exactly one large viewport */
-  .m-sec.snap-section-last {
-    min-height: calc(100lvh - var(--footer-h, 0px));
+
+  /* No snapping on phones (desktop keeps its own) */
+  html {
+    scroll-snap-type: none;
   }
-  /* Label to headline */
-  .m-sec h1,
-  .m-sec h2.m-h56,
-  .m-sec h2.m-h40 {
-    margin-top: 24px;
+  #hero,
+  .m-sec {
+    scroll-snap-align: none;
   }
 
-  /* Headlines */
+  /* Sections: one screen at least, 104 / 20 / 72 padding; zigzag gutter */
+  .m-sec {
+    --gutter: clamp(56px, 19vw, 74px);
+    min-height: 100svh;
+    padding: 104px 20px 72px;
+    overflow-x: clip; /* sideways reveal motion never causes horizontal scroll */
+  }
+
+  /* Headlines: 28px below the label */
   .m-line {
     display: block;
+  }
+  .m-sec h1.m-h40,
+  .m-sec h2.m-h56 {
+    margin-top: 28px;
   }
   .m-h56 {
     font-size: 56px;
@@ -557,16 +512,20 @@
   }
   .m-h40 {
     font-size: 40px;
-    line-height: 1.05;
+    line-height: 1;
     letter-spacing: -0.04em;
     text-wrap: balance;
   }
 
-  /* Supporting text: indented by the 74px gutter */
+  /* Supporting text: 44px below the headline, indented by the gutter */
   .m-indent {
-    margin-left: 74px;
+    margin-left: var(--gutter);
     width: auto;
     max-width: none;
+  }
+  .m-sec .m-indent.m-col,
+  .m-sec div.m-indent {
+    margin-top: 44px;
   }
   .m-text {
     font-size: 18px;
@@ -579,37 +538,21 @@
     font-weight: 300;
   }
 
-  /* 01 Event: Date / Place grid with a 74px key column */
-  /* Kept compact so the whole event, RSVP included, sits well inside one phone screen */
+  /* 01 Event: Date / Place rows with a gutter-wide key column, then text and RSVP */
   .m-launch-col {
-    margin-top: 18px;
+    margin-top: 44px;
     margin-left: 0;
     max-width: none;
-    gap: 20px;
-  }
-  .m-sec.m-launch {
-    padding-top: 56px;
-  }
-  .m-sec.m-launch h2.m-h56 {
-    margin-top: 16px;
-    font-size: 42px;
-  }
-  .m-launch .m-date {
-    font-size: 20px;
-  }
-  .m-launch .m-biglink {
-    font-size: 30px;
-  }
-  .m-launch-col .m-text {
-    font-size: 16px;
-    line-height: 1.45;
+    gap: 36px;
   }
   .m-details {
+    gap: 18px;
+    width: 100%;
+  }
+  .m-row {
     display: grid;
-    grid-template-columns: 74px minmax(0, 1fr);
+    grid-template-columns: var(--gutter) minmax(0, 1fr);
     align-items: baseline;
-    column-gap: 0;
-    row-gap: 10px;
     width: 100%;
   }
   .m-key {
@@ -630,19 +573,29 @@
     line-height: 1.5;
   }
 
-  /* 03 Contributors: label + names pushed to the bottom of the screen */
+  /* 03 Contributors: cover at the top, label + names pushed to the bottom */
   .m-contrib > div {
     display: flex;
     flex-direction: column;
-    /* small viewport minus the section padding: the names sit above the toolbar */
-    min-height: calc(100svh - 120px);
+    min-height: calc(100svh - 176px);
+  }
+  .m-cover {
+    display: block;
+    width: 276px;
+    max-width: calc(100% - var(--gutter));
+    aspect-ratio: 3 / 4;
+    margin: 0 0 48px var(--gutter);
+  }
+  .m-cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .m-contrib h2 {
-    position: relative;
     margin-top: auto;
   }
   .m-contrib .name-rows {
-    position: relative;
     margin-top: 28px;
     font-size: 22px;
     line-height: 1.22;
@@ -653,7 +606,7 @@
     white-space: normal;
   }
   .name-rows li {
-    display: inline;
+    display: inline-block; /* inline-block so the reveal can move each name */
   }
   .name-rows button::after {
     content: none;
@@ -666,75 +619,53 @@
   .name-rows > ul:last-child > li:last-child::after {
     content: none;
   }
+}
 
-  /* Foggy photo fragment above the names: every 5s it glitches in (first 4s), holds,
-     fades out and rests 1s, for as long as the section is in view */
-  .gl {
-    --m: radial-gradient(ellipse 27% 24% at 43% 46%, #000 0%, rgba(0, 0, 0, 0.75) 40%, transparent 100%),
-      radial-gradient(ellipse 20% 28% at 63% 41%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 100%),
-      radial-gradient(ellipse 22% 14% at 33% 66%, rgba(0, 0, 0, 0.4) 0%, transparent 100%),
-      radial-gradient(ellipse 15% 12% at 70% 68%, rgba(0, 0, 0, 0.25) 0%, transparent 100%);
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 96px;
-    width: 100%;
-    height: 340px;
+/*
+ * Scroll-driven reveal on phones: each .rv element rises in as it enters, is fully
+ * visible and still around the middle of the screen, then rises away. Increasing --i
+ * staggers it within a section. The cover (.rv-img) slides in from the right and out
+ * to the left. Without support or with reduced motion, everything simply shows.
+ */
+@keyframes rv-y {
+  0% {
     opacity: 0;
-    pointer-events: none;
-    -webkit-mask-image: var(--m);
-    mask-image: var(--m);
+    transform: translateY(64px);
   }
-  .gl i {
-    position: absolute;
-    inset: 0;
-    background: var(--photo) 50% 30% / cover;
-    filter: saturate(1.1) contrast(1.1) brightness(0.95);
+  32%,
+  62% {
+    opacity: 1;
+    transform: none;
   }
-  .gl i:nth-child(1) { clip-path: inset(0 0 82% 0); }
-  .gl i:nth-child(2) { clip-path: inset(18% 0 66% 0); }
-  .gl i:nth-child(3) { clip-path: inset(34% 0 52% 0); }
-  .gl i:nth-child(4) { clip-path: inset(48% 0 34% 0); }
-  .gl i:nth-child(5) { clip-path: inset(66% 0 18% 0); }
-  .gl i:nth-child(6) { clip-path: inset(82% 0 0 0); }
-  .gl b {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
-  }
-  .m-contrib.in-view .gl { animation: gl-wrap 5s infinite; }
-  /* Slices 2 and 4 run in reverse; the -3s offset keeps their jerks in the visible part */
-  .m-contrib.in-view .gl i:nth-child(1) { animation: gl-a 5s steps(1) infinite; }
-  .m-contrib.in-view .gl i:nth-child(2) { animation: gl-b 5s steps(1) -3s reverse infinite; }
-  .m-contrib.in-view .gl i:nth-child(3) { animation: gl-c 5s steps(1) infinite; }
-  .m-contrib.in-view .gl i:nth-child(4) { animation: gl-a 5s steps(1) -3s reverse infinite; }
-  .m-contrib.in-view .gl i:nth-child(5) { animation: gl-b 5s steps(1) infinite; }
-  .m-contrib.in-view .gl i:nth-child(6) { animation: gl-c 5s steps(1) infinite; }
-}
-
-/* Reduced motion: no glitch, just a quiet static patch */
-@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
-  .gl,
-  .m-contrib.in-view .gl {
-    opacity: 0.35;
-    animation: none;
-  }
-  .gl i,
-  .m-contrib.in-view .gl i {
-    animation: none;
+  100% {
+    opacity: 0;
+    transform: translateY(-64px);
   }
 }
-
-/* Snapping on phones: every scroll settles exactly on a section start (mandatory);
-   a quick flick can still pass several sections (snap-stop: normal). A section taller
-   than the screen scrolls through normally. */
-@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y mandatory;
+@keyframes rv-x {
+  0% {
+    opacity: 0;
+    transform: translateX(110%);
   }
-  #hero,
-  .m-sec {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
+  34%,
+  62% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-110%);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+    .rv {
+      animation: rv-y linear both;
+      animation-timeline: view();
+      animation-range: cover calc(var(--i, 0) * 3%) cover 100%;
+    }
+    .rv-img {
+      animation-name: rv-x;
+    }
   }
 }

@@ -1,5 +1,4 @@
-import { forwardRef, useEffect, type CSSProperties } from "react";
-import backgroundImage from "@assets/01-greek.webp";
+import { forwardRef, type CSSProperties } from "react";
 import { afterLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
 import { contributors, type Contributor } from "@/data/contributors";
 
@@ -27,6 +26,8 @@ const rows: Contributor[][] = ROWS.map((row) =>
   row.map((slug) => bySlug.get(slug)).filter((c): c is Contributor => Boolean(c)),
 );
 rows[rows.length - 1].push(...contributors.filter((c) => !listed.has(c.slug)));
+/** Position of each name in reading order (phones stagger the scroll reveal by it). */
+const order = new Map(rows.flat().map((c, i) => [c.slug, i]));
 
 /**
  * The names in four fixed rows of large light type with faint "/" separators. Each name
@@ -36,22 +37,6 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
   { onSelect },
   ref,
 ) {
-  // Phones: the photo fragment above the names glitches in every 5 seconds while the
-  // section is at least half in view, restarting each time it comes back into view
-  // (index.css, `.gl`). Harmless elsewhere: `.gl` is hidden there.
-  useEffect(() => {
-    const section = document.getElementById("contributors");
-    if (!section || !("IntersectionObserver" in window)) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) section.classList.toggle("in-view", e.isIntersecting);
-      },
-      { threshold: 0.5 },
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <Section
       id="contributors"
@@ -59,22 +44,13 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       aria-labelledby="contributors-heading"
       className={`${sectionPad} m-sec m-contrib`}
     >
-      {/* Phones only: a foggy fragment of the background photo (6 slices + scanlines) */}
-      <div
-        className="gl hidden"
-        aria-hidden="true"
-        style={{ "--photo": `url("${backgroundImage}")` } as CSSProperties}
-      >
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-        <b />
-      </div>
+      {/* Phones only: the publication cover, above the names. Add the file as
+          client/public/assets/cover.jpg (served at /assets/cover.jpg). */}
+      <figure className="m-cover rv rv-img hidden">
+        <img src="/assets/cover.jpg" alt="Cover of Remnants of a Future" loading="lazy" />
+      </figure>
 
-      <h2 id="contributors-heading" className={numberLabelClass}>
+      <h2 id="contributors-heading" className={`${numberLabelClass} rv`}>
         03 — Contributors
       </h2>
 
@@ -82,7 +58,11 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
         {rows.map((row, r) => (
           <ul key={r}>
             {row.map((contributor) => (
-              <li key={contributor.slug}>
+              <li
+                key={contributor.slug}
+                className="rv"
+                style={{ "--i": order.get(contributor.slug) } as CSSProperties}
+              >
                 <button
                   type="button"
                   onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
