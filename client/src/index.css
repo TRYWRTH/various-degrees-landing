@@ -818,9 +818,6 @@
   .m-bio-link {
     margin-top: 14px;
   }
-  .m-bio-back {
-    display: none;
-  }
 }
 
 /* =========================================================================
@@ -1100,5 +1097,122 @@
       calc(100svh - clamp(112px, 16vh, 160px) - var(--nfs) * 4.62 - 70px - (28px - var(--nlh)) - clamp(24px, 4vh, 64px)),
       560px
     );
+  }
+}
+
+/* =========================================================================
+ * Bio overlay: closing signals (ContributorPanel.tsx)
+ * ========================================================================= */
+/* The real close button: visually hidden, shown at the top right on keyboard focus */
+.bio-close {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.bio-close:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0 0 auto;
+  overflow: visible;
+  clip: auto;
+}
+.bio-close,
+.bio-cursor {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 14px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #f4f1ea;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.bio-close svg,
+.bio-cursor svg {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.7));
+}
+
+/* The touch hint: hidden unless the device is touch-first */
+.bio-hint {
+  display: none;
+}
+@media (hover: none) and (pointer: coarse) {
+  .bio-hint {
+    display: block;
+    max-width: 130px;
+    margin-left: auto;
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    text-align: right;
+    color: rgb(244 241 234 / 0.6);
+  }
+}
+
+/* The pointer label: mouse and trackpad only */
+.bio-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  scale: 0.8;
+  transition: opacity 0.18s ease, scale 0.18s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bio-cursor {
+    visibility: visible;
+  }
+  .bio-cursor[data-state="shown"] {
+    opacity: 1;
+    scale: 1;
+  }
+  /* native cursor hidden over the close area; normal pointer over links */
+  [data-testid="contributor-panel"] {
+    cursor: none;
+  }
+  [data-testid="contributor-panel"] a,
+  [data-testid="contributor-panel"] button {
+    cursor: pointer;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bio-cursor {
+    transition: none;
+  }
+}
+
+/* Link hover nudges: previous ←, next →, handle ↗ */
+.nudge-l,
+.nudge-r,
+.nudge-ne {
+  display: inline-block;
+  transition: translate 0.22s ease;
+}
+.group:hover .nudge-l {
+  translate: -5px 0;
+}
+.group:hover .nudge-r {
+  translate: 5px 0;
+}
+.group:hover .nudge-ne {
+  translate: 2px -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nudge-l,
+  .nudge-r,
+  .nudge-ne {
+    transition: none;
   }
 }

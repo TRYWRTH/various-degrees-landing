@@ -21,19 +21,22 @@ const FADE_MS = 200;
 
 const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/** 14px stroke × for Close. */
+/** 12px stroke × for Close. */
 function CloseIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" aria-hidden="true">
-      <path d="M2 2L12 12M12 2L2 12" />
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+      <path d="M1.5 1.5L10.5 10.5M10.5 1.5L1.5 10.5" />
     </svg>
   );
 }
 
+/** Mouse and trackpad only: the media query that switches on the cursor label. */
+const FINE_POINTER = "(hover: hover) and (pointer: fine)";
+
 /** 16px stroke ↗ after the external link. */
 function ExternalArrow() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="nudge-ne shrink-0">
       <path d="M4 12L12 4M5.5 4H12V10.5" />
     </svg>
   );
@@ -43,10 +46,16 @@ function ExternalArrow() {
  * Contributor dialog: a full-screen text page over the same blurred photo as the site,
  * under a darker overlay. The whole overlay scrolls when the bio is long.
  *
- * Focus moves to the dialog on open (the dialog itself, so iOS doesn't draw a ring on
- * Close after a tap; Tab then reaches Close), Tab is trapped inside, Esc, Close, Back
- * and a click on empty space fade it
- * out, and the page returns focus to the name of the artist last shown.
+ * Closing: a click or tap anywhere closes it, except on the handle, previous / next and
+ * the close button, and except the click that ends a text selection; Esc closes too.
+ * Mouse and trackpad (hover + fine pointer): a "Close ×" label follows the pointer and
+ * hides the native cursor over the close area. Touch: a small "Click anywhere to close"
+ * in the top-right corner. A real, visually hidden "Close bio" button is always there
+ * and shows on keyboard focus.
+ *
+ * Focus moves to the dialog on open (Tab then reaches the close button), Tab is
+ * trapped inside, and on close the page returns focus to the name of the artist last
+ * shown.
  *
  * Previous / next swap the artist in place: back to the top, focus stays on the link
  * that was pressed (so you can keep pressing it), and the new name is announced.
@@ -122,6 +131,58 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
     requestClose();
   };
 
+  // Mouse / trackpad: the "Close ×" label follows the pointer (pointermove + rAF);
+  // it fades out over links and buttons and hides when the pointer leaves the window.
+  const cursorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const label = cursorRef.current;
+    const fine = window.matchMedia(FINE_POINTER);
+    if (!dialog || !label) return;
+    let frame = 0;
+    let x = 0;
+    let y = 0;
+    let state: "hidden" | "shown" | "over-link" = "hidden";
+    const paint = () => {
+      frame = 0;
+      label.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+      label.dataset.state = state;
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch" || e.pointerType === "pen") return;
+      x = e.clientX;
+      y = e.clientY;
+      state = (e.target as Element).closest("a, button") ? "over-link" : "shown";
+      schedule();
+    };
+    const onLeave = () => {
+      state = "hidden";
+      schedule();
+    };
+    const attach = () => {
+      dialog.addEventListener("pointermove", onMove);
+      document.documentElement.addEventListener("pointerleave", onLeave);
+      window.addEventListener("blur", onLeave);
+    };
+    const detach = () => {
+      dialog.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("blur", onLeave);
+      onLeave();
+    };
+    const onChange = () => (fine.matches ? attach() : detach());
+    if (fine.matches) attach();
+    fine.addEventListener?.("change", onChange);
+    return () => {
+      cancelAnimationFrame(frame);
+      detach();
+      fine.removeEventListener?.("change", onChange);
+    };
+  }, []);
+
   const isInstagram = contributor.link?.label.startsWith("@");
 
   return (
@@ -155,10 +216,16 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
         <div className="mx-auto flex w-full max-w-[1296px] flex-col min-[900px]:min-h-[100svh]">
           <div className="flex h-[72px] shrink-0 items-center justify-between gap-4">
             <p className={numberLabelClass}>03 — Contributors</p>
+            {/* Touch screens only: the one close hint */}
+            <p className="bio-hint" aria-hidden="true">
+              Click anywhere to close
+            </p>
+            {/* Always in the DOM; visually hidden until it has keyboard focus */}
             <button
               type="button"
               onClick={requestClose}
-              className="inline-flex min-h-11 items-center gap-2 font-mono text-[12px] font-normal uppercase leading-none tracking-[0.2em] text-editorial-strong decoration-1 underline-offset-[5px] hover:underline"
+              aria-label="Close bio"
+              className="bio-close"
               data-testid="button-panel-close"
             >
               Close
@@ -191,7 +258,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${contributor.name}${isInstagram ? " on Instagram" : ", website"} (opens in a new tab)`}
-                    className="m-bio-link mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
+                    className="group m-bio-link mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
                     data-testid="link-contributor"
                   >
                     {contributor.link.label}
@@ -203,25 +270,11 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
               <div className={cn(rightColumn, "mt-[clamp(56px,6.7vw,96px)] min-[900px]:ml-0 min-[900px]:mt-0 min-[900px]:max-w-none")}>
                 {/* On wide screens the size also follows the window height, so short laptop screens fit too */}
                 <p
-                  className={cn(paragraphClass, "hyphens-none sm:text-justify min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]")}
+                  className={cn(paragraphClass, "hyphens-none text-left min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]")}
                   data-testid="text-contributor-bio"
                 >
                   {contributor.bio}
                 </p>
-
-                {/* Second exit, right where the reading ends */}
-                <button
-                  type="button"
-                  onClick={requestClose}
-                  className="m-bio-back mt-[clamp(24px,4vh,40px)] inline-flex items-center gap-2.5 border-b border-current pb-1 font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-none tracking-[-0.01em] text-editorial-strong hover:text-white min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]"
-                  data-testid="button-panel-back"
-                >
-                  {/* Same size as the bio text */}
-                  <span className="rotate-180">
-                    <Arrow size={18} />
-                  </span>
-                  Back
-                </button>
               </div>
             </div>
           </div>
@@ -234,10 +287,10 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
             <button
               type="button"
               onClick={() => browse(previous.slug)}
-              className="inline-flex min-h-11 max-w-[48%] items-center gap-2 text-left decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
+              className="group inline-flex min-h-11 max-w-[48%] items-center gap-2 text-left decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
               data-testid="button-panel-previous"
             >
-              <span className="rotate-180">
+              <span className="nudge-l rotate-180">
                 <Arrow size={16} />
               </span>
               <span>
@@ -248,20 +301,28 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
             <button
               type="button"
               onClick={() => browse(next.slug)}
-              className="inline-flex min-h-11 max-w-[48%] items-center gap-2 text-right decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
+              className="group inline-flex min-h-11 max-w-[48%] items-center gap-2 text-right decoration-1 underline-offset-[0.18em] hover:text-white hover:underline"
               data-testid="button-panel-next"
             >
               <span>
                 <span className="sr-only">Next: </span>
                 {next.name}
               </span>
-              <Arrow size={16} />
+              <span className="nudge-r">
+                <Arrow size={16} />
+              </span>
             </button>
           </nav>
           <p className="sr-only" aria-live="polite">
             {contributor.name}
           </p>
         </div>
+      </div>
+
+      {/* Mouse / trackpad: the label that follows the pointer */}
+      <div ref={cursorRef} className="bio-cursor" data-state="hidden" aria-hidden="true">
+        Close
+        <CloseIcon />
       </div>
     </div>
   );
