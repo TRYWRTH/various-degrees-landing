@@ -29,8 +29,8 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
 
       <div className={`${rightColumn} mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
         <p className={paragraphClass}>
-          Copies are available from €15. Any extra support goes directly toward funding the project
-          and the artists involved. Contributions of €150 or more include a copy of the publication
+          Copies are available from €15. Any extra support goes directly toward funding the project.
+          Contributions of €150 or more include a copy of the publication
           plus an original, limited artwork from our artists.
         </p>
 
