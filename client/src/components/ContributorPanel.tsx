@@ -116,9 +116,14 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_11_8/0.64),rgb(10_11_8/0.88))] md:bg-[linear-gradient(to_bottom,rgb(10_11_8/0.55),rgb(10_11_8/0.88))]" />
       </div>
 
-      <div className={cn("relative pb-[clamp(96px,9.7vw,140px)]", gutter)} style={{ paddingTop: "env(safe-area-inset-top)" }}>
-        <div className="mx-auto w-full max-w-[1296px]">
-          <div className="flex h-[72px] items-center justify-between gap-4">
+      <div
+        className={cn("relative pb-[clamp(96px,9.7vw,140px)] min-[900px]:pb-0", gutter)}
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        {/* Wide screens: one screen tall, name left and bio right, centred vertically so
+            the whole bio fits without scrolling. Phones: stacked, and the overlay scrolls. */}
+        <div className="mx-auto flex w-full max-w-[1296px] flex-col min-[900px]:min-h-[100svh]">
+          <div className="flex h-[72px] shrink-0 items-center justify-between gap-4">
             <p className={numberLabelClass}>03 — Contributors</p>
             <button
               type="button"
@@ -131,37 +136,50 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
             </button>
           </div>
 
-          {contributor.discipline && (
-            <p className={cn(numberLabelClass, "mt-[clamp(40px,5.6vw,80px)]")}>{contributor.discipline}</p>
-          )}
-          <h2
-            id={nameId}
-            className={cn(
-              "font-tight text-[clamp(46px,8vw,128px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong",
-              contributor.discipline ? "mt-6" : "mt-[clamp(56px,8.3vw,120px)]",
-            )}
-          >
-            {contributor.name}
-          </h2>
+          <div className="min-[900px]:flex min-[900px]:flex-1 min-[900px]:items-center min-[900px]:pb-[clamp(48px,9vh,96px)] min-[900px]:pt-[clamp(24px,4vh,48px)]">
+            <div className="w-full min-[900px]:grid min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,600px)] min-[900px]:items-start min-[900px]:gap-x-[clamp(48px,6vw,96px)]">
+              <div>
+                {contributor.discipline && (
+                  <p className={cn(numberLabelClass, "mb-6 mt-[clamp(40px,5.6vw,80px)] min-[900px]:mt-0")}>
+                    {contributor.discipline}
+                  </p>
+                )}
+                <h2
+                  id={nameId}
+                  className={cn(
+                    "font-tight text-[clamp(46px,8vw,128px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong",
+                    "min-[900px]:mt-0 min-[900px]:text-[clamp(46px,min(7vw,12vh),112px)]",
+                    !contributor.discipline && "mt-[clamp(56px,8.3vw,120px)]",
+                  )}
+                >
+                  {contributor.name}
+                </h2>
 
-          {contributor.link && (
-            <a
-              href={contributor.link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${contributor.name}${isInstagram ? " on Instagram" : ", website"} (opens in a new tab)`}
-              className="mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
-              data-testid="link-contributor"
-            >
-              {contributor.link.label}
-              <ExternalArrow />
-            </a>
-          )}
+                {contributor.link && (
+                  <a
+                    href={contributor.link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${contributor.name}${isInstagram ? " on Instagram" : ", website"} (opens in a new tab)`}
+                    className="mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
+                    data-testid="link-contributor"
+                  >
+                    {contributor.link.label}
+                    <ExternalArrow />
+                  </a>
+                )}
+              </div>
 
-          <div className={cn(rightColumn, "mt-[clamp(56px,6.7vw,96px)]")}>
-            <p className={cn(paragraphClass, "hyphens-none")} data-testid="text-contributor-bio">
-              {contributor.bio}
-            </p>
+              <div className={cn(rightColumn, "mt-[clamp(56px,6.7vw,96px)] min-[900px]:ml-0 min-[900px]:mt-0 min-[900px]:max-w-none")}>
+                {/* On wide screens the size also follows the window height, so short laptop screens fit too */}
+                <p
+                  className={cn(paragraphClass, "hyphens-none min-[900px]:text-[clamp(17px,min(1.7vw,2.9vh),25px)]")}
+                  data-testid="text-contributor-bio"
+                >
+                  {contributor.bio}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
