@@ -16,7 +16,7 @@ const italic = "font-light italic";
 /** The statement set large, then the two supporting paragraphs in the narrow right column. */
 export const About = forwardRef<HTMLElement>(function About(_props, ref) {
   return (
-    <Section id="about" ref={ref} pinClassName="pin-about" aria-labelledby="about-heading" className={`${sectionPad} m-sec`}>
+    <Section id="about" ref={ref} pinClassName="pin-about" aria-labelledby="about-heading" className={`${sectionPad} m-sec m-about`}>
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="02" name="About" />
       </p>
@@ -44,6 +44,9 @@ export const About = forwardRef<HTMLElement>(function About(_props, ref) {
           find pieces that help us take another step towards the future.
         </p>
       </div>
+
+      {/* Phones: decorative arrow trail down to the cover (index.css) */}
+      <span className="trail hidden" aria-hidden="true" />
     </Section>
   );
 });
