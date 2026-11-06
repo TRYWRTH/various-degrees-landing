@@ -1116,3 +1116,17 @@
     margin-right: auto;
   }
 }
+
+/* Mirrored About, better aligned: the headline splits into three lines that grow
+   towards the bottom ("A publication contemplating what / happens when the future we /
+   imagined feels increasingly far away"), so, right-aligned, its last line reaches
+   furthest left, towards the text; the paragraphs are justified into a solid block. */
+@media (min-width: 761px) {
+  #about-heading {
+    text-wrap: balance;
+  }
+  #about .m-text {
+    text-align: justify;
+    hyphens: none;
+  }
+}
