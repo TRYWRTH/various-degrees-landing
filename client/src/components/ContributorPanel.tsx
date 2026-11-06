@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Contributor } from "@/data/contributors";
-import { SectionLabel } from "@/components/sections/Section";
+import { gutter, numberLabelClass, paragraphClass, rightColumn } from "@/components/sections/Section";
 import { cn } from "@/lib/utils";
-import { usePanelBackdropOffset } from "@/hooks/use-panel-backdrop-offset";
 import backgroundImage from "@assets/01-greek.webp";
 
 type ContributorPanelProps = {
@@ -14,52 +12,70 @@ type ContributorPanelProps = {
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
+/** Matches the 200ms opacity fade. */
+const FADE_MS = 200;
+
+const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** 14px stroke × for Close. */
+function CloseIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" aria-hidden="true">
+      <path d="M2 2L12 12M12 2L2 12" />
+    </svg>
+  );
+}
+
+/** 16px stroke ↗ after the external link. */
+function ExternalArrow() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
+      <path d="M4 12L12 4M5.5 4H12V10.5" />
+    </svg>
+  );
+}
+
 /**
- * Accessible contributor dialog: a centred box over a blurred scrim on every screen size
- * (phones get a narrower box with tighter padding). Only the bio scrolls; label, name and
- * Close stay pinned.
+ * Contributor dialog: a full-screen text page over the same blurred photo as the site,
+ * under a darker overlay. The whole overlay scrolls when the bio is long.
+ *
+ * Focus moves to the dialog on open (the dialog itself, so iOS doesn't draw a ring on
+ * Close after a tap; Tab then reaches Close), Tab is trapped inside, Esc and Close fade it
+ * out, and the page returns focus to the name that opened it.
  */
 export function ContributorPanel({ contributor, onClose }: ContributorPanelProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const bioRef = useRef<HTMLDivElement>(null);
-  const photoRef = useRef<HTMLImageElement>(null);
-  const [showFade, setShowFade] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const closingRef = useRef(false);
   const nameId = `contributor-name-${contributor.slug}`;
 
-  const updateFade = useCallback(() => {
-    const el = bioRef.current;
-    if (!el) return;
-    setShowFade(el.scrollTop + el.clientHeight < el.scrollHeight - 4);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (bioRef.current) bioRef.current.scrollTop = 0;
-    updateFade();
-  }, [contributor.slug, updateFade]);
-
-  // Keep the panel's photo lined up with the page background
-  usePanelBackdropOffset(dialogRef, photoRef);
-
+  // Fade in on the next frame; focus the dialog and start at its top
   useEffect(() => {
-    // Focus the dialog itself rather than Close: iOS Safari draws the focus ring on a
-    // programmatically focused button even after a tap. Tab then moves to Close.
-    dialogRef.current?.focus({ preventScroll: true });
-    window.addEventListener("resize", updateFade);
-    return () => window.removeEventListener("resize", updateFade);
-  }, [updateFade]);
+    const dialog = dialogRef.current;
+    dialog?.focus({ preventScroll: true });
+    if (dialog) dialog.scrollTop = 0;
+    const frame = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, [contributor.slug]);
+
+  // Fade out, then let the page unmount it (and restore focus)
+  const requestClose = useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    setVisible(false);
+    window.setTimeout(onClose, prefersReducedMotion() ? 0 : FADE_MS);
+  }, [onClose]);
 
   // Esc closes; Tab is trapped inside the dialog.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        requestClose();
         return;
       }
       if (e.key !== "Tab" || !dialogRef.current) return;
-      const focusables = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
-      ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+      const focusables = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
       if (focusables.length === 0) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -75,102 +91,78 @@ export function ContributorPanel({ contributor, onClose }: ContributorPanelProps
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, [requestClose]);
+
+  const isInstagram = contributor.link?.label.startsWith("@");
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* Scrim: click/tap outside the box to close */}
-      <div
-        className="absolute inset-0 animate-fade-in bg-night/55 backdrop-blur-md motion-reduce:animate-none"
-        onClick={onClose}
-        aria-hidden="true"
-        data-testid="panel-scrim"
-      />
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={nameId}
+      tabIndex={-1}
+      className={cn(
+        "fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-night outline-none",
+        "transition-opacity duration-200 ease-out motion-reduce:transition-none",
+        visible ? "opacity-100" : "opacity-0",
+      )}
+      data-testid="contributor-panel"
+    >
+      {/* The site's photo, fixed while the text scrolls, under a 55% → 88% overlay
+          (64% at the top on phones, where the photo's light sky sits behind the label) */}
+      <div className="fixed inset-0 overflow-hidden" aria-hidden="true">
+        <img src={backgroundImage} alt="" className="absolute inset-0 h-full w-full scale-[1.04] object-cover blur-[8px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_11_8/0.64),rgb(10_11_8/0.88))] md:bg-[linear-gradient(to_bottom,rgb(10_11_8/0.55),rgb(10_11_8/0.88))]" />
+      </div>
 
-      <div className="pointer-events-none relative flex h-full flex-col items-center justify-center">
-        <div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={nameId}
-          tabIndex={-1}
-          className={cn(
-            "panel-glass pointer-events-auto relative flex flex-col overflow-hidden rounded-2xl border border-glass-border outline-none",
-            "animate-panel-in motion-reduce:animate-none",
-            "max-h-[min(640px,100svh-112px)] w-[calc(100vw-32px)]",
-            "md:max-h-[min(700px,100svh-96px)] md:w-[min(820px,100vw-48px)]",
-          )}
-          data-testid="contributor-panel"
-        >
-          {/* Smoked glass: own blurred copy of the photo (z 0) + tint (z 1); content is z 2 */}
-          <img ref={photoRef} src={backgroundImage} alt="" aria-hidden="true" className="panel-glass-photo" />
-          <div className="panel-glass-tint" aria-hidden="true" />
-
-          {/* Close: an × only, floating top-right (44px tap target). z-3 keeps it above the name block. */}
-          <div className="absolute right-2 top-2 z-[3] md:right-4 md:top-4">
+      <div className={cn("relative pb-[clamp(96px,9.7vw,140px)]", gutter)} style={{ paddingTop: "env(safe-area-inset-top)" }}>
+        <div className="mx-auto w-full max-w-[1296px]">
+          <div className="flex h-[72px] items-center justify-between gap-4">
+            <p className={numberLabelClass}>03 — Contributors</p>
             <button
               type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="inline-flex h-11 w-11 items-center justify-center text-ink transition-colors duration-160 hover:text-ink-muted"
+              onClick={requestClose}
+              className="inline-flex min-h-11 items-center gap-2 font-mono text-[12px] font-normal uppercase leading-none tracking-[0.2em] text-editorial-strong decoration-1 underline-offset-[5px] hover:underline"
               data-testid="button-panel-close"
             >
-              <X aria-hidden="true" className="h-5 w-5" strokeWidth={1.5} />
+              Close
+              <CloseIcon />
             </button>
           </div>
 
-          <div className="relative z-[2] flex shrink-0 flex-col items-center px-6 pt-14 text-center md:px-24 md:pt-20">
-            {contributor.discipline && (
-              <SectionLabel className="mb-4">{contributor.discipline}</SectionLabel>
+          {contributor.discipline && (
+            <p className={cn(numberLabelClass, "mt-[clamp(40px,5.6vw,80px)]")}>{contributor.discipline}</p>
+          )}
+          <h2
+            id={nameId}
+            className={cn(
+              "font-tight text-[clamp(46px,8vw,128px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong",
+              contributor.discipline ? "mt-6" : "mt-[clamp(56px,8.3vw,120px)]",
             )}
-            <h2
-              id={nameId}
-              className="text-balance font-forum text-panel-name-m text-ink md:text-panel-name"
-            >
-              {contributor.name}
-            </h2>
-            {contributor.link && (
-              <a
-                href={contributor.link.href}
-                target="_blank"
-                rel="noopener"
-                aria-label={`${contributor.name}${contributor.link.label.startsWith("@") ? " on Instagram" : ", website"} (opens in a new tab)`}
-                className="group mt-2 inline-flex min-h-11 items-center gap-1.5 font-sans text-link text-glass-text transition-colors duration-160 ease-out hover:text-ink md:mt-3"
-                data-testid="link-contributor"
-              >
-                <span className="underline decoration-glass-text/60 decoration-1 underline-offset-[6px] group-hover:decoration-ink">
-                  {contributor.link.label}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="inline-block transition-transform duration-160 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
-                >
-                  ↗
-                </span>
-              </a>
-            )}
-          </div>
-
-          <div
-            ref={bioRef}
-            onScroll={updateFade}
-            tabIndex={0}
-            aria-label={`About ${contributor.name}`}
-            className="slim-scrollbar relative z-[2] mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-12 md:mt-8 md:px-24 md:pb-[72px]"
           >
-            <p className="mx-auto max-w-[70ch] hyphens-auto text-justify font-sans text-panel-bio-m text-glass-text md:text-panel-bio">
+            {contributor.name}
+          </h2>
+
+          {contributor.link && (
+            <a
+              href={contributor.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${contributor.name}${isInstagram ? " on Instagram" : ", website"} (opens in a new tab)`}
+              className="mt-9 inline-flex items-center gap-2 border-b border-current pb-1 font-tight text-[20px] font-normal leading-none text-editorial-body hover:text-white"
+              data-testid="link-contributor"
+            >
+              {contributor.link.label}
+              <ExternalArrow />
+            </a>
+          )}
+
+          <div className={cn(rightColumn, "mt-[clamp(56px,6.7vw,96px)]")}>
+            <p className={cn(paragraphClass, "hyphens-none")} data-testid="text-contributor-bio">
               {contributor.bio}
             </p>
           </div>
-
-          {/* Bottom fade */}
-          <div
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-12 bg-gradient-to-t md:h-[72px] from-glass-fade to-glass-clear transition-opacity duration-200",
-              showFade ? "opacity-100" : "opacity-0",
-            )}
-          />
         </div>
       </div>
     </div>

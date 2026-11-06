@@ -47,14 +47,6 @@ export const paragraphClass =
 /** Narrow column pushed to the right edge of the container (full width on phones). */
 export const rightColumn = "ml-auto w-full max-w-[600px]";
 
-/** Contributor panel: the small label above a name (Inter caps). */
-export const labelClass =
-  "font-sans text-label-m font-medium uppercase text-ink-muted md:text-label";
-
-export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn(labelClass, className)}>{children}</p>;
-}
-
 /** The one icon on the page: a thin right arrow drawn with strokes. */
 export function Arrow({ size, stroke = 1 }: { size: number; stroke?: number }) {
   const m = size / 2;

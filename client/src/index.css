@@ -220,63 +220,6 @@
     margin: 0 0.32em;
     opacity: 0.35;
   }
-
-  /* Slim custom scrollbar for the contributor bio */
-  .slim-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(243, 240, 234, 0.35) rgba(243, 240, 234, 0.08);
-  }
-  .slim-scrollbar::-webkit-scrollbar {
-    width: 4px;
-  }
-  .slim-scrollbar::-webkit-scrollbar-track {
-    background: rgba(243, 240, 234, 0.08);
-    border-radius: 999px;
-  }
-  .slim-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(243, 240, 234, 0.35);
-    border-radius: 999px;
-  }
-
-  /*
-   * Contributor panel: "smoked glass", a window onto the photo.
-   * The panel draws its own blurred copy of the background photo, lined up with the
-   * page background by usePanelBackdropOffset (--bx/--by/--bw/--bh), under a smoked
-   * tint. (backdrop-filter alone only sees the already-darkened page behind it.)
-   */
-  .panel-glass {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .panel-glass-photo {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 0;
-    width: var(--bw, 100vw);
-    height: var(--bh, 100svh);
-    max-width: none;
-    transform: translate(var(--bx, 0px), var(--by, 0px));
-    pointer-events: none;
-    filter: blur(28px) saturate(1.1);
-  }
-  .panel-glass-tint {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    /* 0.72, not 0.62: the lowest tint that keeps the bio >= 4.5:1 where the bust shows through */
-    background: rgba(20, 18, 15, 0.72);
-  }
-  /* Solid fallback: the reader asked for less transparency */
-  @media (prefers-reduced-transparency: reduce) {
-    .panel-glass-photo {
-      display: none;
-    }
-    .panel-glass-tint {
-      background: rgb(24 22 19 / 0.96);
-    }
-  }
 }
 
 /**

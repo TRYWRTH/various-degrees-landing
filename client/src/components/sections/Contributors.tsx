@@ -31,7 +31,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
               type="button"
               onClick={(e) => onSelect(contributor.slug, e.currentTarget)}
               aria-haspopup="dialog"
-              className="text-left decoration-1 underline-offset-[0.12em] hover:text-white hover:underline"
+              className="text-left decoration-1 underline-offset-[0.18em] hover:underline focus-visible:underline"
               data-testid={`button-contributor-${contributor.slug}`}
             >
               {contributor.name}
