@@ -1102,3 +1102,17 @@
     );
   }
 }
+
+/* Desktop (comparison version): section 02 mirrored. The headline sits on the right,
+   right-aligned; the paragraph column sits on the left, same width and same gap below
+   the headline as before. Phones unchanged. */
+@media (min-width: 761px) {
+  #about h1 {
+    text-align: right;
+    margin-left: auto;
+  }
+  #about .m-indent {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
