@@ -336,24 +336,6 @@
   .name-rows button:focus-visible::after {
     text-decoration: none;
   }
-  /*
-   * Narrow screens: no fixed grouping. All names flow as one wrapped text; each name
-   * (with its "/") stays in one piece unless it is wider than the whole line.
-   */
-  @media (max-width: 759px) {
-    .name-rows {
-      font-size: clamp(34px, 9vw, 56px);
-    }
-    .name-rows > ul {
-      display: inline;
-      white-space: normal;
-    }
-    .name-rows li {
-      display: inline-block;
-      max-width: 100%;
-      margin-right: 0.28em;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .name-rows button {
       transition: none;
@@ -470,5 +452,231 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+}
+
+/* =========================================================================
+ * Mobile redesign (max-width 760px). Everything below applies to phones only;
+ * desktop is unaffected. Hooks: m-* classes in the section components.
+ * ========================================================================= */
+@keyframes gl-wrap {
+  0% { opacity: 0; }
+  3% { opacity: 0.9; }
+  5% { opacity: 0.2; }
+  8% { opacity: 0.85; }
+  14% { opacity: 0.5; }
+  20% { opacity: 0.8; }
+  55% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+@keyframes gl-a {
+  0%, 2% { transform: none; }
+  3% { transform: translateX(-30px); }
+  7% { transform: translateX(18px); }
+  12% { transform: translateX(-8px); }
+  19% { transform: translateX(26px); }
+  27% { transform: translateX(-14px); }
+  34% { transform: translateX(6px); }
+  40%, 100% { transform: none; }
+}
+@keyframes gl-b {
+  0%, 3% { transform: none; }
+  4% { transform: translateX(24px); }
+  9% { transform: translateX(-30px); }
+  15% { transform: translateX(12px); }
+  22% { transform: translateX(-20px); }
+  30% { transform: translateX(30px); }
+  36% { transform: translateX(-6px); }
+  40%, 100% { transform: none; }
+}
+@keyframes gl-c {
+  0%, 4% { transform: none; }
+  5% { transform: translateX(-16px); }
+  10% { transform: translateX(30px); }
+  17% { transform: translateX(-26px); }
+  25% { transform: translateX(10px); }
+  31% { transform: translateX(-30px); }
+  38% { transform: translateX(14px); }
+  40%, 100% { transform: none; }
+}
+
+@media (max-width: 760px) {
+  /* Sections: one screen at least, 104px top / 72px bottom */
+  .m-sec {
+    min-height: 100svh;
+    padding-top: 104px;
+    padding-bottom: 72px;
+  }
+  /* The last section leaves room for the footer, so snapping never hides it */
+  .m-sec.snap-section-last {
+    min-height: calc(100svh - var(--footer-h, 0px));
+  }
+
+  /* Headlines */
+  .m-line {
+    display: block;
+  }
+  .m-h56 {
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .m-h40 {
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  /* Supporting text: indented by the 74px gutter */
+  .m-indent {
+    margin-left: 74px;
+    width: auto;
+    max-width: none;
+  }
+  .m-text {
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: #e6e2d9;
+  }
+  .m-biglink {
+    font-size: 34px;
+    font-weight: 300;
+  }
+
+  /* 01 Event: Date / Place grid with a 74px key column */
+  .m-launch-col {
+    margin-left: 0;
+    max-width: none;
+    gap: 36px;
+  }
+  .m-details {
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr);
+    align-items: baseline;
+    row-gap: 18px;
+    width: 100%;
+  }
+  .m-key {
+    display: block;
+    font-family: "DM Mono", ui-monospace, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #bdb8ac;
+  }
+  .m-date {
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.25;
+  }
+  .m-place {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  /* 03 Contributors: label + names pushed to the bottom of the screen */
+  .m-contrib > div {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - 176px);
+  }
+  .m-contrib h2 {
+    position: relative;
+    margin-top: auto;
+  }
+  .m-contrib .name-rows {
+    position: relative;
+    margin-top: 28px;
+    font-size: 22px;
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+  }
+  .name-rows > ul {
+    display: inline;
+    white-space: normal;
+  }
+  .name-rows li {
+    display: inline;
+  }
+  .name-rows button::after {
+    content: none;
+  }
+  .name-rows li::after {
+    content: "/";
+    margin: 0 0.28em;
+    opacity: 0.35;
+  }
+  .name-rows > ul:last-child > li:last-child::after {
+    content: none;
+  }
+
+  /* Foggy photo fragment above the names: glitches in once, holds, fades out */
+  .gl {
+    --m: radial-gradient(ellipse 27% 24% at 43% 46%, #000 0%, rgba(0, 0, 0, 0.75) 40%, transparent 100%),
+      radial-gradient(ellipse 20% 28% at 63% 41%, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 100%),
+      radial-gradient(ellipse 22% 14% at 33% 66%, rgba(0, 0, 0, 0.4) 0%, transparent 100%),
+      radial-gradient(ellipse 15% 12% at 70% 68%, rgba(0, 0, 0, 0.25) 0%, transparent 100%);
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 96px;
+    width: 100%;
+    height: 340px;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-mask-image: var(--m);
+    mask-image: var(--m);
+  }
+  .gl i {
+    position: absolute;
+    inset: 0;
+    background: var(--photo) 50% 30% / cover;
+    filter: saturate(1.1) contrast(1.1) brightness(0.95);
+  }
+  .gl i:nth-child(1) { clip-path: inset(0 0 82% 0); }
+  .gl i:nth-child(2) { clip-path: inset(18% 0 66% 0); }
+  .gl i:nth-child(3) { clip-path: inset(34% 0 52% 0); }
+  .gl i:nth-child(4) { clip-path: inset(48% 0 34% 0); }
+  .gl i:nth-child(5) { clip-path: inset(66% 0 18% 0); }
+  .gl i:nth-child(6) { clip-path: inset(82% 0 0 0); }
+  .gl b {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+  }
+  .m-contrib.in-view .gl { animation: gl-wrap 4s forwards; }
+  .m-contrib.in-view .gl i:nth-child(1) { animation: gl-a 4s steps(1) forwards; }
+  .m-contrib.in-view .gl i:nth-child(2) { animation: gl-b 4s steps(1) reverse forwards; }
+  .m-contrib.in-view .gl i:nth-child(3) { animation: gl-c 4s steps(1) forwards; }
+  .m-contrib.in-view .gl i:nth-child(4) { animation: gl-a 4s steps(1) reverse forwards; }
+  .m-contrib.in-view .gl i:nth-child(5) { animation: gl-b 4s steps(1) forwards; }
+  .m-contrib.in-view .gl i:nth-child(6) { animation: gl-c 4s steps(1) forwards; }
+}
+
+/* Reduced motion: no glitch, just a quiet static patch */
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .gl,
+  .m-contrib.in-view .gl {
+    opacity: 0.35;
+    animation: none;
+  }
+  .gl i,
+  .m-contrib.in-view .gl i {
+    animation: none;
+  }
+}
+
+/* Soft snapping on phones: settles on a section start when you stop near one, but a
+   quick flick still passes several sections */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  #hero,
+  .m-sec {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }

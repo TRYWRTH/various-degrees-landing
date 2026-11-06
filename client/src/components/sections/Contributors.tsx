@@ -1,4 +1,5 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, type CSSProperties } from "react";
+import backgroundImage from "@assets/01-greek.webp";
 import { afterLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
 import { contributors, type Contributor } from "@/data/contributors";
 
@@ -35,8 +36,46 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
   { onSelect },
   ref,
 ) {
+  // Phones: the photo fragment above the names glitches in once, when the section is
+  // about half in view (index.css, `.gl`). Harmless elsewhere: `.gl` is hidden there.
+  useEffect(() => {
+    const section = document.getElementById("contributors");
+    if (!section || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          section.classList.add("in-view");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Section id="contributors" ref={ref} aria-labelledby="contributors-heading" className={sectionPad}>
+    <Section
+      id="contributors"
+      ref={ref}
+      aria-labelledby="contributors-heading"
+      className={`${sectionPad} m-sec m-contrib`}
+    >
+      {/* Phones only: a foggy fragment of the background photo (6 slices + scanlines) */}
+      <div
+        className="gl hidden"
+        aria-hidden="true"
+        style={{ "--photo": `url("${backgroundImage}")` } as CSSProperties}
+      >
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+        <b />
+      </div>
+
       <h2 id="contributors-heading" className={numberLabelClass}>
         03 — Contributors
       </h2>
