@@ -1,4 +1,4 @@
-import { forwardRef, useLayoutEffect, useRef } from "react";
+import { forwardRef } from "react";
 import {
   afterLabel,
   Arrow,
@@ -17,34 +17,21 @@ const detailLink =
   "underline decoration-1 underline-offset-[5px] hover:text-white";
 
 /**
- * The launch event: the date set large, then venue, text and RSVP in the narrow right
- * column. Same copy and links as before.
+ * The launch event. Desktop: all text in a left column, the cover large on the right.
+ * Same copy and links as before.
  */
 export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
-  // Desktop: the cover is exactly as tall as the details column, from the top of the
-  // date to the bottom of the RSVP link (its width follows from the 3:4 ratio)
-  const columnRef = useRef<HTMLDivElement>(null);
-  const coverRef = useRef<HTMLElement>(null);
-  useLayoutEffect(() => {
-    const column = columnRef.current;
-    const cover = coverRef.current;
-    if (!column || !cover) return;
-    const fit = () => {
-      cover.style.height = `${column.offsetHeight}px`;
-    };
-    fit();
-    const observer = new ResizeObserver(fit);
-    observer.observe(column);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <Section
       id="launch"
       ref={ref}
       aria-labelledby="launch-heading"
-      className={`${sectionPad} m-sec m-launch`}
+      className={`${sectionPad} m-sec m-launch fit:!pt-[72px] fit:!pb-[clamp(24px,4vh,48px)]`}
     >
+      {/* Desktop: all text in a left column, the cover large on the right, almost the
+          full screen height. Phones: unchanged (cover hidden). */}
+      <div className="md:flex md:items-center md:justify-between md:gap-[clamp(40px,5vw,96px)]">
+      <div className="md:min-w-0 md:max-w-[620px] md:flex-1">
       <p className={`${numberLabelClass} m-numlabel`}>
         <NumLabel n="01" name="Event" />
       </p>
@@ -60,22 +47,8 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
       </h2>
 
 
-      {/* Desktop: the publication cover right next to the details, the same height */}
-      <div className="md:flex md:items-start md:justify-end md:gap-[clamp(28px,3vw,48px)]">
-      <figure
-        ref={coverRef}
-        className="hidden md:mt-[clamp(32px,4vw,56px)] md:block md:aspect-[3/4] md:shrink-0"
-      >
-        <img
-          src="/assets/cover.jpg"
-          alt="Cover of Remnants of a Future"
-          loading="lazy"
-          className="h-full w-full object-cover"
-        />
-      </figure>
       <div
-        ref={columnRef}
-        className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12 md:ml-0`}
+        className={`${rightColumn} m-launch-col mt-[clamp(32px,4vw,56px)] flex flex-col items-start gap-12 md:ml-0 md:max-w-none md:gap-[clamp(20px,3.5vh,40px)]`}
       >
         {/* Date and time lead the details, a step up from the paragraph text; the venue sits
             right under it, then 48px to the paragraph */}
@@ -138,6 +111,16 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
           <Arrow size={40} stroke={1.1} />
         </a>
       </div>
+      </div>
+
+      <figure className="hidden md:block md:aspect-[3/4] md:h-[calc(100svh-72px-clamp(24px,4vh,48px))] md:max-h-[920px] md:shrink-0">
+        <img
+          src="/assets/cover.jpg"
+          alt="Cover of Remnants of a Future"
+          loading="lazy"
+          className="h-full w-full object-cover"
+        />
+      </figure>
       </div>
     </Section>
   );
