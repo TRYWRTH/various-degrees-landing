@@ -101,6 +101,77 @@ export default function Home() {
     };
   }, []);
 
+  // Phones: one-way side entries. Each element slides in from off-screen as its section
+  // rises: it starts the moment the section appears at the bottom (progress 0) and is
+  // in place when the section is centred (progress 1). The furthest progress reached is
+  // remembered, so scrolling back up never moves anything back; scrolling down again
+  // carries on from there. Off on desktop and with reduced motion (elements just sit
+  // in place).
+  useEffect(() => {
+    const phone = window.matchMedia("(max-width: 760px)");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const ENTRIES: { sel: string; from: -1 | 1 }[] = [
+      { sel: ".m-row-date", from: -1 },
+      { sel: ".m-row-place", from: 1 },
+      { sel: ".m-about-h", from: 1 },
+      { sel: ".m-cover", from: -1 },
+      { sel: ".m-order-p", from: -1 },
+    ];
+    const items = ENTRIES.flatMap(({ sel, from }) => {
+      const el = document.querySelector<HTMLElement>(sel);
+      const section = el?.closest<HTMLElement>("section");
+      return el && section ? [{ el, section, from, reached: 0 }] : [];
+    });
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const active = phone.matches && !reduce.matches;
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      for (const item of items) {
+        if (!active) {
+          item.el.style.translate = "";
+          continue;
+        }
+        if (item.reached >= 1) continue;
+        // From the section appearing at the bottom (start) to it being centred, or to the
+        // end of the page if it can never be centred (the last section) (end)
+        const r = item.section.getBoundingClientRect();
+        const y = window.scrollY;
+        const top = r.top + y;
+        const start = top - vh;
+        const maxScroll = document.documentElement.scrollHeight - vh;
+        const end = Math.min(top + r.height / 2 - vh / 2, maxScroll);
+        const progress = end > start ? (y - start) / (end - start) : 1;
+        item.reached = Math.min(1, Math.max(item.reached, progress));
+        item.el.style.translate =
+          item.reached >= 1 ? "" : `${item.from * (1 - Math.max(0, item.reached)) * vw}px 0`;
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const onModeChange = () => {
+      if (!phone.matches || reduce.matches) for (const item of items) item.reached = 0;
+      onScroll();
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    phone.addEventListener?.("change", onModeChange);
+    reduce.addEventListener?.("change", onModeChange);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      phone.removeEventListener?.("change", onModeChange);
+      reduce.removeEventListener?.("change", onModeChange);
+      for (const item of items) item.el.style.translate = "";
+    };
+  }, []);
+
   // Phones: "right position" signal. A section is centred while it crosses the middle
   // band of the screen (IntersectionObserver, rootMargin -45% top and bottom). On
   // entering, in the same callback: class is-center (dash + label + thud in CSS), a 10ms

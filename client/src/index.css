@@ -662,22 +662,6 @@
  */
 
 
-@keyframes enter-l {
-  from {
-    translate: -100vw 0;
-  }
-  to {
-    translate: 0 0;
-  }
-}
-@keyframes enter-r {
-  from {
-    translate: 100vw 0;
-  }
-  to {
-    translate: 0 0;
-  }
-}
 
 @media (max-width: 760px) {
   /* The title screen scrolls away normally; no drift on phones (it would slide into
@@ -709,40 +693,19 @@
   }
 }
 
-@supports (animation-timeline: view()) {
-  @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
-    /*
-     * One rule for every side entry: each element rides its section's timeline
-     * (--sec), starting the moment the section appears at the bottom of the screen and
-     * arriving exactly when the section is centred (cover 50%). Linear, no fade; the
-     * translate property only (the thud uses scale, so they never collide).
-     */
-    .m-sec {
-      view-timeline: --sec block;
-    }
-    .m-row-date,
-    .m-row-place,
-    .m-about-h,
-    .m-cover,
-    .m-order-p {
-      animation: enter-r linear both;
-      animation-timeline: --sec;
-      animation-range: entry 0% cover 50%;
-      will-change: translate;
-    }
-    .m-row-date,
-    .m-cover,
-    .m-order-p {
-      animation-name: enter-l;
-    }
-    /* The About headline keeps its entry while the thud (scale) plays on top */
-    .m-sec.is-center .m-about-h {
-      animation:
-        enter-r linear both,
-        settle 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 1;
-      animation-timeline: --sec, auto;
-      animation-range: entry 0% cover 50%, normal;
-    }
+/*
+ * Side entries (phones): moved by pages/home.tsx, one way only. Each element starts
+ * fully off-screen the moment its section appears at the bottom and arrives when the
+ * section is centred; it only ever moves forward with downward scrolling and stays put
+ * when you scroll back up. The script sets the translate property; this is a hint.
+ */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .m-row-date,
+  .m-row-place,
+  .m-about-h,
+  .m-cover,
+  .m-order-p {
+    will-change: translate;
   }
 }
 
