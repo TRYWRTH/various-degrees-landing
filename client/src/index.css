@@ -1084,19 +1084,18 @@
 }
 
 /* Desktop: the rolling cover in Contributors, on the right. It starts 28px under the
-   third line of names ("Theresa Weber /"), beside the short last line, and runs down
-   to the section's bottom padding, so the section still fits one screen. */
+   third line of names ("Theresa Weber /"), beside the short last line; its height is
+   set in Contributors.tsx so it ends 24px above the bottom of the screen. */
 @media (min-width: 761px) {
   .contrib-roll {
     --rw: 440px;
     --nfs: calc(min(100vw - 2 * clamp(20px, 5vw, 72px), 1296px) / 19.8); /* names size */
     --nlh: calc(var(--nfs) * 1.12); /* one line of names */
     margin: calc(28px - var(--nlh)) 0 0 auto;
-    height: clamp(
-      200px,
-      calc(100svh - clamp(112px, 16vh, 160px) - var(--nfs) * 4.62 - 70px - (28px - var(--nlh)) - clamp(24px, 4vh, 64px)),
-      560px
-    );
+    height: 320px;
+  }
+  #contributors {
+    padding-bottom: 24px;
   }
 }
 

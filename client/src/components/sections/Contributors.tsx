@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useLayoutEffect } from "react";
 import { afterLabel, NumLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
 import { RollingCover } from "@/components/RollingCover";
 import { contributors, type Contributor } from "@/data/contributors";
@@ -47,6 +47,31 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
   { onSelect },
   ref,
 ) {
+  // Desktop: the rolling cover runs from under the names down to 24px above the bottom
+  // of the screen (the section's bottom padding); measured, so it is exact everywhere.
+  useLayoutEffect(() => {
+    const roll = document.querySelector<HTMLElement>(".contrib-roll");
+    const section = roll?.closest("section");
+    if (!roll || !section) return;
+    const fit = () => {
+      if (window.innerWidth < 761) {
+        roll.style.height = "";
+        return;
+      }
+      const offset = roll.getBoundingClientRect().top - section.getBoundingClientRect().top;
+      const pb = parseFloat(getComputedStyle(section).paddingBottom) || 0;
+      roll.style.height = `${Math.round(Math.max(200, Math.min(640, window.innerHeight - offset - pb)))}px`;
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    const observer = new ResizeObserver(fit);
+    observer.observe(section.querySelector(".name-rows") ?? section);
+    return () => {
+      window.removeEventListener("resize", fit);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <Section
       id="contributors"
