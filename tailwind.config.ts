@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -194,5 +195,10 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    // fit: desktop windows tall enough for one section per screen (index.css snapping)
+    plugin(({ addVariant }) => addVariant("fit", "@media (min-width: 900px) and (min-height: 600px)")),
+  ],
 } satisfies Config;

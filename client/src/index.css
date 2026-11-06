@@ -166,31 +166,12 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
-/* First screen: load fade (letter-spacing settles from 0.04em wider) and scroll-out */
-@keyframes hero-in {
-  from {
-    opacity: 0;
-    letter-spacing: calc(var(--ls) + 0.04em);
-  }
-  to {
-    opacity: 1;
-    letter-spacing: var(--ls);
-  }
-}
-@keyframes hero-hint-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/* First screen: scroll-out (transform + opacity only, so scrolling stays smooth) */
 @keyframes hero-out {
   /* The page moves the title up at 1x; pushing it down 0.6x leaves ~0.4x */
   to {
     transform: translateY(60vh);
     opacity: 0;
-    filter: blur(12px);
   }
 }
 @keyframes hero-hint-out {
@@ -230,16 +211,15 @@
   }
 
   /*
-   * Soft scroll snapping on the main page: wide and tall enough screens only, never with
-   * reduced motion. "proximity" only settles on a section start when you stop close to
-   * it, so tall sections scroll freely and nothing can trap you. The last section is one
-   * screen minus the footer, so its snap point is the very bottom of the page and the
-   * footer (never a snap point itself) is always in view there.
+   * One section per screen on desktop windows at least 900x600: each section is a full
+   * screen with its content centred, sized (fit: utilities) to fit inside it, and one
+   * scroll moves to the next ("mandatory" snapping; a section that still ends up taller
+   * than the window scrolls through normally, the browser doesn't trap it). The last
+   * section is one screen minus the footer, so its snap point is the very bottom of the
+   * page with the footer in view; the footer is never a snap point. No snapping with
+   * reduced motion, on phones or small windows, or inside the bio popup.
    */
-  @media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-snap-type: y proximity;
-    }
+  @media (min-width: 900px) and (min-height: 600px) {
     .snap-section {
       min-height: 100svh;
       scroll-snap-align: start;
@@ -256,21 +236,21 @@
       scroll-snap-align: start;
     }
   }
+  @media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-snap-type: y mandatory;
+    }
+  }
 
   /*
    * First screen motion (Hero.tsx). Nothing here runs with reduced motion: the title is
    * simply static. Scroll-driven parts only run where the browser supports them.
    */
   @media (prefers-reduced-motion: no-preference) {
-    .hero-in {
-      animation: hero-in 1.2s ease-out both;
-    }
-    .hero-hint-in {
-      animation: hero-hint-in 1.2s ease-out 0.6s both;
-    }
     @supports (animation-timeline: scroll()) {
-      /* Over the first screen of scrolling: drift up at ~0.4x, fade out, blur to 12px */
+      /* Over the first screen of scrolling: drift up at ~0.4x and fade out */
       .hero-title {
+        will-change: transform, opacity;
         animation: hero-out linear both;
         animation-timeline: scroll(root block);
         animation-range: 0 100vh;

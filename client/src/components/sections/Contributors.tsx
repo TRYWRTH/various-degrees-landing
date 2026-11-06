@@ -23,7 +23,7 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
       </h2>
 
       <ul
-        className={`name-flow ${afterLabel} font-tight text-[clamp(28px,4.2vw,64px)] font-light leading-[1.15] tracking-[-0.03em] text-editorial-strong`}
+        className={`name-flow ${afterLabel} font-tight text-[clamp(28px,4.2vw,64px)] fit:text-[clamp(28px,min(4.2vw,7vh),64px)] font-light leading-[1.15] tracking-[-0.03em] text-editorial-strong`}
       >
         {contributors.map((contributor) => (
           <li key={contributor.slug}>

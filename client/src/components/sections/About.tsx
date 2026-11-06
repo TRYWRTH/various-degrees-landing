@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import {
   afterLabel,
+  headlineSize,
   numberLabelClass,
   paragraphClass,
   rightColumn,
@@ -19,14 +20,14 @@ export const About = forwardRef<HTMLElement>(function About(_props, ref) {
 
       <h1
         id="about-heading"
-        className={`${afterLabel} font-tight text-[clamp(36px,5.4vw,84px)] font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
         data-testid="text-description-1"
       >
         A publication contemplating what happens when the future we imagined feels increasingly far
         away
       </h1>
 
-      <div className={`${rightColumn} mt-[clamp(56px,7.8vw,112px)] flex flex-col gap-7`}>
+      <div className={`${rightColumn} mt-[clamp(56px,7.8vw,112px)] fit:mt-[clamp(28px,6vh,112px)] flex flex-col gap-7 fit:gap-[clamp(16px,3vh,28px)]`}>
         <p className={paragraphClass} data-testid="text-description-2">
           <em className={italic}>Remnants of a Future</em> brings together a carefully curated group
           of artists, poets, writers and creators, who each offer their individual exploration of the

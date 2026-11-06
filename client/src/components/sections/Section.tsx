@@ -42,14 +42,24 @@ export const numberLabelClass =
   "font-mono text-[12px] font-normal uppercase leading-none tracking-[0.08em] text-editorial-eyebrow";
 
 /** Gap between a section's label and its headline or content. */
-export const afterLabel = "mt-[clamp(36px,4vw,56px)]";
+export const afterLabel = "mt-[clamp(36px,4vw,56px)] fit:mt-[clamp(20px,4vh,56px)]";
 
-/** Section padding: about 150px top and 170px bottom on desktop, scaled down on phones. */
-export const sectionPad = "pt-[clamp(88px,10.4vw,150px)] pb-[clamp(104px,11.8vw,170px)]";
+/**
+ * Section padding: generous on phones and small windows; on desktop screens where each
+ * section is one screen tall (`fit`), it follows the window height so everything fits.
+ */
+export const sectionPad =
+  "pt-[clamp(88px,10.4vw,150px)] pb-[clamp(104px,11.8vw,170px)] fit:py-[clamp(40px,7vh,112px)]";
+
+/** Large headlines (About, Launch): on `fit` screens the size also follows the height. */
+export const headlineSize = "text-[clamp(36px,5.4vw,84px)] fit:text-[clamp(36px,min(5.4vw,9vh),84px)]";
+
+/** Large text links (Order, RSVP). */
+export const bigLinkSize = "text-[clamp(32px,3.4vw,52px)] fit:text-[clamp(28px,min(3.4vw,5.6vh),52px)]";
 
 /** Paragraph style shared by Launch, About and The publication. */
 export const paragraphClass =
-  "font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-[1.45] tracking-[-0.01em] text-editorial-body";
+  "font-tight text-[clamp(19px,1.7vw,25px)] fit:text-[clamp(17px,min(1.7vw,2.8vh),25px)] font-normal leading-[1.45] tracking-[-0.01em] text-editorial-body";
 
 /** Narrow column pushed to the right edge of the container (full width on phones). */
 export const rightColumn = "ml-auto w-full max-w-[600px]";

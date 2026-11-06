@@ -32,7 +32,7 @@ export const Background = forwardRef<BackgroundHandle>(function Background(_prop
       <img
         src={backgroundImage}
         alt=""
-        className="absolute inset-0 h-full w-full scale-[1.04] object-cover blur-[8px]"
+        className="absolute inset-0 h-full w-full scale-[1.04] object-cover blur-[8px] [will-change:transform]"
         data-page-photo=""
       />
       <div ref={flatRef} className="absolute inset-0 bg-night" style={{ opacity: 0.5 }} />

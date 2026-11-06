@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import {
   afterLabel,
   Arrow,
+  bigLinkSize,
   numberLabelClass,
   paragraphClass,
   rightColumn,
@@ -21,12 +22,12 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
 
       <h2
         id="order-heading"
-        className={`${afterLabel} font-tight text-[clamp(44px,8.4vw,132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong`}
+        className={`${afterLabel} font-tight text-[clamp(44px,8.4vw,132px)] fit:text-[clamp(44px,min(8.4vw,13vh),132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong`}
       >
         Remnants of a Future
       </h2>
 
-      <div className={`${rightColumn} mt-[clamp(48px,6.7vw,96px)]`}>
+      <div className={`${rightColumn} mt-[clamp(48px,6.7vw,96px)] fit:mt-[clamp(28px,6vh,96px)]`}>
         <p className={paragraphClass}>
           Copies are available from €15. Any extra support goes directly toward funding the project
           and the artists involved. Contributions of €150 or more include a copy of the publication
@@ -37,7 +38,7 @@ export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
           href={ORDER_URL}
           target="_blank"
           rel="noopener"
-          className="mt-12 inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight text-[clamp(32px,3.4vw,52px)] font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white"
+          className={`mt-12 fit:mt-[clamp(24px,4.5vh,48px)] inline-flex items-center gap-4 border-b border-current pb-1.5 font-tight ${bigLinkSize} font-light leading-none tracking-[-0.03em] text-editorial-strong hover:text-white`}
           data-testid="button-order"
         >
           Order
