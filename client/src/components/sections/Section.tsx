@@ -19,23 +19,48 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
   { id, className, children, snap = "section", ...rest },
   ref,
 ) {
+  // Phones: .pin / .pin-in hold the section still for half a screen of scrolling
+  // (index.css). Both wrappers are display: contents on desktop, so it is unaffected.
   return (
-    <section
-      id={id}
-      ref={ref}
-      tabIndex={-1}
-      className={cn(
-        "relative outline-none",
-        snap === "last" ? "snap-section-last" : "snap-section",
-        gutter,
-        className,
-      )}
-      {...rest}
-    >
-      <div className="mx-auto w-full max-w-[1296px]">{children}</div>
-    </section>
+    <div className="pin">
+      <div className="pin-in">
+        <section
+          id={id}
+          ref={ref}
+          tabIndex={-1}
+          className={cn(
+            "relative outline-none",
+            snap === "last" ? "snap-section-last" : "snap-section",
+            gutter,
+            className,
+          )}
+          {...rest}
+        >
+          <div className="mx-auto w-full max-w-[1296px]">{children}</div>
+        </section>
+      </div>
+    </div>
   );
 });
+
+/**
+ * The text of a section label ("01 — About"). Desktop shows the em dash; phones swap it
+ * for a drawn dash that grows when the section is centred (index.css). Screen readers
+ * hear "01 to About".
+ */
+export function NumLabel({ n, name }: { n: string; name: string }) {
+  return (
+    <>
+      {n}
+      <span className="m-dash-text" aria-hidden="true">
+        {" — "}
+      </span>
+      <span className="dash hidden" aria-hidden="true" />
+      <span className="sr-only"> to </span>
+      {name}
+    </>
+  );
+}
 
 /** Small mono label that opens each section ("01 — About"). */
 export const numberLabelClass =

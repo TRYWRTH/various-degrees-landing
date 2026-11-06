@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import {
   afterLabel,
   headlineSize,
+  NumLabel,
   numberLabelClass,
   paragraphClass,
   rightColumn,
@@ -16,11 +17,13 @@ const italic = "font-light italic";
 export const About = forwardRef<HTMLElement>(function About(_props, ref) {
   return (
     <Section id="about" ref={ref} aria-labelledby="about-heading" className={`${sectionPad} m-sec`}>
-      <p className={`${numberLabelClass}`}>02 — About</p>
+      <p className={`${numberLabelClass} m-numlabel`}>
+        <NumLabel n="02" name="About" />
+      </p>
 
       <h1
         id="about-heading"
-        className={`${afterLabel} m-h40 m-about-h font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h40 m-about-h m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
         data-testid="text-description-1"
       >
         A publication contemplating what happens when the future we imagined feels increasingly far

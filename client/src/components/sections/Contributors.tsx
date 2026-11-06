@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { afterLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
+import { afterLabel, NumLabel, numberLabelClass, Section, sectionPad } from "@/components/sections/Section";
 import { contributors, type Contributor } from "@/data/contributors";
 
 type ContributorsProps = {
@@ -50,9 +50,9 @@ export const Contributors = forwardRef<HTMLElement, ContributorsProps>(function 
 
       <h2
         id="contributors-heading"
-        className={`${numberLabelClass}`}
+        className={`${numberLabelClass} m-numlabel m-head`}
       >
-        03 — Contributors
+        <NumLabel n="03" name="Contributors" />
       </h2>
 
       <div className={`name-rows ${afterLabel} font-tight font-light text-editorial-strong`}>

@@ -493,7 +493,9 @@
   .m-sec {
     --gutter: clamp(56px, 19vw, 74px);
     min-height: 100svh;
-    padding: 104px 20px 72px;
+    /* 104 / 72 on phones about 844px tall, a little less on shorter ones so more
+       sections fit one screen (and can pin) */
+    padding: clamp(72px, 12.3svh, 104px) 20px clamp(48px, 8.5svh, 72px);
     overflow-x: clip; /* sideways reveal motion never causes horizontal scroll */
   }
 
@@ -700,17 +702,111 @@
       animation-timeline: view();
       animation-range: entry 0% cover 40%;
     }
-    /* Contributors: the cover slides in from the right */
+    /*
+     * Contributors cover and Get a copy paragraph slide in from the right. They sit low
+     * in sections that pin, so they finish once fully on screen (entry 100%) — always
+     * before the pin starts, never frozen half-arrived during the hold.
+     */
     .m-cover {
       animation: cover-in linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 40%;
+      animation-range: entry 0% entry 100%;
     }
-    /* Get a copy: the paragraph slides in from the right */
     .m-order-p {
       animation: row-in-r linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 40%;
+      animation-range: entry 0% entry 100%;
     }
+  }
+}
+
+/* =========================================================================
+ * Phones: pin + "right position" signal (logic in pages/home.tsx).
+ * ========================================================================= */
+/* Desktop: the pin wrappers make no boxes and the drawn dash is not used */
+.pin,
+.pin-in {
+  display: contents;
+}
+
+@media (max-width: 760px) {
+  /*
+   * Each section holds still for about half a screen of scrolling: the outer .pin is
+   * one screen plus the hold, the inner .pin-in sticks to the top. No JS locking; the
+   * finger always moves the page. A section that does not fit in one small-viewport
+   * screen gets .pin-off (set by the page) and scrolls normally.
+   */
+  .pin {
+    display: block;
+    height: calc(100svh + var(--hold, 50svh));
+  }
+  .pin-in {
+    display: block;
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+  .pin.pin-off {
+    height: auto;
+  }
+  .pin.pin-off > .pin-in {
+    position: static;
+  }
+
+  /* Label dash: replaces the em dash, grows when the section is centred */
+  .m-dash-text {
+    display: none;
+  }
+  .dash {
+    display: inline-block;
+    width: 14px;
+    height: 1px;
+    margin: 0 0.6em;
+    vertical-align: middle;
+    background: currentColor;
+    transition: width 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .m-numlabel {
+    transition: color 0.3s;
+  }
+  .is-center .dash {
+    width: 56px;
+  }
+  .is-center .m-numlabel {
+    color: #f4f1ea;
+  }
+}
+
+@keyframes settle {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.015);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Thud: the headline gives a tiny one-shot pulse each time its section is centred */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .is-center .m-head {
+    animation: settle 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 1;
+    transform-origin: left center;
+  }
+}
+
+/* Reduced motion: no pin, no thud, no transitions; the centred state just shows */
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .pin {
+    height: auto;
+  }
+  .pin-in {
+    position: static;
+  }
+  .dash,
+  .m-numlabel {
+    transition: none;
   }
 }

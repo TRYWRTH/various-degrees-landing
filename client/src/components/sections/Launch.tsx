@@ -4,6 +4,7 @@ import {
   Arrow,
   bigLinkSize,
   headlineSize,
+  NumLabel,
   numberLabelClass,
   paragraphClass,
   rightColumn,
@@ -27,11 +28,13 @@ export const Launch = forwardRef<HTMLElement>(function Launch(_props, ref) {
       aria-labelledby="launch-heading"
       className={`${sectionPad} m-sec m-launch`}
     >
-      <p className={`${numberLabelClass}`}>01 — Event</p>
+      <p className={`${numberLabelClass} m-numlabel`}>
+        <NumLabel n="01" name="Event" />
+      </p>
 
       <h2
         id="launch-heading"
-        className={`${afterLabel} m-h56 font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
+        className={`${afterLabel} m-h56 m-head font-tight ${headlineSize} font-light leading-[1.05] tracking-[-0.035em] text-editorial-strong`}
       >
         {/* The spans only stack on phones (index.css); on desktop they read as one line */}
         <span className="m-line">Join us</span>{" "}

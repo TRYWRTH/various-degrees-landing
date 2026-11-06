@@ -3,6 +3,7 @@ import {
   afterLabel,
   Arrow,
   bigLinkSize,
+  NumLabel,
   numberLabelClass,
   paragraphClass,
   rightColumn,
@@ -18,11 +19,13 @@ import { ORDER_URL } from "@/lib/links";
 export const Order = forwardRef<HTMLElement>(function Order(_props, ref) {
   return (
     <Section id="order" ref={ref} snap="last" aria-labelledby="order-heading" className={`${sectionPad} m-sec`}>
-      <p className={`${numberLabelClass}`}>04 — Get a copy</p>
+      <p className={`${numberLabelClass} m-numlabel`}>
+        <NumLabel n="04" name="Get a copy" />
+      </p>
 
       <h2
         id="order-heading"
-        className={`${afterLabel} m-h56 font-tight text-[clamp(44px,8.4vw,132px)] fit:text-[clamp(44px,min(8.4vw,13vh),132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong`}
+        className={`${afterLabel} m-h56 m-head font-tight text-[clamp(44px,8.4vw,132px)] fit:text-[clamp(44px,min(8.4vw,13vh),132px)] font-light leading-[0.98] tracking-[-0.045em] text-editorial-strong`}
       >
         {/* The spans only stack on phones (index.css); on desktop they read as one line */}
         <span className="m-line">Remnants</span>{" "}

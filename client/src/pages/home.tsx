@@ -29,6 +29,26 @@ const DARKNESS: Record<SectionKey, number> = {
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+/**
+ * A section's position on the page. On phones each section sits in a sticky .pin
+ * wrapper (Section.tsx), so its own offsetTop is relative to that wrapper; measure the
+ * outer .pin instead whenever it is a real box (on desktop it is display: contents).
+ */
+function docTop(section: HTMLElement | null | undefined): number {
+  if (!section) return 0;
+  const pin = section.closest<HTMLElement>(".pin");
+  const el = pin && getComputedStyle(pin).display !== "contents" ? pin : section;
+  return el.getBoundingClientRect().top + window.scrollY;
+}
+
+/** Phones: the sections that pin and signal "centred", with their names. */
+const CENTRED: { id: SectionKey; n: number; name: string }[] = [
+  { id: "launch", n: 1, name: "Event" },
+  { id: "about", n: 2, name: "About" },
+  { id: "contributors", n: 3, name: "Contributors" },
+  { id: "order", n: 4, name: "Get a copy" },
+];
+
 const PANEL_STATE_KEY = "vdContributor";
 
 
@@ -57,7 +77,7 @@ export default function Home() {
     const update = () => {
       frame = 0;
       const y = window.scrollY + window.innerHeight * 0.5;
-      const tops = SECTION_ORDER.map((key) => sectionRefs.current[key]?.offsetTop ?? 0);
+      const tops = SECTION_ORDER.map((key) => docTop(sectionRefs.current[key]));
       let alpha = DARKNESS.hero;
       for (let i = 0; i < SECTION_ORDER.length; i++) {
         const next = tops[i + 1];
@@ -84,6 +104,115 @@ export default function Home() {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Phones: pin fit check + "right position" signal.
+  // - A section pins (index.css) only if it fits in one small-viewport screen; otherwise
+  //   its .pin gets .pin-off and it scrolls normally.
+  // - A pinned section is centred while it is stuck (its .pin spans the whole screen);
+  //   an unpinned one while it covers the middle half of the screen. On entering, in the
+  //   same frame: class is-center (dash + label + thud in CSS), a 10ms vibration (after
+  //   the first interaction, where supported) and a polite announcement (not on first
+  //   load, not repeated for the same section twice in a row).
+  const liveRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const phone = window.matchMedia("(max-width: 760px)");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const probe = document.createElement("div");
+    probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none";
+    document.body.appendChild(probe);
+
+    let interacted = false;
+    let first = true;
+    let lastAnnounced: string | null = null;
+    const centred = new Set<string>();
+    let frame = 0;
+
+    const parts = () =>
+      CENTRED.map((c) => {
+        const section = document.getElementById(c.id);
+        return { ...c, section, pin: section?.closest<HTMLElement>(".pin") ?? null };
+      });
+
+    const fit = () => {
+      const svh = probe.offsetHeight;
+      for (const { section, pin } of parts()) {
+        if (!section || !pin) continue;
+        pin.classList.toggle("pin-off", phone.matches && section.offsetHeight > svh + 1);
+      }
+    };
+
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      for (const { id, n, name, section, pin } of parts()) {
+        if (!section || !pin) continue;
+        let isCentre = false;
+        if (phone.matches) {
+          const pinned = !reduce.matches && !pin.classList.contains("pin-off");
+          if (pinned) {
+            const r = pin.getBoundingClientRect();
+            isCentre = r.top <= 1 && r.bottom >= vh - 1;
+          } else {
+            const r = section.getBoundingClientRect();
+            isCentre = r.top <= vh * 0.25 && r.bottom >= vh * 0.75;
+          }
+        }
+        if (isCentre && !centred.has(id)) {
+          centred.add(id);
+          section.classList.add("is-center");
+          if (!first) {
+            if (interacted && !reduce.matches) {
+              try {
+                navigator.vibrate?.(10);
+              } catch {
+                /* unsupported: stay silent */
+              }
+            }
+            if (lastAnnounced !== id && liveRef.current) {
+              liveRef.current.textContent = `Section ${n} of 4: ${name}`;
+              lastAnnounced = id;
+            }
+          }
+        } else if (!isCentre && centred.has(id)) {
+          centred.delete(id);
+          section.classList.remove("is-center");
+        }
+      }
+      first = false;
+    };
+
+    const onScroll = () => {
+      interacted = true;
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const onTouch = () => {
+      interacted = true;
+    };
+    const onResize = () => {
+      fit();
+      onScroll();
+    };
+    const resizeObserver = new ResizeObserver(onResize);
+    for (const { section } of parts()) if (section) resizeObserver.observe(section);
+
+    fit();
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("resize", onResize);
+    phone.addEventListener?.("change", onResize);
+    reduce.addEventListener?.("change", onResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      probe.remove();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("resize", onResize);
+      phone.removeEventListener?.("change", onResize);
+      reduce.removeEventListener?.("change", onResize);
     };
   }, []);
 
@@ -151,6 +280,8 @@ export default function Home() {
           <Order ref={setSectionRef("order")} />
         </main>
         <Footer />
+        {/* Phones: announces the section that just reached the centre */}
+        <div ref={liveRef} className="sr-only" role="status" aria-live="polite" aria-atomic="true" />
       </div>
 
       {activeContributor && (
