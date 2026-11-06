@@ -1,66 +1,33 @@
 import { forwardRef } from "react";
-import { ChevronDown } from "lucide-react";
-
-type HeroProps = {
-  isLoaded: boolean;
-};
+import { gutter } from "@/components/sections/Section";
+import { cn } from "@/lib/utils";
 
 /**
- * Unchanged hero. Its opacity (`scrollOpacity`) is written directly by the
- * page's scroll handler through the forwarded ref.
+ * First screen: the site name set large and the publication title under it, at the
+ * bottom-left of the photo. The nav sits over the top of this screen.
  */
-export const Hero = forwardRef<HTMLElement, HeroProps>(function Hero({ isLoaded }, ref) {
+export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
   return (
     <section
       id="hero"
       ref={ref}
       tabIndex={-1}
-      className="relative flex outline-none min-h-[100svh] snap-start snap-always items-center justify-center px-6 py-16"
-      style={{ transition: "opacity 0.3s ease-out" }}
+      aria-label="Various Degrees"
+      className={cn("relative flex min-h-[100svh] flex-col justify-end outline-none", gutter)}
     >
-      <div className="flex flex-col items-center gap-3 md:gap-4">
-        <h1
-          className={`
-            text-center font-display text-display-m uppercase text-ink transition-all duration-1000
-            md:text-display
-            ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-          `}
-          style={{ textShadow: "0 4px 20px rgba(0, 0, 0, 0.6)" }}
+      <div className="mx-auto w-full max-w-[1296px] pb-[clamp(56px,10vh,120px)]">
+        <p
+          className="font-tight text-[clamp(56px,11.5vw,184px)] font-light leading-[0.92] tracking-[-0.045em] text-editorial-strong"
           data-testid="text-title"
         >
-          <span className="block md:inline">Various</span> <span className="block md:inline">Degrees</span>
-        </h1>
+          Various Degrees
+        </p>
         <p
-          className={`
-            text-center font-display text-subtitle-m italic text-ink/90 transition-all duration-1000
-            md:text-subtitle
-            ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
-          `}
-          style={{
-            textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
-            transitionDelay: "200ms",
-          }}
+          className="mt-[clamp(16px,2vw,28px)] font-tight text-[clamp(22px,2.4vw,36px)] font-light italic leading-[1.2] tracking-[-0.02em] text-editorial-body"
           data-testid="text-subtitle"
         >
           Remnants of a future
         </p>
-      </div>
-
-      {/* Scroll Indicator: on phones small, faint and near the bottom edge, just a hint */}
-      <div
-        className={`
-          absolute bottom-[calc(20px+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 transition-all duration-1000
-          md:bottom-8 md:gap-2
-          ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
-        `}
-        style={{ transitionDelay: "1200ms" }}
-        data-testid="scroll-indicator"
-        aria-hidden="true"
-      >
-        <p className="text-[10px] uppercase tracking-widest text-ink/50 md:text-sm md:text-ink/70">Scroll</p>
-        <div className="animate-bounce">
-          <ChevronDown className="h-4 w-4 text-ink/50 md:h-8 md:w-8 md:text-ink/70" />
-        </div>
       </div>
     </section>
   );

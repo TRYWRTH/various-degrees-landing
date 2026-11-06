@@ -84,15 +84,13 @@ export default {
         "on-ink": "#121211",
         // Section headlines (About, Launch, ...): dark red, kept light enough to read on night
         heading: "#B03A32",
-        // About + The Publication (editorial layout)
+        // Typographic page: labels + footer, paragraphs, main text
         editorial: {
           eyebrow: "#BDB8AC",
-          body: "#DAD6CC",
+          body: "#E6E2D9",
           strong: "#F4F1EA",
-          link: "#8F8A7E",
-          "on-strong": "#0A0B08",
         },
-        night: "rgb(8 8 7)",
+        night: "#0A0B08",
         surface: "#161614",
         // Contributor panel: "smoked glass" surface
         glass: {
@@ -118,8 +116,9 @@ export default {
         serif: ['"Playfair Display"', "Georgia", "serif"],
         display: ['"Playfair Display"', "Georgia", "serif"],
         forum: ["Forum", "Georgia", "serif"],
-        // About statement and the publication title
-        newsreader: ["Newsreader", "Georgia", "serif"],
+        // Typographic page: display + body, and the small mono labels / nav / footer
+        tight: ['"Inter Tight"', "Inter", "system-ui", "sans-serif"],
+        mono: ['"DM Mono"', "ui-monospace", "monospace"],
       },
       // Type scale: `<role>` is desktop (md+), `<role>-m` is mobile.
       fontSize: {

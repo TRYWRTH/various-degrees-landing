@@ -2,43 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes glitch-shake {
-  0%, 100% {
-    transform: translateX(0) translateY(0);
-  }
-  10% {
-    transform: translateX(2px) translateY(-2px);
-  }
-  20% {
-    transform: translateX(-3px) translateY(2px);
-  }
-  30% {
-    transform: translateX(3px) translateY(-1px);
-  }
-  40% {
-    transform: translateX(-2px) translateY(3px);
-  }
-  50% {
-    transform: translateX(2px) translateY(-2px);
-  }
-  60% {
-    transform: translateX(-3px) translateY(1px);
-  }
-  70% {
-    transform: translateX(3px) translateY(-3px);
-  }
-  80% {
-    transform: translateX(-1px) translateY(2px);
-  }
-  90% {
-    transform: translateX(2px) translateY(-1px);
-  }
-}
-
-.glitch-animate {
-  animation: glitch-shake 0.15s infinite;
-}
-
 /* LIGHT MODE */
 :root {
   --button-outline: rgba(0,0,0, .10);
@@ -218,6 +181,13 @@
     overscroll-behavior: none;
   }
 
+  /* In-page links glide; instant for people who prefer reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   /* One focus style everywhere */
   :focus {
     outline: none;
@@ -236,92 +206,19 @@
 }
 
 @layer components {
-  /* Snap container: hide the scrollbar, keep scrolling */
-  .snap-scroller {
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .snap-scroller::-webkit-scrollbar {
-    display: none;
-  }
-  /* In-page links glide; instant for people who prefer reduced motion */
-  @media (prefers-reduced-motion: no-preference) {
-    .snap-scroller {
-      scroll-behavior: smooth;
-    }
-  }
-
-  /* Content sections: clear the fixed top bar and the safe areas */
-  .section-pad {
-    padding-top: calc(80px + env(safe-area-inset-top));
-    padding-bottom: calc(48px + env(safe-area-inset-bottom));
-    padding-left: max(28px, env(safe-area-inset-left));
-    padding-right: max(28px, env(safe-area-inset-right));
-  }
-  @media (min-width: 768px) {
-    .section-pad {
-      padding-top: calc(112px + env(safe-area-inset-top));
-      padding-bottom: calc(72px + env(safe-area-inset-bottom));
-      padding-left: max(40px, env(safe-area-inset-left));
-      padding-right: max(40px, env(safe-area-inset-right));
-    }
-  }
-
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Centre vignette behind the text column of every content section */
-  .section-vignette {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: -1;
-    background: radial-gradient(ellipse 70% 50% at 50% 52%, rgb(8 8 7 / 0.4), transparent);
-  }
-  @media (min-width: 768px) {
-    .section-vignette {
-      background: radial-gradient(ellipse 46% 58% at 50% 52%, rgb(8 8 7 / 0.4), transparent);
-    }
-  }
-
-  /* Expands a compact control's hit area to at least 44px (the 30px mobile pill + 2×7px) */
-  .hit-area::before {
-    content: "";
-    position: absolute;
-    inset: -7px -4px;
-  }
-
-  /* Contributor names: thin underline that draws in left-to-right */
-  .draw-underline {
-    position: relative;
+  /* Contributors: one flowing line of names, a thin slash between them (not in the text) */
+  .name-flow > li {
     display: inline-block;
+    max-width: 100%;
   }
-  .draw-underline::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -4px;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 200ms ease-out;
-  }
-  @media (min-width: 768px) {
-    .draw-underline::after {
-      bottom: -6px;
-    }
-  }
-  @media (hover: hover) {
-    .group:hover .draw-underline::after {
-      transform: scaleX(1);
-    }
-  }
-  .group:active .draw-underline::after,
-  .group:focus-visible .draw-underline::after {
-    transform: scaleX(1);
+  .name-flow > li:not(:last-child)::after {
+    content: "/";
+    margin: 0 0.32em;
+    opacity: 0.35;
   }
 
   /* Slim custom scrollbar for the contributor bio */
@@ -378,12 +275,6 @@
     }
     .panel-glass-tint {
       background: rgb(24 22 19 / 0.96);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .draw-underline::after {
-      transition: none;
     }
   }
 }

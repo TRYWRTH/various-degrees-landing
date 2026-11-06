@@ -1,44 +1,39 @@
+import { gutter } from "@/components/sections/Section";
 import { scrollToSection } from "@/lib/scroll";
+import { cn } from "@/lib/utils";
+
+const footerText =
+  "font-mono text-[12px] uppercase leading-[1.6] tracking-[0.08em] text-editorial-eyebrow";
 
 /**
- * Bottom edge of the last (Order) screen: credits, kept faint on purpose.
- * Phones also get "Back to top ↑" here, since the top bar has no wordmark on phones;
- * on desktop the wordmark does that job.
+ * Page footer: the same credits as before, now in the mono label style.
+ * Phones also get "Back to top ↑" here, as before.
  */
 export function Footer() {
   return (
-    <footer role="contentinfo" className="flex flex-col items-center text-center font-sans">
-      <button
-        type="button"
-        onClick={() => scrollToSection("hero")}
-        className="group mb-1 inline-flex min-h-11 items-center gap-2 font-sans text-note text-ink-muted transition-colors duration-160 ease-out hover:text-ink md:hidden"
-        data-testid="button-back-to-top"
-      >
-        <span className="underline decoration-ink-muted/60 decoration-1 underline-offset-4">
-          Back to top
-        </span>
-        <span
-          aria-hidden="true"
-          className="inline-block transition-transform duration-160 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none"
+    <footer role="contentinfo" className={cn("relative pb-[calc(32px+env(safe-area-inset-bottom))]", gutter)}>
+      <div className="mx-auto flex w-full max-w-[1296px] flex-col items-start">
+        <button
+          type="button"
+          onClick={() => scrollToSection("hero")}
+          className={cn(footerText, "mb-3 inline-flex min-h-11 items-center gap-2 text-editorial-strong md:hidden")}
+          data-testid="button-back-to-top"
         >
-          ↑
-        </span>
-      </button>
+          <span className="underline decoration-1 underline-offset-4">Back to top</span>
+          <span aria-hidden="true">↑</span>
+        </button>
 
-      {/* Mobile: one line */}
-      <p className="text-footer-m md:hidden">
-        <span className="text-ink/35" data-testid="text-copyright">
-          © 2026 Various Degrees. All rights reserved.
-        </span>
-        <span className="text-ink/25"> · Designed by YRT</span>
-      </p>
-
-      {/* Desktop: two centred lines */}
-      <div className="hidden flex-col items-center gap-2 text-footer md:flex">
-        <p className="text-ink/35">© 2026 Various Degrees. All rights reserved.</p>
-        <p className="text-ink/25" data-testid="text-credit">
-          Designed by YRT
+        {/* Mobile: one line */}
+        <p className={cn(footerText, "md:hidden")}>
+          <span data-testid="text-copyright">© 2026 Various Degrees. All rights reserved.</span>
+          <span> · Designed by YRT</span>
         </p>
+
+        {/* Desktop: two lines */}
+        <div className={cn(footerText, "hidden flex-col gap-1 md:flex")}>
+          <p>© 2026 Various Degrees. All rights reserved.</p>
+          <p data-testid="text-credit">Designed by YRT</p>
+        </div>
       </div>
     </footer>
   );

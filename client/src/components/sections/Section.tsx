@@ -6,7 +6,13 @@ type SectionProps = HTMLAttributes<HTMLElement> & {
   children: ReactNode;
 };
 
-/** One full screen per section, snapped, with the centre vignette behind the column. */
+/** Page gutter shared by the nav, every section and the footer. */
+export const gutter = "px-[clamp(20px,5vw,72px)]";
+
+/**
+ * One text section on the flowing page: left-aligned, content up to 1296px wide.
+ * Focusable (tabIndex -1) so in-page links can move focus here after scrolling.
+ */
 export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
   { id, className, children, ...rest },
   ref,
@@ -15,68 +21,59 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
     <section
       id={id}
       ref={ref}
-      className={cn(
-        "section-pad relative isolate flex min-h-[100svh] snap-start snap-always flex-col items-center justify-center text-center",
-        className,
-      )}
+      tabIndex={-1}
+      className={cn("relative outline-none", gutter, className)}
       {...rest}
     >
-      <div className="section-vignette" aria-hidden="true" />
-      {children}
+      <div className="mx-auto w-full max-w-[1296px]">{children}</div>
     </section>
   );
 });
 
+/** Small mono label that opens each section ("01 — About"). */
+export const numberLabelClass =
+  "font-mono text-[12px] font-normal uppercase leading-none tracking-[0.08em] text-editorial-eyebrow";
+
+/** Gap between a section's label and its headline or content. */
+export const afterLabel = "mt-[clamp(36px,4vw,56px)]";
+
+/** Section padding: about 150px top and 170px bottom on desktop, scaled down on phones. */
+export const sectionPad = "pt-[clamp(88px,10.4vw,150px)] pb-[clamp(104px,11.8vw,170px)]";
+
+/** Paragraph style shared by Launch, About and The publication. */
+export const paragraphClass =
+  "font-tight text-[clamp(19px,1.7vw,25px)] font-normal leading-[1.45] tracking-[-0.01em] text-editorial-body";
+
+/** Narrow column pushed to the right edge of the container (full width on phones). */
+export const rightColumn = "ml-auto w-full max-w-[600px]";
+
+/** Contributor panel: the small label above a name (Inter caps). */
 export const labelClass =
   "font-sans text-label-m font-medium uppercase text-ink-muted md:text-label";
 
 export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <p className={cn(labelClass, className)}>
-      {children}
-    </p>
-  );
+  return <p className={cn(labelClass, className)}>{children}</p>;
 }
 
-/** Section heading: the small-caps style, used for every section. */
-export function SectionTitle({ id, children }: { id: string; children: ReactNode }) {
+/** The one icon on the page: a thin right arrow drawn with strokes. */
+export function Arrow({ size, stroke = 1 }: { size: number; stroke?: number }) {
+  const m = size / 2;
+  const head = size * 0.3;
   return (
-    <h2
-      id={id}
-      className="text-balance font-sans text-title-m font-medium uppercase text-heading md:text-title"
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={stroke}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="inline-block shrink-0"
     >
-      {children}
-    </h2>
-  );
-}
-
-/**
- * Gentle fade-up once the section has scrolled into view. Children reveal one after
- * another, `step` ms apart (pass each item's `index`).
- */
-export function Reveal({
-  show,
-  index = 0,
-  step = 150,
-  className,
-  children,
-}: {
-  show: boolean;
-  index?: number;
-  step?: number;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div
-      className={cn(
-        "transition-all duration-1000 motion-reduce:transition-none",
-        show ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0",
-        className,
-      )}
-      style={{ transitionDelay: `${index * step}ms` }}
-    >
-      {children}
-    </div>
+      <path d={`M${size * 0.06} ${m}H${size * 0.94}`} />
+      <path d={`M${size * 0.94 - head} ${m - head}L${size * 0.94} ${m}L${size * 0.94 - head} ${m + head}`} />
+    </svg>
   );
 }

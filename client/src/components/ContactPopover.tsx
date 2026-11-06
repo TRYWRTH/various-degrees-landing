@@ -1,12 +1,14 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { Instagram, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ContactPopoverProps = {
   className?: string;
 };
 
-/** "Contact" text button in the top bar + the email/Instagram popover, anchored under it (right-aligned). */
+/**
+ * "Contact" text button in the nav + the email/Instagram popover, anchored under it
+ * (right-aligned). Text only, in the nav's mono style.
+ */
 export function ContactPopover({ className }: ContactPopoverProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -24,8 +26,7 @@ export function ContactPopover({ className }: ContactPopoverProps) {
         buttonRef.current?.focus();
       }
     };
-    // The page scrolls inside the snap container, not the window, so listen in the
-    // capture phase to catch scroll events from any element.
+    // Close on any scroll (capture phase catches the page and inner scrollers alike).
     const onScroll = () => setOpen(false);
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -45,7 +46,7 @@ export function ContactPopover({ className }: ContactPopoverProps) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={popoverId}
-        className="inline-flex min-h-11 items-center font-sans text-nav-m font-medium uppercase text-ink transition-colors duration-160 hover:text-ink-muted md:text-nav"
+        className="inline-flex min-h-11 items-center font-mono text-[11px] font-medium uppercase leading-none tracking-[0.2em] text-editorial-strong decoration-1 underline-offset-[5px] hover:underline min-[380px]:text-[12px]"
         data-testid="button-contact"
       >
         Contact
@@ -54,27 +55,24 @@ export function ContactPopover({ className }: ContactPopoverProps) {
       {open && (
         <div
           id={popoverId}
-          className="absolute right-0 top-full animate-fade-in motion-reduce:animate-none"
-          style={{ textShadow: "0 2px 12px rgba(0, 0, 0, 0.6)" }}
+          className="absolute right-0 top-full animate-fade-in rounded-sm bg-night/85 px-4 py-1 motion-reduce:animate-none"
           data-testid="contact-info"
         >
           <a
             href="https://www.instagram.com/various.degrees/"
             target="_blank"
             rel="noopener"
-            className="flex min-h-11 items-center gap-3 text-ink transition-colors hover:text-ink-muted"
+            className="flex min-h-11 items-center text-editorial-strong decoration-1 underline-offset-[5px] hover:underline"
             data-testid="link-instagram"
           >
-            <Instagram className="h-5 w-5 flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" aria-hidden="true" />
-            <span className="whitespace-nowrap text-sm font-medium">@various.degrees</span>
+            <span className="whitespace-nowrap font-mono text-[12px] tracking-[0.08em]">@various.degrees</span>
           </a>
           <a
             href="mailto:v.degrees@proton.me"
-            className="flex min-h-11 items-center gap-3 text-ink transition-colors hover:text-ink-muted"
+            className="flex min-h-11 items-center text-editorial-strong decoration-1 underline-offset-[5px] hover:underline"
             data-testid="link-email"
           >
-            <Mail className="h-5 w-5 flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" aria-hidden="true" />
-            <span className="whitespace-nowrap text-sm font-medium">v.degrees@proton.me</span>
+            <span className="whitespace-nowrap font-mono text-[12px] tracking-[0.08em]">v.degrees@proton.me</span>
           </a>
         </div>
       )}
