@@ -140,7 +140,7 @@ export function ContributorPanel({ contributor, previous, next, onNavigate, onCl
       {/* The site's photo, fixed while the text scrolls, under a 55% → 88% overlay
           (64% at the top on phones, where the photo's light sky sits behind the label) */}
       <div className="fixed inset-0 overflow-hidden" aria-hidden="true">
-        <img src={backgroundImage} alt="" className="absolute inset-0 h-full w-full scale-[1.04] object-cover blur-[8px]" />
+        <img src={backgroundImage} alt="" className="m-photo absolute inset-0 h-full w-full scale-[1.04] object-cover blur-[8px]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_11_8/0.64),rgb(10_11_8/0.88))] md:bg-[linear-gradient(to_bottom,rgb(10_11_8/0.55),rgb(10_11_8/0.88))]" />
       </div>
 

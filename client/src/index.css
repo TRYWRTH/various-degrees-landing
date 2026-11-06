@@ -501,6 +501,16 @@
 }
 
 @media (max-width: 760px) {
+  /*
+   * The background photo: on a tall phone screen the whole portrait photo would show,
+   * including the grey street at its bottom. A taller photo layer anchored at the top
+   * pushes the street below the screen, so phones see the dark foliage like desktop.
+   */
+  .m-photo {
+    height: 140%;
+    bottom: auto;
+  }
+
   /* Sections: one screen at least, 104px top / 72px bottom */
   .m-sec {
     min-height: 100svh;
